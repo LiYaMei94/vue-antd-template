@@ -1,0 +1,12 @@
+import { createStore } from 'vuex';
+import global from './modules/global';
+/**
+ * 创建仓库和导出
+ */
+const store = createStore({
+  state: {},
+  modules: {
+    global
+  }
+});
+export default store;
