@@ -2,7 +2,6 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { BasicLayout, UserLayout } from '@/layouts';
 import Home from '@/views/home';
 import _ from 'lodash';
-import { _flatten } from '@/utils/utils';
 
 const staticRoutes = [
   {

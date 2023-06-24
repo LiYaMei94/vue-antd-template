@@ -5,10 +5,6 @@ const DB = new db();
 
 export default {
   state: () => ({
-    // element 组件大小
-    assemblySize: 'default',
-    // 当前系统语言
-    language: null,
     // 主题颜色
     primary: DB.getLocal('primary-color') || DEFAULT_PRIMARY_COLOR,
     // 折叠菜单

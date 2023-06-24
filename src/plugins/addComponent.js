@@ -19,7 +19,10 @@ import {
   Row,
   Col,
   InputNumber,
-  InputPassword
+  InputPassword,
+  Table,
+  TableColumn,
+  Tag
 } from 'ant-design-vue';
 
 export default {
@@ -45,6 +48,9 @@ export default {
     app.component(Col.name, Col);
     app.component(InputNumber.name, InputNumber);
     app.component(InputPassword.name, InputPassword);
+    app.component(Table.name, Table);
+    app.component(TableColumn.name, TableColumn);
+    app.component(Tag.name, Tag);
 
     app.config.globalProperties.$message = message;
   }
