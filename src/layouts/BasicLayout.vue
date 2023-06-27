@@ -1,8 +1,8 @@
 <template>
   <a-layout>
-    <LayoutSider v-model:theme="state.global.theme"></LayoutSider>
+    <LayoutHeader v-model:theme="state.global.theme"></LayoutHeader>
     <a-layout>
-      <LayoutHeader v-model:theme="state.global.theme"></LayoutHeader>
+      <LayoutSider v-model:theme="state.global.theme"></LayoutSider>
       <a-layout-content><router-view /></a-layout-content>
     </a-layout>
   </a-layout>

@@ -10,13 +10,7 @@ export const isObject = (value) => {
 
 export const isNull = (val) => {
   return (
-    val === 'undefined' ||
-    val === undefined ||
-    val == null ||
-    val === 'null' ||
-    val.toString().trim() === '' ||
-    _.isNaN(val) ||
-    data === 'unknown'
+    val === 'undefined' || val === undefined || val == null || val === 'null' || val.toString().trim() === '' || _.isNaN(val) || val === 'unknown'
   );
 };
 
@@ -41,17 +35,6 @@ export const handleRowAccordingToProp = (row, prop) => {
   if (!prop.includes('.')) return row[prop] ?? '--';
   prop.split('.').forEach((item) => (row = row[item] ?? '--'));
   return row;
-};
-
-/**
- * @description 处理 prop，当 prop 为多级嵌套时 ==> 返回最后一级 prop
- * @param {String} prop 当前 prop
- * @returns {String}
- * */
-export const handleProp = (prop) => {
-  const propArr = prop.split('.');
-  if (propArr.length == 1) return prop;
-  return propArr[propArr.length - 1];
 };
 
 /**

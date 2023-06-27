@@ -13,17 +13,47 @@ body,
 }
 
 #app {
+  .margin-left-12 {
+    margin-left: 12px;
+  }
+
   .ant-layout {
     min-height: 100vh;
     background-color: var(--ant-layout-bg);
   }
+
   .ant-layout-header {
     background-color: var(--ant-layout-header-bg);
   }
+
   .ant-layout-content {
-    margin: 16px;
-    padding: 20px;
+    margin: 10px 12px;
+    padding: 15px;
     background: var(--ant-layout-content-bg);
     min-height: 280px;
+    min-width: 900px;
+  }
+
+  .ant-layout-sider-trigger {
+    text-align: right;
+    padding-right: 16px;
+    box-sizing: border-box;
+    font-size: 20px;
+  }
+
+  .ant-input-number {
+    width: 100%;
+  }
+
+  .ant-picker {
+    width: 100%;
+  }
+
+  .header-tool-right-icon {
+    display: flex;
+    align-items: center;
+    .action {
+      color: var(--ant-header-icon-bg);
+    }
   }
 }

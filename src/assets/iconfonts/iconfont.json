@@ -1,0 +1,23 @@
+{
+  "id": "4140184",
+  "name": "longi-message platform",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1346236",
+      "name": "主题",
+      "font_class": "zhuti",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "23125240",
+      "name": "主题-04",
+      "font_class": "zhuti-04",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    }
+  ]
+}

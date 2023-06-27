@@ -36,11 +36,21 @@ export const THEME_COLOR = {
   [LIGHT_THEME]: {
     '--ant-layout-header-bg': '#ffffff',
     '--ant-layout-content-bg': '#ffffff',
-    '--ant-layout-bg': '#f0f2f5'
+    '--ant-layout-bg': '#f0f2f5',
+    '--ant-header-icon-bg': '#000000',
+    '--ant-line': '#E1E5EB',
+    '--ant-background': '#F0F2F5',
+    '--ant-tips-bg': '#FFF7EB',
+    '--ant-table-bg': '#F5F7FA'
   },
   [DARK_THEME]: {
-    '--ant-layout-header-bg': '#001529',
-    '--ant-layout-content-bg': '#001529',
-    '--ant-layout-bg': '#73767a'
+    '--ant-layout-header-bg': '#0D131A',
+    '--ant-layout-content-bg': '#252B31',
+    '--ant-layout-bg': '#73767a',
+    '--ant-header-icon-bg': '#ffffff',
+    '--ant-line': '#39404C',
+    '--ant-background': '#0D131A',
+    '--ant-tips-bg': '#50473B',
+    '--ant-table-bg': '#1C242E'
   }
 };

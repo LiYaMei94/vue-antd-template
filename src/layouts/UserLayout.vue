@@ -6,10 +6,10 @@
           <div class="header">
             <a href="/">
               <!-- <img src="~@/assets/logo.svg" class="logo" alt="logo" /> -->
-              <span class="title">隆基</span>
+              <span class="title">后台系统</span>
             </a>
           </div>
-          <div class="desc">隆基消息平台</div>
+          <div class="desc">消息平台</div>
         </div>
 
         <router-view />

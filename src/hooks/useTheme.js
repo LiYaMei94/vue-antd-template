@@ -1,6 +1,6 @@
 import { ConfigProvider } from 'ant-design-vue';
 import { useStore } from 'vuex';
-import { THEME_COLOR, DEFAULT_PRIMARY_COLOR, MAIN_THEME_MAP } from '@/theme';
+import { THEME_COLOR, DEFAULT_PRIMARY_COLOR, MAIN_THEME_MAP, LIGHT_THEME, DARK_THEME } from '@/theme';
 
 /**
  * @description 全局主题 hooks
@@ -8,6 +8,16 @@ import { THEME_COLOR, DEFAULT_PRIMARY_COLOR, MAIN_THEME_MAP } from '@/theme';
 export const useTheme = () => {
   const { state, dispatch } = useStore();
   const { global } = state || {};
+  const theme = [
+    {
+      value: LIGHT_THEME,
+      label: '浅色模式'
+    },
+    {
+      value: DARK_THEME,
+      label: '暗黑模式'
+    }
+  ];
 
   // console.log('map', map.state);
   // 修改主题颜色
@@ -63,6 +73,7 @@ export const useTheme = () => {
   return {
     initTheme,
     changePrimaryColor,
-    setThemeColor
+    setThemeColor,
+    theme
   };
 };

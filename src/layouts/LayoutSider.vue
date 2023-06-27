@@ -1,29 +1,29 @@
 <template>
-  <!-- :trigger="null" -->
   <a-layout-sider v-model:collapsed="collapsed" :theme="theme" collapsible>
-    <div class="logo" />
-    <a-menu v-model:selectedKeys="selectedKeys" :theme="theme">
-      <template v-for="subItem in menuList" :key="subItem.path">
-        <a-sub-menu>
-          <template #icon></template>
-          <template #title>Navigation One</template>
-          <a-menu-item-group key="g1">
-            <template #title>Item 1</template>
-            <a-menu-item key="1">Option 1</a-menu-item>
-            <a-menu-item key="2">Option 2</a-menu-item>
-          </a-menu-item-group>
-          <a-menu-item-group key="g2" title="Item 2">
-            <a-menu-item key="3">Option 3</a-menu-item>
-            <a-menu-item key="4">Option 4</a-menu-item>
-          </a-menu-item-group>
-        </a-sub-menu>
+    <template #trigger>
+      <component :is="collapsed ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined'"></component>
+    </template>
+
+    <a-menu :theme="theme" triggerSubMenuAction="click" mode="inline">
+      <template v-for="item in list" :key="item.key">
+        <template v-if="!item.children">
+          <a-menu-item :key="item.key">
+            <template #icon>
+              <component :is="item.icon"></component>
+            </template>
+            {{ item.title }}
+          </a-menu-item>
+        </template>
+        <template v-else>
+          <CustomSubMenu :key="item.key" :menuInfo="item" />
+        </template>
       </template>
     </a-menu>
   </a-layout-sider>
 </template>
 
 <script setup>
-import { defineProps, ref } from 'vue';
+import { ref } from 'vue';
 import { LIGHT_THEME } from '@/theme';
 
 const props = defineProps({
@@ -33,8 +33,30 @@ const props = defineProps({
   }
 });
 
-const menuList = ref([1, 3, 2]);
 const selectedKeys = ref([]);
-
 const collapsed = ref(false);
+
+// TODO:权限
+const list = [
+  {
+    key: '1',
+    title: 'Option 1',
+    icon: 'MailOutlined'
+  },
+  {
+    key: '2',
+    title: 'Navigation 2',
+    icon: 'PieChartOutlined',
+    children: [
+      {
+        key: '2.1',
+        title: 'Navigation 3',
+        icon: 'SettingOutlined',
+        children: [{ key: '2.1.1', title: 'Option 2.1.1' }]
+      }
+    ]
+  }
+];
 </script>
+
+<style lang="less" scope></style>

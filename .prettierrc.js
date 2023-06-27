@@ -4,7 +4,7 @@ module.exports = {
   semi: true, //是否使用分号
   singleQuote: true, //是否使用单引号
   trailingComma: 'none', //末尾逗号
-  printWidth: 100, //换行
+  printWidth: 150, //换行
   tabWidth: 2, //缩进
   useTabs: false, //使用空格代替tab缩进
   quoteProps: 'as-needed', //仅在必需时为对象的key添加引号
