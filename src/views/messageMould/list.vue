@@ -1,0 +1,178 @@
+<template>
+  <div class="list-table-content">
+    <ProTable ref="proTableRef" v-bind="{ formConfig, columns, requestApi: mouldList, rowKey: 'id', labelCol: { span: 7 } }">
+      <template #tableHeaderLeft>
+        <a-button type="primary" @click="handleOpen({ type: CREATE })">添加</a-button>
+      </template>
+      <template v-slot:bodyCell="{ dataInfo: { column, record, text } }">
+        <template v-if="column.dataIndex === 'id'">
+          <a class="table-custom-primary" @click="handleOpen({ type: DETAIL, id: record.id })">{{ text }}</a>
+        </template>
+        <template v-if="column.dataIndex === 'action'">
+          <span class="table-custom-cell">
+            <a class="table-custom-primary" @click="handleOpen({ type: EDIT, id: record.id })">修改</a>
+            <a-divider type="vertical" />
+            <a class="table-custom-danger" @click="handleDelete(record.id)">删除</a>
+          </span>
+        </template>
+      </template>
+    </ProTable>
+  </div>
+</template>
+<script setup>
+import { ref, reactive, toRefs, unref, computed, watch } from 'vue';
+import ProTable from '@/components/ProTable';
+import { CREATE, EDIT, DETAIL, TEMPLATE_STATUS_TYPE_ENUM, PAGE_ROUTE_NAME_MAP } from '@/utils/const';
+import { mouldList, mouldDelete } from '@/apis/mould';
+import { useStore } from 'vuex';
+import { filterEnum } from '@/utils/utils';
+import { getLocalAllEnum } from '@/apis';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+let channelTypeEnum, idTypeEnum, msgTypeEnum, templateStatusEnum;
+getLocalAllEnum()
+  .then((enumData) => {
+    channelTypeEnum = enumData?.channelTypeEnum;
+    idTypeEnum = enumData?.idTypeEnum;
+    msgTypeEnum = enumData?.msgTypeEnum;
+    templateStatusEnum = enumData?.templateStatusEnum;
+  })
+  .catch((error) => {});
+const state = reactive({
+  type: '',
+  id: null,
+  visible: false
+});
+
+const handleOpen = ({ type, id }) => {
+  const name = PAGE_ROUTE_NAME_MAP[type];
+  router.push({ name: `MessageMould${name}`, params: { id, type } });
+};
+
+const proTableRef = ref();
+const search = computed(() => unref(proTableRef.value?.search));
+
+// 删除并刷新列表
+const handleDelete = async (id) => {
+  try {
+    await mouldDelete({ id });
+    search.value && search.value();
+  } catch (error) {}
+};
+
+// 表单配置
+const formConfig = [
+  {
+    label: '模板名称',
+    value: 'name',
+    el: 'input'
+  },
+  {
+    label: '接收账号类型',
+    value: 'idType',
+    el: 'select',
+    props: {
+      options: idTypeEnum,
+      fieldNames: { label: 'desc', value: 'id' },
+      showSearch: true,
+      optionFilterProp: 'desc'
+    }
+  },
+  {
+    label: '消息类型',
+    value: 'msgType',
+    el: 'select',
+    props: {
+      options: msgTypeEnum,
+      fieldNames: { label: 'desc', value: 'id' },
+      showSearch: true,
+      optionFilterProp: 'desc'
+    }
+  },
+  {
+    label: '开启状态',
+    value: 'templateStatus',
+    el: 'select',
+    props: {
+      options: templateStatusEnum,
+      fieldNames: { label: 'desc', value: 'id' },
+      showSearch: true,
+      optionFilterProp: 'desc'
+    }
+  },
+  {
+    label: '发布渠道',
+    value: 'sendChannel',
+    el: 'select',
+    props: {
+      options: channelTypeEnum,
+      fieldNames: { label: 'desc', value: 'id' },
+      showSearch: true,
+      optionFilterProp: 'desc'
+    }
+  }
+];
+
+// table配置
+const columns = [
+  {
+    title: '序号',
+    dataIndex: 'number',
+    customRender({ text, record, index, column }) {
+      return index + 1;
+    }
+  },
+  {
+    title: '模板编码',
+    dataIndex: 'id'
+  },
+  {
+    title: '模板名称',
+    dataIndex: 'name'
+  },
+  {
+    title: '接收账号类型',
+    dataIndex: 'idType',
+    customRender({ text }) {
+      return filterEnum(text, idTypeEnum, { value: 'id', label: 'desc' });
+    }
+  },
+  {
+    title: '消息类型',
+    dataIndex: 'msgType',
+    customRender({ text }) {
+      return filterEnum(text, msgTypeEnum, { value: 'id', label: 'desc' });
+    }
+  },
+  {
+    title: '模板类型',
+    dataIndex: 'templateType',
+    customRender({ text }) {
+      return filterEnum(text, TEMPLATE_STATUS_TYPE_ENUM);
+    }
+  },
+  {
+    title: '发布渠道',
+    dataIndex: 'sendChannel',
+    customRender({ text }) {
+      return filterEnum(text, channelTypeEnum, { value: 'id', label: 'desc' });
+    }
+  },
+  {
+    title: '备注',
+    dataIndex: 'remark'
+  },
+  {
+    title: '开启状态',
+    dataIndex: 'templateStatus',
+    customRender({ text }) {
+      return filterEnum(text, templateStatusEnum, { value: 'id', label: 'desc' });
+    }
+  },
+  {
+    title: '操作',
+    dataIndex: 'action'
+  }
+];
+</script>

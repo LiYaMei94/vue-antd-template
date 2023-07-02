@@ -54,12 +54,54 @@ const routes = [
   {
     path: '/',
     component: BasicLayout,
-    redirect: '/home',
+    redirect: '/channel/list',
     children: [
       {
         name: 'Home',
         path: '/home',
         component: Home
+      },
+      /*渠道账号*/
+      {
+        name: 'ChannelList',
+        path: '/channel/list',
+        component: () => import(/* webpackChunkName: "channel" */ '@/views/channelManage/list.vue'),
+        meta: {
+          key: '1-1'
+        }
+      },
+      /*消息模板*/
+      {
+        name: 'MessageMouldList',
+        path: '/message/mould/list',
+        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/list.vue'),
+        meta: {
+          key: '1-2'
+        }
+      },
+      {
+        name: 'MessageMouldCreate',
+        path: '/message/mould/:type',
+        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/edit.vue'),
+        meta: {
+          key: '1-2'
+        }
+      },
+      {
+        name: 'MessageMouldEdit',
+        path: '/message/mould/:type/:id',
+        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/edit.vue'),
+        meta: {
+          key: '1-2'
+        }
+      },
+      {
+        name: 'MessageMouldDetail',
+        path: '/message/mould/:type/:id',
+        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/edit.vue'),
+        meta: {
+          key: '1-2'
+        }
       }
     ]
   }

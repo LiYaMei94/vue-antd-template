@@ -1,5 +1,5 @@
 <template>
-  <SearchForm v-bind="{ formConfig, formatSearchParams, initSearchParams }" :search="search" :reset="reset"></SearchForm>
+  <SearchForm v-bind="{ formConfig, formatSearchParams, initSearchParams, labelCol }" :search="search" :reset="reset"></SearchForm>
   <div class="pro-table">
     <div class="pro-table-header">
       <div class="pro-table-header-left">
@@ -20,9 +20,13 @@
         </slot>
       </div>
     </div>
-    <a-table :dataSource="tableData" :columns="newColumns" v-bind="{ ...tableConfig }"></a-table>
-    <div class="pro-table-pagination">
-      <a-pagination v-bind="{ ...config }" :total="page.total" @change="handleSizeChange" />
+    <a-table size="small" :dataSource="tableData" :columns="newColumns" v-bind="{ ...tableConfig }" :rowKey="rowKey" :pagination="false">
+      <template #bodyCell="{ column, text, record }">
+        <slot name="bodyCell" :dataInfo="{ column, text, record }"></slot>
+      </template>
+    </a-table>
+    <div class="table-pagination">
+      <a-pagination v-if="page.total > 0" v-bind="{ ...config, ...page }" :total="page.total" @change="handleSizeChange" />
     </div>
   </div>
 </template>
@@ -60,7 +64,7 @@ const props = defineProps({
     default: null
   },
   requestApi: {
-    type: Promise,
+    type: Function,
     default: null
   },
   columns: {
@@ -82,11 +86,15 @@ const props = defineProps({
   tableConfig: {
     type: Object,
     default: {}
+  },
+  rowKey: {
+    type: [String, Function],
+    default: (record, index) => index
   }
 });
 
 const newColumns = ref(props.columns);
-const { config, handleSizeChange, tableData, page } = useTable({ searchParam, requestApi: props.requestApi }) || {};
+const { config, handleSizeChange, tableData, page, getTableData } = useTable({ searchParam, requestApi: props.requestApi }) || {};
 
 // 更新表格columns
 const updateColumns = (cols) => {
@@ -95,15 +103,18 @@ const updateColumns = (cols) => {
 
 // 查询
 const search = (params) => {
-  console.log('params===', params);
   searchParam.value = { ...props.initSearchParams, ...params };
+  getTableData && getTableData();
 };
 
 // 重置
 const reset = (params) => {
-  console.log('params===', params);
   searchParam.value = { ...props.initSearchParams, ...params };
+  getTableData && getTableData();
 };
+
+// 暴露给上层组件的方法
+defineExpose({ search: getTableData });
 </script>
 
 <style lang="less" scoped>
@@ -124,13 +135,6 @@ const reset = (params) => {
       align-items: center;
       justify-content: flex-end;
     }
-  }
-  .pro-table-pagination {
-    width: 100%;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
   }
 }
 </style>

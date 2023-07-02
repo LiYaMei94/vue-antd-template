@@ -1,6 +1,5 @@
 import { DEFAULT_PRIMARY_COLOR, LIGHT_THEME } from '@/theme';
 import db from '@/utils/db';
-
 const DB = new db();
 
 export default {

@@ -13,8 +13,8 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.1.4",
     "@ant-design/icons-vue": "^6.1.0",
+    "@tinymce/tinymce-vue": "^5.1.0",
     "@vueuse/core": "^10.2.0",
     "ant-design-vue": "^3.2.20",
     "axios": "^1.4.0",
@@ -22,6 +22,7 @@
     "dayjs": "^1.11.8",
     "js-base64": "^3.7.5",
     "lodash": "^4.17.21",
+    "tinymce": "^6.5.1",
     "vue": "^3.2.13",
     "vue-router": "^4.2.2",
     "vuex": "^4.0.2"

@@ -13,7 +13,7 @@
 import SearchForm from '@/components/SearchForm';
 import ProTable from '@/components/ProTable';
 import { ref } from 'vue';
-import { dateFormat, getTime } from '@/utils/day.js';
+import { dateFormat, getTime } from '@/utils/day';
 
 const columns = [
   {

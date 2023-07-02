@@ -27,8 +27,17 @@
   </a-dropdown>
 </template>
 <script setup>
+import db from '@/utils/db';
+import { ACCESS_TOKEN } from '@/utils/const';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const DB = new db();
 const changePassword = () => {};
-const logout = () => {};
+const logout = () => {
+  DB.deleteLocal(ACCESS_TOKEN);
+  router.push('/user/login');
+};
 </script>
 <style lang="less" scoped>
 .user-container {

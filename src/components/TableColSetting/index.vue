@@ -63,7 +63,8 @@ const allSelectedRowKeys = _.map(props.colData, 'dataIndex');
 const tableName = props.tableName || unref(currentRoute).name;
 // 缓存当前表格的列设置
 const storageKey = `${tableName}-table-columns`;
-const defaultSelectedRowKeys = DB.getLocal(storageKey) || allSelectedRowKeys;
+const storageRowKeys = DB.getLocal(storageKey);
+const defaultSelectedRowKeys = storageRowKeys && DB.getLocal(storageKey).length !== 0 ? storageRowKeys : allSelectedRowKeys;
 const selectedRowKeys = ref([...defaultSelectedRowKeys]);
 
 const rowSelection = computed(() => {
@@ -84,7 +85,6 @@ const handleChange = () => {
   DB.setLocal(storageKey, unref(selectedRowKeys));
   props.callback && props.callback(result);
 };
-// 页面刷新从内存中读取columns
 handleChange();
 
 // 拖拽排序

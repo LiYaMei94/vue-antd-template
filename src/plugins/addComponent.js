@@ -34,7 +34,16 @@ import {
   Space,
   Dropdown,
   MenuDivider,
-  Avatar
+  Avatar,
+  Drawer,
+  Textarea,
+  Divider,
+  Breadcrumb,
+  BreadcrumbItem,
+  PageHeader,
+  RadioGroup,
+  Radio,
+  Popconfirm
 } from 'ant-design-vue';
 
 import {
@@ -48,7 +57,11 @@ import {
   FullscreenOutlined,
   FullscreenExitOutlined,
   MenuFoldOutlined,
-  MenuUnfoldOutlined
+  MenuUnfoldOutlined,
+  CloseOutlined,
+  EditOutlined,
+  CheckOutlined,
+  DeleteOutlined
 } from '@ant-design/icons-vue';
 
 import CustomSubMenu from '@/components/SubMenu';
@@ -92,6 +105,15 @@ export default {
     app.component(Dropdown.name, Dropdown);
     app.component(MenuDivider.name, MenuDivider);
     app.component(Avatar.name, Avatar);
+    app.component(Drawer.name, Drawer);
+    app.component(Textarea.name, Textarea);
+    app.component(Divider.name, Divider);
+    app.component(Breadcrumb.name, Breadcrumb);
+    app.component(BreadcrumbItem.name, BreadcrumbItem);
+    app.component(PageHeader.name, PageHeader);
+    app.component(RadioGroup.name, RadioGroup);
+    app.component(Radio.name, Radio);
+    app.component(Popconfirm.name, Popconfirm);
 
     // 图标
     app.component('SyncOutlined', SyncOutlined);
@@ -105,6 +127,10 @@ export default {
     app.component('FullscreenExitOutlined', FullscreenExitOutlined);
     app.component('MenuFoldOutlined', MenuFoldOutlined);
     app.component('MenuUnfoldOutlined', MenuUnfoldOutlined);
+    app.component('CloseOutlined', CloseOutlined);
+    app.component('EditOutlined', EditOutlined);
+    app.component('CheckOutlined', CheckOutlined);
+    app.component('DeleteOutlined', DeleteOutlined);
 
     // 自定义组件
     app.component('CustomSubMenu', CustomSubMenu);

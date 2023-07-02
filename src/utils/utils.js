@@ -1,4 +1,9 @@
+import { message as Message } from 'ant-design-vue';
 import _ from 'lodash';
+
+export const isNumber = (value) => {
+  return Object.prototype.toString.call(value) === '[object Number]';
+};
 
 export const isArray = (value) => {
   return Object.prototype.toString.call(value) === '[object Array]';
@@ -12,29 +17,6 @@ export const isNull = (val) => {
   return (
     val === 'undefined' || val === undefined || val == null || val === 'null' || val.toString().trim() === '' || _.isNaN(val) || val === 'unknown'
   );
-};
-
-/**
- * @description 处理值无数据情况
- * @param {*} callValue 需要处理的值
- * @returns {String}
- * */
-export const formatValue = (callValue) => {
-  // 如果当前值为数组，使用 / 拼接（根据需求自定义）
-  if (isArray(callValue)) return callValue.length ? callValue.join(' / ') : '--';
-  return callValue ?? '--';
-};
-
-/**
- * @description 处理 prop 为多级嵌套的情况，返回的数据 (列如: prop: user.name)
- * @param {Object} row 当前行数据
- * @param {String} prop 当前 prop
- * @returns {*}
- * */
-export const handleRowAccordingToProp = (row, prop) => {
-  if (!prop.includes('.')) return row[prop] ?? '--';
-  prop.split('.').forEach((item) => (row = row[item] ?? '--'));
-  return row;
 };
 
 /**
@@ -54,8 +36,68 @@ export const filterEnum = (callValue, enumData, fieldNames, type) => {
   if (Array.isArray(enumData)) filterData = findItemNested(enumData, callValue, value, children);
   // 判断是否输出的结果为 tag 类型
   if (type == 'tag') {
-    return filterData?.tagType ? filterData.tagType : '';
+    return filterData?.tagType ? filterData.tagType : callValue;
   } else {
-    return filterData ? filterData[label] : '--';
+    return filterData ? filterData[label] : callValue;
   }
+};
+
+/**
+ * @description 递归查找 callValue 对应的 enum 值
+ * */
+export const findItemNested = (enumData, callValue, value, children) => {
+  return enumData.reduce((accumulator, current) => {
+    if (accumulator) return accumulator;
+    if (current[value] === callValue) return current;
+    if (current[children]) return findItemNested(current[children], callValue, value, children);
+  }, null);
+};
+
+/**
+ * html展示json
+ */
+export const syntaxHighlight = (json) => {
+  if (typeof json != 'string') {
+    json = JSON.stringify(json, undefined, 2);
+  }
+  json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+    var cls = 'number';
+    if (/^"/.test(match)) {
+      if (/:$/.test(match)) {
+        cls = 'key';
+      } else {
+        cls = 'string';
+      }
+    } else if (/true|false/.test(match)) {
+      cls = 'boolean';
+    } else if (/null/.test(match)) {
+      cls = 'null';
+    }
+    return '<span class="' + cls + '">' + match + '</span>';
+  });
+};
+
+/**
+ * 网络请求业务自己处理响应数据
+ * @param {*} options
+ * @returns
+ */
+export const resultCallBack = (options) => {
+  const { result, successMessage } = options || {};
+  return new Promise((resolve, reject) => {
+    const { code, data: res, message } = result || {};
+    if (code == 200) {
+      Message.success(successMessage || '操作成功');
+      return resolve(res);
+    } else {
+      Message.error(message);
+    }
+  });
+};
+
+export const buildShortUUID = (prefix = '') => {
+  const time = Date.now();
+  const random = Math.floor(Math.random() * 1000000000);
+  return prefix + '_' + random + String(time);
 };

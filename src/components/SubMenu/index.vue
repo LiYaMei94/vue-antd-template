@@ -10,7 +10,10 @@
           <template #icon>
             <component :is="item.icon"></component>
           </template>
-          {{ item.title }}
+          <template v-if="item.name">
+            <router-link :to="{ name: item.name }">{{ item.title }}</router-link>
+          </template>
+          <template v-else>{{ item.title }}</template>
         </a-menu-item>
       </template>
       <template v-else>

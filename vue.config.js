@@ -37,5 +37,17 @@ module.exports = defineConfig({
   configureWebpack: (config) => {
     // 打包体积分析
     // config.plugins.push(new BundleAnalyzerPlugin({ openAnalyzer: false }));
+  },
+  devServer: {
+    hot: false,
+    liveReload: false,
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'http://10.28.97.163:8099', //要代理的本地api地址，也可以换成线上测试地址
+        changeOrigin: true, //允许跨域
+        pathRewrite: { '^/api': '' } //将/api开头替换为/api
+      }
+    }
   }
 });

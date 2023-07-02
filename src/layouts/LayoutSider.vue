@@ -3,15 +3,25 @@
     <template #trigger>
       <component :is="collapsed ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined'"></component>
     </template>
-
-    <a-menu :theme="theme" triggerSubMenuAction="click" mode="inline">
+    <a-menu
+      :theme="theme"
+      triggerSubMenuAction="click"
+      mode="inline"
+      :inlineCollapsed="false"
+      v-model:openKeys="openKeys"
+      v-model:selectedKeys="selectedKeys"
+      @openChange="onOpenChange"
+    >
       <template v-for="item in list" :key="item.key">
         <template v-if="!item.children">
           <a-menu-item :key="item.key">
             <template #icon>
               <component :is="item.icon"></component>
             </template>
-            {{ item.title }}
+            <template v-if="item.name">
+              <router-link :to="{ name: item.name }">{{ item.title }}</router-link>
+            </template>
+            <template v-else>{{ item.title }}</template>
           </a-menu-item>
         </template>
         <template v-else>
@@ -23,40 +33,54 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, unref } from 'vue';
 import { LIGHT_THEME } from '@/theme';
+import { useRouter } from 'vue-router';
+
+const { currentRoute } = useRouter();
 
 const props = defineProps({
   theme: {
     type: String,
     default: LIGHT_THEME
+  },
+  isShowCurrent: {
+    type: Boolean,
+    default: true
   }
 });
 
-const selectedKeys = ref([]);
+const currentRouteKey = unref(currentRoute).meta?.key;
+const openKeys = ref(['1']);
+const selectedKeys = ref([currentRouteKey]);
 const collapsed = ref(false);
 
-// TODO:权限
 const list = [
   {
     key: '1',
-    title: 'Option 1',
-    icon: 'MailOutlined'
-  },
-  {
-    key: '2',
-    title: 'Navigation 2',
-    icon: 'PieChartOutlined',
+    title: '配置管理',
+    icon: 'MailOutlined',
     children: [
       {
-        key: '2.1',
-        title: 'Navigation 3',
-        icon: 'SettingOutlined',
-        children: [{ key: '2.1.1', title: 'Option 2.1.1' }]
+        key: '1-1',
+        title: '渠道账号',
+        icon: 'PieChartOutlined',
+        name: 'ChannelList'
+      },
+      {
+        key: '1-2',
+        title: '消息模板',
+        icon: 'PieChartOutlined',
+        name: 'MessageMouldList'
       }
     ]
   }
 ];
+
+const onOpenChange = (keys) => {
+  openKeys.value = props.isShowCurrent ? [keys[keys.length - 1]] : keys;
+  selectedKeys.value = [];
+};
 </script>
 
 <style lang="less" scope></style>

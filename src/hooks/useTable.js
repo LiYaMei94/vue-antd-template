@@ -1,18 +1,18 @@
-import { reactive, toRefs } from 'vue';
+import { reactive, toRefs, unref } from 'vue';
 
 export const useTable = (options) => {
-  const { searchParam, requestApi, firstRequestAuto = true } = options || {};
+  const { searchParam, requestApi, firstRequestAuto = true, hideOnSinglePage = false } = options || {};
   const state = reactive({
     // 表格数据
     tableData: [],
     // 分页数据
     page: {
       // 当前页数
-      pageNum: 1,
+      current: 0,
       // 每页显示条数
       pageSize: 10,
       // 总条数
-      total: 100
+      total: 0
     },
     colData: []
   });
@@ -20,20 +20,21 @@ export const useTable = (options) => {
   //   获取表格数据
   const getTableData = async () => {
     try {
-      // TODO:
-      console.log('{ ...searchParam, ...state.page }', { ...searchParam.value, ...state.page });
-      //   const data = await (api && requestApi({ ...searchParam, ...state.page }));
-      //   console.log('data', data);
-      state.tableData = [];
-      state.page = { ...state.page, total: 200 };
+      const { pageSize, current } = state.page || {};
+      const data = await (requestApi && requestApi({ entity: { ...unref(searchParam) }, pageQuery: { pageSize, pageNum: current } }));
+      // const data = { data: [{ name: 'name', description: 'description', id: 1 }], total: 10, pageNum: 1, pageSize: 10 };
+      const { total, data: result, pageNum, pageSize: size } = data || {};
+      console.log('data', data, result);
+      state.tableData = result || [];
+      state.page = { total, current: pageNum, pageSize: size };
     } catch (error) {
       console.log('表格数据获取失败：', error);
     }
   };
 
   //   页码变化的回调
-  const handleSizeChange = (current, size) => {
-    state.page = { ...state.page, pageNum: current, pageSize: size };
+  const handleSizeChange = (current, pageSize) => {
+    state.page = { ...state.page, current, pageSize };
     getTableData();
   };
 
@@ -44,18 +45,18 @@ export const useTable = (options) => {
   const init = () => {
     //   首次请求
     firstRequestAuto && getTableData();
-    // state.colData = columns.
   };
   init();
 
   return {
     ...toRefs(state),
     config: {
-      hideOnSinglePage: true,
+      hideOnSinglePage,
       showSizeChanger: true,
       showQuickJumper: true,
       showTotal: showTotalText
     },
-    handleSizeChange
+    handleSizeChange,
+    getTableData
   };
 };

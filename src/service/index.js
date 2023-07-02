@@ -3,13 +3,15 @@ import store from '@/store';
 import db from '@/utils/db';
 import { ACCESS_TOKEN } from '@/utils/const';
 import { notification } from 'ant-design-vue'; // FIXME:提示可根据自己的需要更换
-import { isObject } from '@/utils/utils';
+import { isObject, isNull } from '@/utils/utils';
+import router from '@/router';
 
 const DB = new db();
 
-const service = axios.create({
+const instance = axios.create({
   // FIXME:如果是多个baseURL关闭此处，在api调用是加入
-  baseURL: process.env.VUE_APP_BASE_API,
+  // baseURL: process.env.VUE_APP_BASE_API,
+  baseURL: '/api',
   responseType: 'json',
   skipHandleResponse: false //默认不跳过数据处理
 });
@@ -18,112 +20,129 @@ const service = axios.create({
  * 异常拦截处理器
  * @param {*} error
  */
-const errorHandler = (error) => {
-  if (error.response) {
-    const error = {};
-    const { status, data } = error.response || {};
-    switch (status) {
+const errorHandler = (error, Status200 = false) => {
+  if (error) {
+    let errorMap = {};
+    const { status, data, code, message } = error.response || error || {};
+    const newCode = Number(status || code);
+    const newMessage = data?.message || message;
+    switch (newCode) {
       case 400:
-        error = {
+        errorMap = {
           message: '请求失败！请您稍后重试'
         };
         break;
       case 401:
-        // TODO:跳转登录
-        error = {
+        errorMap = {
           message: '登录失效！请您重新登录'
         };
         break;
       case 403:
-        error = {
+        errorMap = {
           message: '当前账号无权限访问！'
         };
         break;
       case 404:
-        error = {
+        errorMap = {
           message: '你所访问的资源不存在！'
         };
         break;
       case 405:
-        error = {
+        errorMap = {
           message: '请求方式错误！请您稍后重试'
         };
         break;
-      case 408:
-        break;
       case 500:
-        error = {
+        errorMap = {
           message: '服务异常！'
         };
         break;
       case 502:
-        error = {
+        errorMap = {
           message: '网关错误！'
         };
         break;
       case 503:
-        error = {
+        errorMap = {
           message: '服务不可用！'
         };
         break;
       case 504:
-        error = {
+        errorMap = {
           message: '网关超时！'
         };
         break;
       default:
-        error = {
+        errorMap = {
           message: '请求失败！'
         };
     }
 
+    const key = 'errorNotification';
     notification.error({
-      description: data.message,
-      ...error
+      description: newMessage,
+      ...errorMap,
+      key
     });
+    if (newCode === 401) {
+      DB.deleteLocal(ACCESS_TOKEN);
+      setTimeout(() => {
+        notification.close(key);
+        router.push('/user/login');
+      }, 1000);
+    }
   }
-  return Promise.reject(error);
+  // 网络请求成功，code非200使用resolve返回
+  return Status200 ? Promise.resolve(error) : Promise.reject(error);
 };
 
 /**
- * 移除空字符串，null, undefined
+ * 递归将空字符串，null, undefined、'undefined','null','unknown'
  * @param {*} config
  */
 const clearEmptyParam = (config) => {
   ['data', 'params'].forEach((item) => {
-    if (config[item]) {
-      const keys = Object.keys(config[item]);
-      if (keys.length) {
-        keys.forEach((key) => {
-          if (['', undefined, null].includes(config[item][key]) && isObject(config[item])) {
-            delete config[item][key];
+    const fn = (data) => {
+      if (typeof data === 'object') {
+        if (Array.isArray(data)) {
+          for (let item of data) {
+            fn(item);
           }
-        });
+        } else {
+          for (let key in data) {
+            if (isNull(data[key])) {
+              data[key] = null;
+            } else if (typeof data[key] === 'object') {
+              fn(data[key]);
+            }
+          }
+        }
       }
-    }
+    };
+    fn(config[item]);
   });
 };
 
-request.interceptors.request.use((config) => {
+instance.interceptors.request.use((config) => {
   const token = DB.getLocal(ACCESS_TOKEN);
   // FIXME:如果 token 存在,让每个请求携带自定义 token 请根据实际情况自行修改
   if (token) {
-    config.headers[ACCESS_TOKEN] = token;
+    config.headers['Authorization'] = `Bearer ${token}`;
   }
   clearEmptyParam(config);
   return config;
 }, errorHandler);
 
-request.interceptors.response.use((response) => {
+instance.interceptors.response.use((response) => {
   const result = response?.data || {};
-  const { code, data } = result || {};
+  const { code, data, total, pageNum, pageSize } = result || {};
   const { skipHandleResponse = false } = response?.config || {};
-  if (!skipHandleResponse && code === 200) {
-    return data;
+  if (!skipHandleResponse && code == 200) {
+    return { data, total, pageNum, pageSize };
   }
 
-  if (!skipHandleResponse && code !== 200) {
-    errorHandler(result);
+  if (!skipHandleResponse && code != 200) {
+    errorHandler(result, true);
   }
   return response.data;
 }, errorHandler);
@@ -159,4 +178,17 @@ export const post = (url, data, options) => {
   );
 };
 
-export default service;
+/**
+ *
+ * @param url delete 请求
+ * @param data
+ * @param options
+ * @returns
+ */
+export const deleteFn = (url, data, options) => {
+  return instance.delete(url, {
+    params: data,
+    ...options
+  });
+};
+export default instance;

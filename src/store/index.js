@@ -5,6 +5,9 @@ import global from './modules/global';
  */
 const store = createStore({
   state: {},
+  actions: {},
+  mutations: {},
+
   modules: {
     global
   }
