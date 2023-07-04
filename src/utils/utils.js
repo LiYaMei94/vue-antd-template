@@ -87,7 +87,7 @@ export const resultCallBack = (options) => {
   const { result, successMessage } = options || {};
   return new Promise((resolve, reject) => {
     const { code, data: res, message } = result || {};
-    if (code == 200) {
+    if (code && Number(code) === 200) {
       Message.success(successMessage || '操作成功');
       return resolve(res);
     } else {

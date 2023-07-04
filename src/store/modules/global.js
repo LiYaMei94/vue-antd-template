@@ -6,20 +6,24 @@ export default {
   state: () => ({
     // 主题颜色
     primary: DB.getLocal('primary-color') || DEFAULT_PRIMARY_COLOR,
-    // 折叠菜单
-    isCollapse: false,
-    theme: DB.getLocal('theme') || LIGHT_THEME
+    // 主题模式
+    theme: DB.getLocal('theme') || LIGHT_THEME,
+    allEnum: DB.getLocal('allEnum') || {}
   }),
-  getters: {},
+  getters: {
+    channelTypeEnum(state) {
+      console.log('state', state);
+    }
+  },
   actions: {
     setGlobalPrimary({ commit }, val) {
       commit('setGlobalPrimary', val);
     },
-    setIsDrak({ commit }, val) {
-      commit('setIsDrak', val);
-    },
     setThemeModel({ commit }, val) {
       commit('setThemeModel', val);
+    },
+    setAllEnum({ commit }, val) {
+      commit('setAllEnum', val);
     }
   },
   mutations: {
@@ -30,6 +34,10 @@ export default {
     setThemeModel(state, val) {
       DB.setLocal('theme', val);
       state.theme = val;
+    },
+    setAllEnum(state, val) {
+      DB.setLocal('allEnum', val);
+      state.allEnum = val;
     }
   }
 };

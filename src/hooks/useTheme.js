@@ -19,7 +19,6 @@ export const useTheme = () => {
     }
   ];
 
-  // console.log('map', map.state);
   // 修改主题颜色
   const changePrimaryColor = (val) => {
     val = val || DEFAULT_PRIMARY_COLOR;

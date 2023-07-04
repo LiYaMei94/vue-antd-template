@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4765736",
+      "name": "question-circle",
+      "font_class": "question-circle",
+      "unicode": "e782",
+      "unicode_decimal": 59266
+    },
+    {
+      "icon_id": "6151281",
+      "name": "question-circle",
+      "font_class": "question-circle1",
+      "unicode": "e81f",
+      "unicode_decimal": 59423
+    },
+    {
       "icon_id": "1346236",
       "name": "主题",
       "font_class": "zhuti",

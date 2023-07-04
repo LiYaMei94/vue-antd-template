@@ -12,7 +12,9 @@
           <span class="table-custom-cell">
             <a class="table-custom-primary" @click="handleOpen({ type: EDIT, id: record.id })">修改</a>
             <a-divider type="vertical" />
-            <a class="table-custom-danger" @click="handleDelete(record.id)">删除</a>
+            <a-popconfirm title="确认要删除吗？" @confirm="handleDelete(record.id)">
+              <a class="table-custom-danger">删除</a>
+            </a-popconfirm>
           </span>
         </template>
       </template>
@@ -20,25 +22,21 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, toRefs, unref, computed, watch } from 'vue';
+import { ref, reactive, toRefs, unref, computed, watch, onMounted } from 'vue';
 import ProTable from '@/components/ProTable';
 import { CREATE, EDIT, DETAIL, TEMPLATE_STATUS_TYPE_ENUM, PAGE_ROUTE_NAME_MAP } from '@/utils/const';
 import { mouldList, mouldDelete } from '@/apis/mould';
 import { useStore } from 'vuex';
 import { filterEnum } from '@/utils/utils';
-import { getLocalAllEnum } from '@/apis';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-let channelTypeEnum, idTypeEnum, msgTypeEnum, templateStatusEnum;
-getLocalAllEnum()
-  .then((enumData) => {
-    channelTypeEnum = enumData?.channelTypeEnum;
-    idTypeEnum = enumData?.idTypeEnum;
-    msgTypeEnum = enumData?.msgTypeEnum;
-    templateStatusEnum = enumData?.templateStatusEnum;
-  })
-  .catch((error) => {});
+const { state: storeState } = useStore();
+const channelTypeEnum = computed(() => storeState?.global?.allEnum?.channelType);
+const idTypeEnum = computed(() => storeState?.global?.allEnum?.idType);
+const msgTypeEnum = computed(() => storeState?.global?.allEnum?.messageType);
+const templateStatusEnum = computed(() => storeState?.global?.allEnum?.messageTemplateStatus);
+
 const state = reactive({
   type: '',
   id: null,
@@ -73,7 +71,7 @@ const formConfig = [
     value: 'idType',
     el: 'select',
     props: {
-      options: idTypeEnum,
+      options: idTypeEnum.value,
       fieldNames: { label: 'desc', value: 'id' },
       showSearch: true,
       optionFilterProp: 'desc'
@@ -84,7 +82,7 @@ const formConfig = [
     value: 'msgType',
     el: 'select',
     props: {
-      options: msgTypeEnum,
+      options: msgTypeEnum.value,
       fieldNames: { label: 'desc', value: 'id' },
       showSearch: true,
       optionFilterProp: 'desc'
@@ -95,7 +93,7 @@ const formConfig = [
     value: 'templateStatus',
     el: 'select',
     props: {
-      options: templateStatusEnum,
+      options: templateStatusEnum.value,
       fieldNames: { label: 'desc', value: 'id' },
       showSearch: true,
       optionFilterProp: 'desc'
@@ -106,7 +104,7 @@ const formConfig = [
     value: 'sendChannel',
     el: 'select',
     props: {
-      options: channelTypeEnum,
+      options: channelTypeEnum.value,
       fieldNames: { label: 'desc', value: 'id' },
       showSearch: true,
       optionFilterProp: 'desc'
@@ -135,14 +133,14 @@ const columns = [
     title: '接收账号类型',
     dataIndex: 'idType',
     customRender({ text }) {
-      return filterEnum(text, idTypeEnum, { value: 'id', label: 'desc' });
+      return filterEnum(text, idTypeEnum.value, { value: 'id', label: 'desc' });
     }
   },
   {
     title: '消息类型',
     dataIndex: 'msgType',
     customRender({ text }) {
-      return filterEnum(text, msgTypeEnum, { value: 'id', label: 'desc' });
+      return filterEnum(text, msgTypeEnum.value, { value: 'id', label: 'desc' });
     }
   },
   {
@@ -156,7 +154,7 @@ const columns = [
     title: '发布渠道',
     dataIndex: 'sendChannel',
     customRender({ text }) {
-      return filterEnum(text, channelTypeEnum, { value: 'id', label: 'desc' });
+      return filterEnum(text, channelTypeEnum.value, { value: 'id', label: 'desc' });
     }
   },
   {
@@ -167,7 +165,7 @@ const columns = [
     title: '开启状态',
     dataIndex: 'templateStatus',
     customRender({ text }) {
-      return filterEnum(text, templateStatusEnum, { value: 'id', label: 'desc' });
+      return filterEnum(text, templateStatusEnum.value, { value: 'id', label: 'desc' });
     }
   },
   {

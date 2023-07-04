@@ -31,19 +31,19 @@
     </a-form>
     <template #footer>
       <div class="ant-drawer-footer-custom">
-        <a-button @click="handleClose(false)">取消</a-button>
-        <a-button class="margin-left-10" type="primary" @click="onSubmit">提交</a-button>
+        <a-button @click="handleClose(false)">{{ !isDetail ? '取消' : '关闭' }}</a-button>
+        <a-button v-if="!isDetail" class="margin-left-10" type="primary" @click="onSubmit">提交</a-button>
       </div>
     </template>
   </a-drawer>
 </template>
 <script setup>
-import { ref, watch, reactive, unref, toRefs } from 'vue';
-import { CREATE, PAGE_TITLE_MAP, EDIT, DETAIL, CHANNEL_ACCOUNT_CONFIG_DEMO } from '@/utils/const.js';
+import { ref, watch, reactive, unref, toRefs, computed } from 'vue';
+import { CREATE, PAGE_TITLE_MAP, EDIT, DETAIL, CHANNEL_ACCOUNT_CONFIG_DEMO } from '@/utils/const';
 import { syntaxHighlight } from '@/utils/utils';
 import { channelDetail, channelSave } from '@/apis/channel';
 import { useRouter } from 'vue-router';
-import { getLocalAllEnum } from '@/apis';
+import { useStore } from 'vuex';
 
 const { push } = useRouter();
 const props = defineProps({
@@ -76,12 +76,8 @@ const formState = ref({
   remark: ''
 });
 
-let channelTypeEnum = [];
-getLocalAllEnum()
-  .then((enumData) => {
-    channelTypeEnum = enumData?.channelTypeEnum;
-  })
-  .catch((error) => {});
+const { state: storeState } = useStore();
+const channelTypeEnum = computed(() => storeState?.global?.allEnum?.channelType);
 // 获取详情回填form表单
 const getChannelDetail = async () => {
   try {

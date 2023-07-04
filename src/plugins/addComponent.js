@@ -43,7 +43,8 @@ import {
   PageHeader,
   RadioGroup,
   Radio,
-  Popconfirm
+  Popconfirm,
+  Modal
 } from 'ant-design-vue';
 
 import {
@@ -61,7 +62,8 @@ import {
   CloseOutlined,
   EditOutlined,
   CheckOutlined,
-  DeleteOutlined
+  DeleteOutlined,
+  DoubleRightOutlined
 } from '@ant-design/icons-vue';
 
 import CustomSubMenu from '@/components/SubMenu';
@@ -114,6 +116,7 @@ export default {
     app.component(RadioGroup.name, RadioGroup);
     app.component(Radio.name, Radio);
     app.component(Popconfirm.name, Popconfirm);
+    app.component(Modal.name, Modal);
 
     // 图标
     app.component('SyncOutlined', SyncOutlined);
@@ -131,6 +134,7 @@ export default {
     app.component('EditOutlined', EditOutlined);
     app.component('CheckOutlined', CheckOutlined);
     app.component('DeleteOutlined', DeleteOutlined);
+    app.component('DoubleRightOutlined', DoubleRightOutlined);
 
     // 自定义组件
     app.component('CustomSubMenu', CustomSubMenu);

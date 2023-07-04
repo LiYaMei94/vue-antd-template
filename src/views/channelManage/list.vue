@@ -12,7 +12,9 @@
           <span class="table-custom-cell">
             <a class="table-custom-primary" @click="handleOpen({ type: EDIT, id: record.id })">修改</a>
             <a-divider type="vertical" />
-            <a class="table-custom-danger" @click="handleDelete(record.id)">删除</a>
+            <a-popconfirm title="确认要删除吗？" @confirm="handleDelete(record.id)">
+              <a class="table-custom-danger">删除</a>
+            </a-popconfirm>
           </span>
         </template>
       </template>
@@ -21,21 +23,16 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, toRefs, unref, computed, watch } from 'vue';
+import { ref, reactive, toRefs, unref, computed, watch, onMounted } from 'vue';
 import ProTable from '@/components/ProTable';
 import Edit from './edit.vue';
 import { CREATE, EDIT, DETAIL } from '@/utils/const';
 import { channelList, channelDelete } from '@/apis/channel';
 import { useStore } from 'vuex';
 import { filterEnum } from '@/utils/utils';
-import { getLocalAllEnum } from '@/apis';
 
-let channelTypeEnum = [];
-getLocalAllEnum()
-  .then((enumData) => {
-    channelTypeEnum = enumData?.channelTypeEnum;
-  })
-  .catch((error) => {});
+const { state: storeState } = useStore();
+const channelTypeEnum = computed(() => storeState?.global?.allEnum?.channelType);
 
 const state = reactive({
   type: '',
@@ -78,7 +75,7 @@ const formConfig = [
     value: 'sendChannel',
     el: 'select',
     props: {
-      options: channelTypeEnum,
+      options: channelTypeEnum.value,
       fieldNames: { label: 'desc', value: 'id' },
       showSearch: true,
       optionFilterProp: 'desc'
@@ -107,7 +104,7 @@ const columns = [
     title: '发送渠道',
     dataIndex: 'sendChannel',
     customRender({ text }) {
-      return filterEnum(text, channelTypeEnum, { value: 'id', label: 'desc' });
+      return filterEnum(text, channelTypeEnum.value, { value: 'id', label: 'desc' });
     }
   },
   {

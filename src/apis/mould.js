@@ -13,7 +13,7 @@ export const mouldDetail = (data) => {
 };
 
 export const mouldSave = (data) => {
-  return post('/message-template/save', data);
+  return post('/message-template/save', data, { skipHandleResponse: true });
 };
 
 export const templateVariableList = (data) => {
@@ -26,4 +26,12 @@ export const templateVariableSave = (data) => {
 
 export const templateVariableDelete = (data) => {
   return post('/template-variable/delete', data);
+};
+
+export const miniTempList = (data) => {
+  return get('/mini-program/template/list', data);
+};
+
+export const miniTempDetail = (data) => {
+  return get('/mini-program/detailTemplate', data);
 };

@@ -1,27 +1,28 @@
 <template>
-  <a-table :columns="columns" :data-source="newDataSource" bordered :pagination="false" :rowKey="rowKey" :customRow="tableRowClick">
+  <a-table :columns="columns" :dataSource="newDataSource" bordered :pagination="false" :rowKey="rowKey" :customRow="tableRowClick">
     <template #bodyCell="{ column, text, record, index }">
       <template v-if="editColumns.includes(column.dataIndex)">
-        <div class="editable-cell">
-          <div v-if="!isNull(record[key])" class="editable-cell-input-wrapper">
-            <component
-              :is="column?.render || (column?.el && `a-${column?.el}`) || `a-input`"
-              placeholder="输入内容"
-              @change="handleColChange($event, column.dataIndex, record)"
-              :value="text"
-            ></component>
-          </div>
-          <div v-else class="editable-cell-text-wrapper">
-            {{ text || ' ' }}
-          </div>
+        <div>
+          <component
+            v-if="!isNull(record[key])"
+            :is="column?.render || (column?.el && `a-${column?.el}`) || `a-input`"
+            placeholder="输入内容"
+            @change="handleRowChange($event, column.dataIndex, record)"
+            :value="text"
+            v-bind="{ ...column.props }"
+          ></component>
+          <template v-else>
+            {{ text }}
+          </template>
         </div>
       </template>
       <template v-else-if="column.dataIndex === 'action'">
-        <slot name="action" :dataInfo="{ column, text, record, index }"></slot>
+        <slot name="actionOther" :dataInfo="{ column, text, record, index }"></slot>
       </template>
+      <slot name="bodyCell" :dataInfo="{ column, text, record, index }"></slot>
     </template>
     <template #headerCell="{ column, text, record }">
-      <slot name="headerCell" :dataInfo="{ column, text, record, index }"></slot>
+      <slot name="headerCell" :dataInfo="{ column, text, record }"></slot>
     </template>
   </a-table>
   <div class="table-pagination" v-if="pagination.total > 1">
@@ -32,7 +33,6 @@
     <slot name="tableAdd"></slot>
   </div>
 </template>
-
 <script setup>
 import { computed, ref, reactive, watch } from 'vue';
 import _ from 'lodash';
@@ -76,6 +76,7 @@ const props = defineProps({
     default: 'myKey'
   }
 });
+
 const key = props.key;
 // 表格设置指定key，展示可编辑
 const setTableDataKey = (value) => {
@@ -84,10 +85,8 @@ const setTableDataKey = (value) => {
   });
 };
 
-// 表格添加一行的key值
 const dataIndexArr = _.map(props.columns, 'dataIndex');
 const newDataSource = ref([...setTableDataKey(props.dataSource)]);
-const editableData = reactive({});
 const count = computed(() => newDataSource.value.length);
 watch(
   () => props.dataSource,
@@ -96,7 +95,6 @@ watch(
   }
 );
 
-// 表格添加一行
 const handleAdd = () => {
   let newData = { [key]: count.value };
   dataIndexArr.forEach((element) => {
@@ -110,22 +108,15 @@ const handleAdd = () => {
   newDataSource.value.push(newData);
 };
 
-// 表格可编辑列的form组件值变化
-const handleColChange = (event, dataIndex, record) => {
+const handleRowChange = (event, dataIndex, record) => {
   const type = event?.type;
   const value = type === 'input' ? event?.target?.value : event;
   const obj = newDataSource.value.filter((item) => record[key] === item[key])[0];
   Object.assign(obj, { ...obj, [dataIndex]: value });
 };
 
-// 表格页码改变
-const handleChange = (current, size) => {
-  props?.handleSizeChange && props?.handleSizeChange({ current, size });
-};
-
 defineExpose({ dataSource: newDataSource });
 </script>
-
 <style lang="less" scoped>
 .table-add {
   width: 100%;
@@ -133,18 +124,5 @@ defineExpose({ dataSource: newDataSource });
   box-sizing: border-box;
   text-align: center;
   border: 1px solid var(--ant-line);
-}
-</style>
-<style lang="less">
-.editable-cell {
-  position: relative;
-  .editable-cell-input-wrapper,
-  .editable-cell-text-wrapper {
-    padding-right: 24px;
-  }
-
-  .editable-cell-text-wrapper {
-    padding: 5px 24px 5px 5px;
-  }
 }
 </style>

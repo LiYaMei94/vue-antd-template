@@ -33,7 +33,9 @@ import { resultCallBack } from '@/utils/utils';
 import { useRouter } from 'vue-router';
 import { ACCESS_TOKEN } from '@/utils/const';
 import { allEnum } from '@/apis/index';
+import { useStore } from 'vuex';
 
+const { dispatch } = useStore();
 const router = useRouter();
 const DB = new db();
 const formState = ref({ username: null, password: null, remember: false, uuid: null, code: null });
@@ -67,7 +69,8 @@ const onFinish = async (values) => {
       DB.setLocal(ACCESS_TOKEN, res);
       router.push({ name: `ChannelList` });
       const allEnumData = (await allEnum()).data;
-      JSON.stringify(allEnumData) !== '{}' && DB.setLocal('allEnum', allEnumData);
+      // JSON.stringify(allEnumData) !== '{}' && DB.setLocal('allEnum', allEnumData);
+      dispatch('setAllEnum', allEnumData);
       // 记住密码
       if (values.remember) {
         DB.setLocal('username', values.username);

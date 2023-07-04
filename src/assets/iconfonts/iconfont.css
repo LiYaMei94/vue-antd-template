@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'iconfont'; /* Project id 4140184 */
-  src: url('iconfont.woff2?t=1687850448752') format('woff2'), url('iconfont.woff?t=1687850448752') format('woff'),
-    url('iconfont.ttf?t=1687850448752') format('truetype');
+  src: url('iconfont.woff2?t=1688439448077') format('woff2'), url('iconfont.woff?t=1688439448077') format('woff'),
+    url('iconfont.ttf?t=1688439448077') format('truetype');
 }
 
 .iconfont {
@@ -10,6 +10,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-question-circle:before {
+  content: '\e782';
+}
+
+.icon-question-circle1:before {
+  content: '\e81f';
 }
 
 .icon-zhuti:before {

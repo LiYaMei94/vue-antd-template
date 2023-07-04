@@ -45,7 +45,7 @@ export const CHANNEL_ACCOUNT_CONFIG_DEMO = {
 export const TEMPLATE_STATUS_TYPE_ENUM = [
   {
     label: '定时',
-    value: 20
+    value: 10
   },
   {
     label: '实时',

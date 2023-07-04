@@ -7,7 +7,7 @@
       </div>
       <div class="pro-table-header-right" v-if="showToolButton">
         <slot name="toolButton">
-          <a-button v-if="refreshTableButton" shape="circle" @click="search">
+          <a-button v-if="refreshTableButton" shape="circle" @click="handleSearch">
             <template #icon><SyncOutlined /></template>
           </a-button>
           <TableColSetting v-bind="{ visible, colData: columns, callback: updateColumns, tableName }">
@@ -23,6 +23,9 @@
     <a-table size="small" :dataSource="tableData" :columns="newColumns" v-bind="{ ...tableConfig }" :rowKey="rowKey" :pagination="false">
       <template #bodyCell="{ column, text, record }">
         <slot name="bodyCell" :dataInfo="{ column, text, record }"></slot>
+      </template>
+      <template #headerCell="{ column, text, record }">
+        <slot name="headerCell" :dataInfo="{ column, text, record }"></slot>
       </template>
     </a-table>
     <div class="table-pagination">
@@ -104,6 +107,12 @@ const updateColumns = (cols) => {
 // 查询
 const search = (params) => {
   searchParam.value = { ...props.initSearchParams, ...params };
+  console.log('searchParam', searchParam.value, props.initSearchParams, params);
+  getTableData && getTableData();
+};
+
+// 刷新表格
+const handleSearch = () => {
   getTableData && getTableData();
 };
 

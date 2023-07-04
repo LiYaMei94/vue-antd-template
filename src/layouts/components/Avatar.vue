@@ -35,7 +35,8 @@ const router = useRouter();
 const DB = new db();
 const changePassword = () => {};
 const logout = () => {
-  DB.deleteLocal(ACCESS_TOKEN);
+  DB.clearLocal();
+  DB.clearSession();
   router.push('/user/login');
 };
 </script>

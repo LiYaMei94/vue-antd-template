@@ -21,10 +21,9 @@ export const useTable = (options) => {
   const getTableData = async () => {
     try {
       const { pageSize, current } = state.page || {};
-      const data = await (requestApi && requestApi({ entity: { ...unref(searchParam) }, pageQuery: { pageSize, pageNum: current } }));
-      // const data = { data: [{ name: 'name', description: 'description', id: 1 }], total: 10, pageNum: 1, pageSize: 10 };
+      console.log('unref(searchParam)', searchParam.value);
+      const data = await (requestApi && requestApi({ entity: { ...searchParam.value }, pageQuery: { pageSize, pageNum: current } }));
       const { total, data: result, pageNum, pageSize: size } = data || {};
-      console.log('data', data, result);
       state.tableData = result || [];
       state.page = { total, current: pageNum, pageSize: size };
     } catch (error) {

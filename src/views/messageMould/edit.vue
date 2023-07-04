@@ -118,41 +118,36 @@
           </a-col>
         </a-row>
         <component
-          :is="Email"
+          :is="MESSAGE_MOULD_PAGECOM[formState.sendChannel]"
           ref="sendContentRef"
-          v-bind="{ ref: 'sendContentRef', spanSizeConfig, isDetail, basicData: formState, channelAccountId: formState.channelAccountId }"
+          v-bind="{ ref: 'sendContentRef', spanSizeConfig, isDetail, isCreate, basicData: formState, channelAccountId: formState.channelAccountId }"
         ></component>
       </div>
       <PageFooter>
         <template #pageFooterRight>
-          <a-button @click="close">取消</a-button>
-          <a-button class="margin-left-10" type="primary" html-type="submit">提交</a-button>
+          <a-button @click="close">{{ !isDetail ? '取消' : '关闭' }}</a-button>
+          <a-button v-if="!isDetail" class="margin-left-10" type="primary" html-type="submit">提交</a-button>
         </template>
       </PageFooter>
     </a-form>
   </div>
 </template>
 <script setup>
-import { ref, watch, reactive, unref, toRefs, computed } from 'vue';
+import { ref, watch, reactive, unref, toRefs, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import {
-  CREATE,
-  PAGE_TITLE_MAP,
-  EDIT,
-  DETAIL,
-  CHANNEL_ACCOUNT_CONFIG_DEMO,
-  TEMPLATE_STATUS_TYPE_ENUM
-  // MESSAGE_MOULD_PAGECOM
-} from '@/utils/const.js';
+import { CREATE, PAGE_TITLE_MAP, EDIT, DETAIL, CHANNEL_ACCOUNT_CONFIG_DEMO, TEMPLATE_STATUS_TYPE_ENUM } from '@/utils/const';
 import { mouldDetail, mouldSave } from '@/apis/mould';
 import { channelAccount } from '@/apis/channel';
-import { getLocalAllEnum } from '@/apis';
 import PageHeader from '@/components/PageComs/PageHeader';
 import CardHeaderTitle from '@/components/PageComs/CardHeaderTitle';
 import PageFooter from '@/components/PageComs/PageFooter';
 import MiniProgram from './components/MiniProgram';
 import Sms from './components/Sms';
 import Email from './components/Email';
+import { resultCallBack } from '@/utils/utils';
+import { useStore } from 'vuex';
+
+const { state: storeState } = useStore();
 
 const spanSizeConfig = {
   colSpan24: 24,
@@ -165,6 +160,7 @@ const formRef = ref(null);
 const route = useRoute();
 const router = useRouter();
 const type = route.params.type;
+const id = route.params.id;
 const isDetail = type === DETAIL;
 const isEdit = type === EDIT;
 const isCreate = type === CREATE;
@@ -181,27 +177,36 @@ const MESSAGE_MOULD_PAGECOM = {
   [SEND_CHANNEL_MINI]: MiniProgram
 };
 
-let channelTypeEnum, idTypeEnum, msgTypeEnum, templateStatusEnum;
-getLocalAllEnum()
-  .then((enumData) => {
-    channelTypeEnum = enumData?.channelTypeEnum;
-    idTypeEnum = enumData?.idTypeEnum;
-    msgTypeEnum = enumData?.msgTypeEnum;
-    templateStatusEnum = enumData?.templateStatusEnum;
-  })
-  .catch((error) => {});
+const callback = computed(() => sendContentRef.value?.handleSubmit);
+const channelTypeEnum = computed(() => storeState?.global?.allEnum?.channelType);
+const idTypeEnum = computed(() => storeState?.global?.allEnum?.idType);
+const msgTypeEnum = computed(() => storeState?.global?.allEnum?.messageType);
+const templateStatusEnum = computed(() => storeState?.global?.allEnum?.messageTemplateStatus);
 
+const init = async () => {
+  try {
+    // 获取详情回填form表单
+    const detail = await mouldDetail({ id });
+    const result = await channelAccount({ channelType: detail?.data?.sendChannel, creator: 'haojinke' });
+    channelAccountEnum.value = result?.data;
+    formState.value = detail?.data || {};
+  } catch (error) {}
+};
+
+onMounted(() => {
+  !isCreate && id && init();
+});
+
+// 发送内容根据发送渠道展示不同的组件
 const sendContentCom = computed(() => {
   const sendChannel = formState.value.sendChannel;
   return MESSAGE_MOULD_PAGECOM[sendChannel];
 });
-const callback = computed(() => sendContentRef.value?.handleSubmit);
 
 // 发送渠道改变:1:获取对应的组件,2:获取发送账号
 const sendChannelChange = async (value) => {
   try {
     const result = await channelAccount({ channelType: value, creator: 'haojinke' });
-    console.log('result', result);
     channelAccountEnum.value = result?.data;
     formState.value.channelAccountId = null;
   } catch (error) {}
@@ -215,7 +220,12 @@ const submit = async () => {
   try {
     // 调用子组件的方法获取参数
     const childData = await (callback.value && callback.value());
-    console.log('childData', childData);
+    console.log('form-所有参数', { ...childData, ...formState.value });
+    const result = await mouldSave({ id, ...formState.value, ...childData });
+    console.log('result', result);
+    resultCallBack({ result, successMessage: '保存成功' }).then(async (res) => {
+      close();
+    });
   } catch (error) {}
 };
 </script>
