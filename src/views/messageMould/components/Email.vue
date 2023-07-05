@@ -10,27 +10,18 @@
         <div class="send-content">
           <a-row>
             <a-col :span="10">
-              <EditRow
-                ref="editTableRowRef"
+              <a-table
+                ref="editTemplateVariablesRef"
                 v-bind="{
                   columns,
-                  editColumns,
                   dataSource: tableData,
                   rowKey: 'id',
                   tableRowClick
                 }"
+                bordered
+                :pagination="false"
               >
-                <template v-slot:actionOther="{ dataInfo: { record, index } }">
-                  <span class="table-custom-cell">
-                    <DoubleRightOutlined
-                      style="margin-right: 10px"
-                      @click="handleInsertText(record)"
-                      class="table-custom-primary"
-                    ></DoubleRightOutlined>
-                    <DeleteOutlined @click="handleDelete(index)" class="table-custom-danger"></DeleteOutlined>
-                  </span>
-                </template>
-                <template v-slot:headerCell="{ dataInfo: { column } }">
+                <template #headerCell="{ column }">
                   <template v-if="column.dataIndex === 'name'">
                     {{ column.title }}
                     <a-tooltip>
@@ -39,7 +30,24 @@
                     </a-tooltip>
                   </template>
                 </template>
-              </EditRow>
+                <template #bodyCell="{ column, index, record }">
+                  <template v-if="column.dataIndex === 'action'">
+                    <span class="table-custom-cell">
+                      <DoubleRightOutlined
+                        style="margin-right: 10px"
+                        @click="handleInsertText(record)"
+                        class="table-custom-primary"
+                      ></DoubleRightOutlined>
+                      <DeleteOutlined @click="handleDelete(index)" style="margin-right: 10px" class="table-custom-danger"></DeleteOutlined>
+                      <EditOutlined @click="handleEdit(record, index)" class="table-custom-primary"></EditOutlined>
+                    </span>
+                  </template>
+                </template>
+              </a-table>
+              <div class="table-add">
+                <a-button type="link" @click="modalVisible = !modalVisible">+ 添加参数</a-button>
+                <slot name="tableAdd"></slot>
+              </div>
             </a-col>
             <a-col :span="14" style="padding-left: 12px; box-sizing: border-box">
               <a-form ref="formRef" :model="formState" :labelCol="{ span: 4 }" :class="{ 'form-all-disable': isDetail ? true : false }">
@@ -55,12 +63,21 @@
         </div>
       </a-col>
     </a-row>
+    <a-modal :visible="modalVisible" title="添加参数" @ok="handleOk" @cancel="handleCancel">
+      <a-form ref="modalFormRef" :model="modalFormState" :labelCol="{ span: 4 }">
+        <a-form-item name="name" label="参数名称" :rules="[{ required: true, message: '请输入参数名称' }]">
+          <a-input v-model:value.trim="modalFormState.name"></a-input>
+        </a-form-item>
+        <a-form-item name="description" label="描述" :rules="[{ required: true, message: '请输入参数说明' }]">
+          <a-input v-model:value.trim="modalFormState.description"></a-input>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 <script setup>
 import { ref, watch, reactive, unref, toRefs, computed, toRef, onMounted } from 'vue';
 import WangEditor from '@/components/WangEditor';
-import EditRow from '@/components/EditTable/EditRow';
 import { isNull } from '@/utils/utils';
 import { message, Tooltip } from 'ant-design-vue';
 import _ from 'lodash';
@@ -92,11 +109,7 @@ const insertText = computed(() => WangEditorRef?.value?.handleInsertText);
 const searchParam = ref({});
 const formRef = ref(null);
 const tableData = ref([]);
-const editTableRowRef = ref(null);
 const formState = ref({});
-// 编辑之后的表格值
-const editTableData = computed(() => editTableRowRef.value?.dataSource);
-const editColumns = ['name', 'description'];
 const columns = [
   {
     title: '参数名称',
@@ -110,15 +123,54 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     fixed: 'right',
-    width: 75
+    width: 95
   }
 ];
 
+// 弹窗
+const modalFormRef = ref(null);
+const modalFormState = ref({
+  name: '',
+  description: ''
+});
+const modalVisible = ref(false);
+let isModalEdit = false;
+let currentIndex = null;
+const handleCancel = () => {
+  modalVisible.value = false;
+  modalFormState.value = {};
+  modalFormRef.value?.resetFields();
+  isModalEdit = false;
+  currentIndex = null;
+};
+
+const handleOk = async () => {
+  try {
+    await modalFormRef.value?.validateFields();
+    if (!isModalEdit) {
+      tableData.value.push({ ...unref(modalFormState) });
+    } else {
+      const tableInfo = _.cloneDeep(tableData.value);
+      tableInfo.splice(currentIndex, 1, { ...unref(modalFormState) });
+      tableData.value = tableInfo;
+    }
+    handleCancel();
+  } catch (error) {}
+};
+
 // 表格删除行
-const handleDelete = async (index) => {
-  const tableInfo = _.cloneDeep(editTableData.value);
+const handleDelete = (index) => {
+  const tableInfo = _.cloneDeep(tableData.value);
   tableInfo.splice(index, 1);
   tableData.value = tableInfo;
+};
+
+// 表格行编辑
+const handleEdit = (record, index) => {
+  modalVisible.value = true;
+  isModalEdit = true;
+  currentIndex = index;
+  modalFormState.value = _.cloneDeep(record);
 };
 
 // 双击表格行将参数写入富文本编辑器内
@@ -149,17 +201,17 @@ const handleSubmit = async () => {
   try {
     await formRef.value?.validateFields();
     const formData = unref(formState);
-    const tableData = _.map(editTableData.value, (item) => {
+    const tableInfo = _.map(tableData.value, (item) => {
       return { name: item.name, description: item.description, id: item?.id, templateId: item?.templateId };
     });
 
-    if (tableData.length === 0) {
+    if (tableInfo.length === 0) {
       message.error('请编写模板参数');
       return;
     }
     return {
       ...formData,
-      templateVariables: tableData,
+      templateVariables: tableInfo,
       msgContent: JSON.stringify({
         content: wangEditorHtml.value,
         title: formData?.emailTitle,
@@ -196,6 +248,13 @@ defineExpose({ handleSubmit });
     border: 1px dashed var(--ant-line);
     padding: 15px;
     box-sizing: border-box;
+  }
+  .table-add {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px solid var(--ant-line);
   }
 }
 </style>

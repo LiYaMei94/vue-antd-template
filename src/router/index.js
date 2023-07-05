@@ -1,6 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import { BasicLayout, UserLayout } from '@/layouts';
-import Home from '@/views/home';
 import _ from 'lodash';
 
 const staticRoutes = [
@@ -21,32 +20,8 @@ const staticRoutes = [
     }
   },
   {
-    path: '/404',
-    name: '404',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404.vue'),
-    meta: {
-      title: '404'
-    }
-  },
-  {
-    path: '/403',
-    name: '403',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403.vue'),
-    meta: {
-      title: '403'
-    }
-  },
-  {
-    path: '/500',
-    name: '500',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500.vue'),
-    meta: {
-      title: '500'
-    }
-  },
-  {
     path: '/:pathMatch(.*)*',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500.vue')
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404.vue')
   }
 ];
 
@@ -56,11 +31,6 @@ const routes = [
     component: BasicLayout,
     redirect: '/channel/list',
     children: [
-      {
-        name: 'Home',
-        path: '/home',
-        component: Home
-      },
       /*渠道账号*/
       {
         name: 'ChannelList',

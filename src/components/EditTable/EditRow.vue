@@ -61,7 +61,7 @@ const props = defineProps({
   },
   rowKey: {
     type: [String, Function],
-    default: (record, index) => index
+    default: null
   },
   tableRowClick: {
     type: Function,

@@ -85,13 +85,13 @@ const formConfig = [
 
 // table配置
 const columns = [
-  {
-    title: '序号',
-    dataIndex: 'number',
-    customRender({ text, record, index, column }) {
-      return index + 1;
-    }
-  },
+  // {
+  //   title: '序号',
+  //   dataIndex: 'number',
+  //   customRender({ text, record, index, column }) {
+  //     return index + 1;
+  //   }
+  // },
   {
     title: '账号编码',
     dataIndex: 'id'
@@ -109,7 +109,8 @@ const columns = [
   },
   {
     title: '备注',
-    dataIndex: 'remark'
+    dataIndex: 'remark',
+    ellipsis: true
   },
   {
     title: '操作',

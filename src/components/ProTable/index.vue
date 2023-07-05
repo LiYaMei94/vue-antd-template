@@ -20,7 +20,7 @@
         </slot>
       </div>
     </div>
-    <a-table size="small" :dataSource="tableData" :columns="newColumns" v-bind="{ ...tableConfig }" :rowKey="rowKey" :pagination="false">
+    <a-table :dataSource="tableData" :columns="newColumns" v-bind="{ ...tableConfig }" :rowKey="rowKey" :pagination="false">
       <template #bodyCell="{ column, text, record }">
         <slot name="bodyCell" :dataInfo="{ column, text, record }"></slot>
       </template>
@@ -107,7 +107,6 @@ const updateColumns = (cols) => {
 // 查询
 const search = (params) => {
   searchParam.value = { ...props.initSearchParams, ...params };
-  console.log('searchParam', searchParam.value, props.initSearchParams, params);
   getTableData && getTableData();
 };
 

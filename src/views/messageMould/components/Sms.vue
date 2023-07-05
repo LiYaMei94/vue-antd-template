@@ -30,6 +30,14 @@
                     </a-tooltip>
                   </template>
                 </template>
+                <template #bodyCell="{ column, index, record }">
+                  <template v-if="column.dataIndex === 'action'">
+                    <span class="table-custom-cell">
+                      <DeleteOutlined @click="handleDeleteMouldVar(index)" style="margin-right: 10px" class="table-custom-danger"></DeleteOutlined>
+                      <EditOutlined @click="handleEdit(record, index)" class="table-custom-primary"></EditOutlined>
+                    </span>
+                  </template>
+                </template>
               </a-table>
               <div class="table-add">
                 <a-button type="link" @click="modalVisible = !modalVisible">+ 添加参数</a-button>
@@ -49,7 +57,7 @@
                       v-bind="{
                         columns: paramsTableColumns,
                         editColumns: editParamsColumns,
-                        dataSource: paramsTableDta,
+                        dataSource: paramsTableData,
                         rowKey: 'id'
                       }"
                     >
@@ -62,7 +70,7 @@
                         <template v-if="column.dataIndex === 'variable'">
                           {{ column.title }}
                           <a-tooltip>
-                            <template #title>内容在第三方平台维护，绑定第三方平台短信变量，如：腾讯云：{1}，阿里云格式：${name}</template>
+                            <template #title>内容在第三方平台维护，绑定第三方平台短信变量，如：腾讯云、阿里云等第三方平台</template>
                             <MyIcon type="icon-question-circle"></MyIcon>
                           </a-tooltip>
                         </template>
@@ -79,6 +87,7 @@
                             @change="handleVariableNameChange($event, index)"
                             :value="record.variableName"
                             placeholder="输入内容"
+                            style="width: 100%"
                           ></a-select>
                         </template>
                       </template>
@@ -141,6 +150,8 @@ const modalFormState = ref({
   description: ''
 });
 const modalVisible = ref(false);
+let isModalEdit = false;
+let currentIndex = null;
 const templateVariables = ref([]);
 const templateVariablesColumns = [
   {
@@ -148,25 +159,56 @@ const templateVariablesColumns = [
     dataIndex: 'name'
   },
   {
-    title: '参数说明',
+    title: '描述',
     dataIndex: 'description'
+  },
+  {
+    title: '操作',
+    dataIndex: 'action',
+    fixed: 'right',
+    width: 80
   }
 ];
+
 const handleCancel = () => {
   modalVisible.value = false;
   modalFormState.value = {};
   modalFormRef.value?.resetFields();
+  isModalEdit = false;
+  currentIndex = null;
 };
+
 const handleOk = async () => {
   try {
     await modalFormRef.value?.validateFields();
-    templateVariables.value.push({ ...unref(modalFormState) });
+    if (!isModalEdit) {
+      templateVariables.value.push({ ...unref(modalFormState) });
+    } else {
+      const tableInfo = _.cloneDeep(templateVariables.value);
+      tableInfo.splice(currentIndex, 1, { ...unref(modalFormState) });
+      templateVariables.value = tableInfo;
+    }
     handleCancel();
   } catch (error) {}
 };
 
+// 表格删除行
+const handleDeleteMouldVar = (index) => {
+  const tableInfo = _.cloneDeep(templateVariables.value);
+  tableInfo.splice(index, 1);
+  templateVariables.value = tableInfo;
+};
+
+// 表格行编辑
+const handleEdit = (record, index) => {
+  modalVisible.value = true;
+  isModalEdit = true;
+  currentIndex = index;
+  modalFormState.value = _.cloneDeep(record);
+};
+
 // 模板参数
-const paramsTableDta = ref([]);
+const paramsTableData = ref([]);
 const editParamsTableRef = ref(null);
 const editParamsTableData = computed(() => editParamsTableRef.value?.dataSource);
 const editParamsColumns = ['variable', 'params'];
@@ -184,7 +226,8 @@ const paramsTableColumns = [
   },
   {
     title: '参数',
-    dataIndex: 'variableName'
+    dataIndex: 'variableName',
+    width: 100
   },
   {
     title: '操作',
@@ -195,6 +238,13 @@ const paramsTableColumns = [
 ];
 const handleVariableNameChange = (value, index) => {
   editParamsTableData.value.splice(index, 1, { ...editParamsTableData.value[index], variableName: value });
+};
+
+// 表格删除行
+const handleDelete = async (index) => {
+  const tableInfo = _.cloneDeep(editParamsTableData.value);
+  tableInfo.splice(index, 1);
+  paramsTableData.value = tableInfo;
 };
 
 // 父级组件提交数据是执行
@@ -241,7 +291,6 @@ const handleSetFields = (value) => {
 
   const arr = [];
   for (const key in content?.smsParam) {
-    console.log(key, content?.smsParam[key]);
     arr.push({
       variable: key,
       variableName: content?.smsParam[key]
@@ -249,7 +298,7 @@ const handleSetFields = (value) => {
   }
 
   templateVariables.value = tableData;
-  paramsTableDta.value = arr;
+  paramsTableData.value = arr;
 };
 
 onMounted(() => {

@@ -15,10 +15,10 @@
     </div>
     <template #overlay>
       <a-menu>
-        <a-menu-item key="0">
+        <!-- <a-menu-item key="0">
           <a href="javaScript:;" @click="changePassword">修改密码</a>
         </a-menu-item>
-        <a-menu-divider />
+        <a-menu-divider /> -->
         <a-menu-item key="2">
           <a href="javaScript:;" @click="logout">退出登录</a>
         </a-menu-item>

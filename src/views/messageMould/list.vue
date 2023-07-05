@@ -119,7 +119,8 @@ const columns = [
     dataIndex: 'number',
     customRender({ text, record, index, column }) {
       return index + 1;
-    }
+    },
+    width: 80
   },
   {
     title: '模板编码',
@@ -148,7 +149,8 @@ const columns = [
     dataIndex: 'templateType',
     customRender({ text }) {
       return filterEnum(text, TEMPLATE_STATUS_TYPE_ENUM);
-    }
+    },
+    width: 80
   },
   {
     title: '发布渠道',
@@ -159,18 +161,21 @@ const columns = [
   },
   {
     title: '备注',
-    dataIndex: 'remark'
+    dataIndex: 'remark',
+    ellipsis: true
   },
   {
     title: '开启状态',
     dataIndex: 'templateStatus',
     customRender({ text }) {
       return filterEnum(text, templateStatusEnum.value, { value: 'id', label: 'desc' });
-    }
+    },
+    width: 90
   },
   {
     title: '操作',
-    dataIndex: 'action'
+    dataIndex: 'action',
+    width: 90
   }
 ];
 </script>

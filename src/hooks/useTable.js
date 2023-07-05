@@ -21,7 +21,6 @@ export const useTable = (options) => {
   const getTableData = async () => {
     try {
       const { pageSize, current } = state.page || {};
-      console.log('unref(searchParam)', searchParam.value);
       const data = await (requestApi && requestApi({ entity: { ...searchParam.value }, pageQuery: { pageSize, pageNum: current } }));
       const { total, data: result, pageNum, pageSize: size } = data || {};
       state.tableData = result || [];

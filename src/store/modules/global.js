@@ -10,11 +10,7 @@ export default {
     theme: DB.getLocal('theme') || LIGHT_THEME,
     allEnum: DB.getLocal('allEnum') || {}
   }),
-  getters: {
-    channelTypeEnum(state) {
-      console.log('state', state);
-    }
-  },
+  getters: {},
   actions: {
     setGlobalPrimary({ commit }, val) {
       commit('setGlobalPrimary', val);

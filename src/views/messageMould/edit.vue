@@ -220,9 +220,7 @@ const submit = async () => {
   try {
     // 调用子组件的方法获取参数
     const childData = await (callback.value && callback.value());
-    console.log('form-所有参数', { ...childData, ...formState.value });
     const result = await mouldSave({ id, ...formState.value, ...childData });
-    console.log('result', result);
     resultCallBack({ result, successMessage: '保存成功' }).then(async (res) => {
       close();
     });
