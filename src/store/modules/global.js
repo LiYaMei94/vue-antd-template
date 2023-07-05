@@ -8,7 +8,8 @@ export default {
     primary: DB.getLocal('primary-color') || DEFAULT_PRIMARY_COLOR,
     // 主题模式
     theme: DB.getLocal('theme') || LIGHT_THEME,
-    allEnum: DB.getLocal('allEnum') || {}
+    allEnum: DB.getLocal('allEnum') || {},
+    antConfig: DB.getLocal('antConfig') || 'middle'
   }),
   getters: {},
   actions: {
@@ -20,6 +21,9 @@ export default {
     },
     setAllEnum({ commit }, val) {
       commit('setAllEnum', val);
+    },
+    setAntConfig({ commit }, val) {
+      commit('setAntConfig', val);
     }
   },
   mutations: {
@@ -34,6 +38,10 @@ export default {
     setAllEnum(state, val) {
       DB.setLocal('allEnum', val);
       state.allEnum = val;
+    },
+    setAntConfig(state, val) {
+      DB.setLocal('antConfig', val);
+      state.antConfig = val;
     }
   }
 };

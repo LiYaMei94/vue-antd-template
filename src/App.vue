@@ -1,5 +1,5 @@
 <template>
-  <a-config-provider :locale="zhCN">
+  <a-config-provider :locale="zhCN" v-bind="{ ...state.global.antConfig, input: { size: 'small' } }">
     <router-view />
   </a-config-provider>
 </template>
@@ -12,7 +12,7 @@ import 'dayjs/locale/zh-cn';
 import { useStore } from 'vuex';
 import { allEnum } from '@/apis';
 
-const { dispatch } = useStore();
+const { dispatch, state } = useStore();
 // 设置日期组件语言
 dayjs.locale('en');
 

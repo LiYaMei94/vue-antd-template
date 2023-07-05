@@ -1,5 +1,10 @@
 <template>
   <div class="list-table-content">
+    <a-form>
+      <a-form-item label="121324">
+        <a-input placeholder="测试" allowClear></a-input>
+      </a-form-item>
+    </a-form>
     <ProTable ref="proTableRef" v-bind="{ formConfig, columns, requestApi: mouldList, rowKey: 'id', labelCol: { span: 7 } }">
       <template #tableHeaderLeft>
         <a-button type="primary" @click="handleOpen({ type: CREATE })">添加</a-button>
@@ -128,7 +133,8 @@ const columns = [
   },
   {
     title: '模板名称',
-    dataIndex: 'name'
+    dataIndex: 'name',
+    ellipsis: true
   },
   {
     title: '接收账号类型',

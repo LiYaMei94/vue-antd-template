@@ -9,6 +9,7 @@
     </div>
     <div class="header-right-tool">
       <a-space align="center" size="large">
+        <PageDensity></PageDensity>
         <Theme></Theme>
         <Fullscreen></Fullscreen>
         <div class="header-tool-right-icon">
@@ -24,6 +25,7 @@ import { LIGHT_THEME } from '@/theme';
 import Avatar from './components/Avatar.vue';
 import Fullscreen from './components/Fullscreen.vue';
 import Theme from './components/Theme.vue';
+import PageDensity from './components/PageDensity.vue';
 
 const props = defineProps({
   theme: {

@@ -1,7 +1,7 @@
 <template>
   <component
     :is="column?.render || `a-${column?.el}`"
-    v-bind="{ ...handleSearchProps, ...placeholder, allowClear }"
+    v-bind="{ ...handleSearchProps, ...placeholder, allowClear, size: state?.global?.antConfig?.componentSize }"
     v-model:value.trim="searchParam[column.value]"
   ></component>
 </template>
@@ -9,6 +9,7 @@
 <script setup>
 import { computed, inject, ref } from 'vue';
 import { isArray, isNull } from '@/utils/utils';
+import { useStore } from 'vuex';
 
 const props = defineProps({
   column: {
@@ -20,6 +21,8 @@ const props = defineProps({
     default: {}
   }
 });
+
+const { dispatch, state } = useStore();
 
 // 属性透传
 const handleSearchProps = computed(() => {

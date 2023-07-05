@@ -63,7 +63,8 @@ import {
   EditOutlined,
   CheckOutlined,
   DeleteOutlined,
-  DoubleRightOutlined
+  DoubleRightOutlined,
+  WindowsOutlined
 } from '@ant-design/icons-vue';
 
 import CustomSubMenu from '@/components/SubMenu';
@@ -135,6 +136,7 @@ export default {
     app.component('CheckOutlined', CheckOutlined);
     app.component('DeleteOutlined', DeleteOutlined);
     app.component('DoubleRightOutlined', DoubleRightOutlined);
+    app.component('WindowsOutlined', WindowsOutlined);
 
     // 自定义组件
     app.component('CustomSubMenu', CustomSubMenu);

@@ -85,20 +85,21 @@ const formConfig = [
 
 // table配置
 const columns = [
-  // {
-  //   title: '序号',
-  //   dataIndex: 'number',
-  //   customRender({ text, record, index, column }) {
-  //     return index + 1;
-  //   }
-  // },
+  {
+    title: '序号',
+    dataIndex: 'number',
+    customRender({ text, record, index, column }) {
+      return index + 1;
+    }
+  },
   {
     title: '账号编码',
     dataIndex: 'id'
   },
   {
     title: '账号名称',
-    dataIndex: 'name'
+    dataIndex: 'name',
+    ellipsis: true
   },
   {
     title: '发送渠道',
