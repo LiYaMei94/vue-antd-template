@@ -310,7 +310,7 @@ defineExpose({ handleSubmit });
 <style lang="less" scoped>
 .send-content-container {
   .send-content {
-    border: 1px dashed var(--ant-line);
+    border: 1px dashed var(--ant-line-color);
     padding: 15px;
     box-sizing: border-box;
   }
@@ -319,7 +319,7 @@ defineExpose({ handleSubmit });
     padding: 15px;
     box-sizing: border-box;
     text-align: center;
-    border: 1px solid var(--ant-line);
+    border: 1px solid var(--ant-line-color);
   }
 }
 </style>

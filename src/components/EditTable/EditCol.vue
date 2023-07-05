@@ -132,7 +132,7 @@ defineExpose({ dataSource: newDataSource });
   padding: 15px;
   box-sizing: border-box;
   text-align: center;
-  border: 1px solid var(--ant-line);
+  border: 1px solid var(--ant-line-color);
 }
 </style>
 <style lang="less">

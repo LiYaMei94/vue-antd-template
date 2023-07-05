@@ -1,5 +1,5 @@
 <template>
-  <a-config-provider :locale="zhCN" v-bind="{ ...state.global.antConfig, input: { size: 'small' } }">
+  <a-config-provider :locale="zhCN" v-bind="{ ...state.global.antConfig }">
     <router-view />
   </a-config-provider>
 </template>

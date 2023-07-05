@@ -122,7 +122,7 @@ const handleReset = () => {
 
 <style lang="less" scoped>
 .table-search {
-  border-bottom: 1px solid var(--ant-line);
+  border-bottom: 1px solid var(--ant-line-color);
   .operation {
     display: flex;
     align-items: center;

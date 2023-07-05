@@ -2,7 +2,7 @@
   <div>
     <a-dropdown :trigger="['click']">
       <div class="header-tool-right-icon">
-        <WindowsOutlined style="font-size: 20px; color: var(--ant-header-icon-bg)"></WindowsOutlined>
+        <WindowsOutlined style="font-size: 20px; color: var(--ant-body-color)"></WindowsOutlined>
       </div>
       <template #overlay>
         <a-menu @click="change" v-model:selectedKeys="selectedKeys">

@@ -2,10 +2,10 @@
   <div class="theme-modal">
     <a-dropdown :trigger="['click']">
       <div class="header-tool-right-icon">
-        <MyIcon type="icon-zhuti" style="font-size: 20px; color: var(--ant-header-icon-bg)"></MyIcon>
+        <MyIcon type="icon-zhuti" style="font-size: 20px; color: var(--ant-body-color)"></MyIcon>
       </div>
       <template #overlay>
-        <a-menu @click="changeTheme">
+        <a-menu @click="changeTheme" v-model:selectedKeys="selectedKeys">
           <template v-for="(item, index) in theme" :key="item.value">
             <template v-if="true">
               <a-menu-item :key="item.value">
@@ -22,10 +22,16 @@
 
 <script setup>
 import { useTheme } from '@/hooks/useTheme';
+import { useStore } from 'vuex';
+import { ref } from 'vue';
+
 const { changePrimaryColor, setThemeColor, theme } = useTheme();
+const { dispatch, state } = useStore();
+const selectedKeys = ref([state?.global?.theme]);
 
 const changeTheme = ({ item, key, keyPath }) => {
   setThemeColor(key);
+  selectedKeys.value = [key];
 };
 </script>
 

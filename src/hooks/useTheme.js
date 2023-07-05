@@ -22,7 +22,6 @@ export const useTheme = () => {
   // 修改主题颜色
   const changePrimaryColor = (val) => {
     val = val || DEFAULT_PRIMARY_COLOR;
-
     // 修改antd的主题色
     ConfigProvider.config({
       theme: {
@@ -43,7 +42,8 @@ export const useTheme = () => {
     const themeConfig = MAIN_THEME_MAP[type];
     // 当前主题模式下颜色
     const themeColor = THEME_COLOR[type];
-    const primaryColor = global?.primary || MAIN_THEME_MAP[type]?.antd?.primaryColor;
+    // TODO:单独修改主题色的话可以加 global?.primary ||
+    const primaryColor = MAIN_THEME_MAP[type]?.antd?.primaryColor;
 
     dispatch('setThemeModel', type);
     dispatch('setGlobalPrimary', primaryColor);
