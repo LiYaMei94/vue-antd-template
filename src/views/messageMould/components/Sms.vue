@@ -258,7 +258,7 @@ const handleSubmit = async () => {
 
     if (tableData.length === 0) {
       message.error('请编写模板参数');
-      return;
+      return Promise.reject('请编写模板参数');
     }
 
     // 参数变量数组转对象

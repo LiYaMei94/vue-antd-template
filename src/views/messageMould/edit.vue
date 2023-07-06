@@ -231,5 +231,7 @@ const submit = async () => {
 <style lang="less" scoped>
 .page-form-content {
   padding-right: 100px;
+  padding-bottom: 80px;
+  box-sizing: border-box;
 }
 </style>

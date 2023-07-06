@@ -95,9 +95,3 @@ export const resultCallBack = (options) => {
     }
   });
 };
-
-export const buildShortUUID = (prefix = '') => {
-  const time = Date.now();
-  const random = Math.floor(Math.random() * 1000000000);
-  return prefix + '_' + random + String(time);
-};

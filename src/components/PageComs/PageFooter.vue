@@ -13,5 +13,11 @@
   justify-content: space-between;
   border-top: 1px solid var(--ant-line-color);
   pointer-events: all !important;
+  position: fixed;
+  bottom: 0;
+  right: 12px;
+  width: calc(100% - 200px - 24px);
+  background-color: var(--ant-content-bg);
+  z-index: 666;
 }
 </style>

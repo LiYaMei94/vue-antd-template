@@ -62,7 +62,12 @@ export const THEME_COLOR = {
     '--ant-tips-bg': '#FFF7EB',
     '--ant-body-bg': '#F5F7FA',
     '--ant-body-color': 'rgba(0,0,0,.85)',
-    '--ant-content-bg': '#FFFFFF'
+    '--ant-content-bg': '#FFFFFF',
+
+    /**=========================富文本编辑器========================== **/
+    '--w-e-textarea-bg-color': '#fff',
+    '--w-e-toolbar-bg-color': '#fff',
+    '--w-e-toolbar-color': '#595959'
   },
   [DARK_THEME]: {
     /**=========================字体颜色========================== **/
@@ -93,6 +98,11 @@ export const THEME_COLOR = {
     '--ant-tips-bg': '#50473B',
     '--ant-body-bg': '#0D131A',
     '--ant-body-color': '#FFFFFF',
-    '--ant-content-bg': '#1C242E'
+    '--ant-content-bg': '#1C242E',
+
+    /**=========================富文本编辑器========================== **/
+    '--w-e-textarea-bg-color': '#1C242E',
+    '--w-e-toolbar-bg-color': '#1C242E',
+    '--w-e-toolbar-color': '#FFFFFF'
   }
 };

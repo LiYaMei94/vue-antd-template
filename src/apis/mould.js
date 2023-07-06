@@ -1,4 +1,4 @@
-import { post, deleteFn, get } from '@/service';
+import { post, deleteFn, get, put } from '@/service';
 
 export const mouldList = (data) => {
   return post('/message-template/list', data);
@@ -34,4 +34,9 @@ export const miniTempList = (data) => {
 
 export const miniTempDetail = (data) => {
   return get('/mini-program/detailTemplate', data);
+};
+
+export const updateMouldStatus = ({ id, checked }) => {
+  const status = checked ? 'start' : 'stop';
+  return put(`/message-template/${status}`, { id });
 };

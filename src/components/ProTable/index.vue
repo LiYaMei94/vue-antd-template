@@ -21,8 +21,8 @@
       </div>
     </div>
     <a-table :dataSource="tableData" :columns="newColumns" v-bind="{ ...tableConfig }" :rowKey="rowKey" :pagination="false">
-      <template #bodyCell="{ column, text, record }">
-        <slot name="bodyCell" :dataInfo="{ column, text, record }"></slot>
+      <template #bodyCell="{ column, text, record, index }">
+        <slot name="bodyCell" :dataInfo="{ column, text, record, index }"></slot>
       </template>
       <template #headerCell="{ column, text, record }">
         <slot name="headerCell" :dataInfo="{ column, text, record }"></slot>
@@ -121,8 +121,12 @@ const reset = (params) => {
   getTableData && getTableData();
 };
 
+const updateRowData = (record, index) => {
+  tableData.value.splice(index, 1, record);
+};
+
 // 暴露给上层组件的方法
-defineExpose({ search: getTableData });
+defineExpose({ search: getTableData, updateRowData });
 </script>
 
 <style lang="less" scoped>

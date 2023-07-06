@@ -4,9 +4,17 @@
       <template #tableHeaderLeft>
         <a-button type="primary" @click="handleOpen({ type: CREATE })">添加</a-button>
       </template>
-      <template v-slot:bodyCell="{ dataInfo: { column, record, text } }">
+      <template v-slot:bodyCell="{ dataInfo: { column, record, text, index } }">
         <template v-if="column.dataIndex === 'id'">
           <a class="table-custom-primary" @click="handleOpen({ type: DETAIL, id: record.id })">{{ text }}</a>
+        </template>
+        <template v-if="column.dataIndex === 'templateStatus'">
+          <a-switch
+            :checked="text === 30"
+            checked-children="开"
+            un-checked-children="关"
+            @change="handleStatusChange($event, record, index)"
+          ></a-switch>
         </template>
         <template v-if="column.dataIndex === 'action'">
           <span class="table-custom-cell">
@@ -25,7 +33,7 @@
 import { ref, reactive, toRefs, unref, computed, watch, onMounted } from 'vue';
 import ProTable from '@/components/ProTable';
 import { CREATE, EDIT, DETAIL, TEMPLATE_STATUS_TYPE_ENUM, PAGE_ROUTE_NAME_MAP } from '@/utils/const';
-import { mouldList, mouldDelete } from '@/apis/mould';
+import { mouldList, mouldDelete, updateMouldStatus } from '@/apis/mould';
 import { useStore } from 'vuex';
 import { filterEnum } from '@/utils/utils';
 import { useRouter } from 'vue-router';
@@ -43,19 +51,28 @@ const state = reactive({
   visible: false
 });
 
+const proTableRef = ref();
+const search = computed(() => proTableRef.value?.search);
+const updateRowData = computed(() => proTableRef.value?.updateRowData);
+
 const handleOpen = ({ type, id }) => {
   const name = PAGE_ROUTE_NAME_MAP[type];
   router.push({ name: `MessageMould${name}`, params: { id, type } });
 };
-
-const proTableRef = ref();
-const search = computed(() => unref(proTableRef.value?.search));
 
 // 删除并刷新列表
 const handleDelete = async (id) => {
   try {
     await mouldDelete({ id });
     search.value && search.value();
+  } catch (error) {}
+};
+
+const handleStatusChange = async (event, record, index) => {
+  try {
+    const templateStatus = event ? 30 : 20;
+    await updateMouldStatus({ id: record?.id, checked: event });
+    updateRowData.value && updateRowData.value({ ...record, templateStatus }, index);
   } catch (error) {}
 };
 
@@ -168,9 +185,9 @@ const columns = [
   {
     title: '开启状态',
     dataIndex: 'templateStatus',
-    customRender({ text }) {
-      return filterEnum(text, templateStatusEnum.value, { value: 'id', label: 'desc' });
-    },
+    // customRender({ text }) {
+    //   return filterEnum(text, templateStatusEnum.value, { value: 'id', label: 'desc' });
+    // },
     width: 90
   },
   {

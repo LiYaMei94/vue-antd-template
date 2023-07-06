@@ -5,6 +5,7 @@ import { ACCESS_TOKEN } from '@/utils/const';
 import { notification } from 'ant-design-vue'; // FIXME:提示可根据自己的需要更换
 import { isObject, isNull } from '@/utils/utils';
 import router from '@/router';
+import qs from 'qs';
 
 const DB = new db();
 
@@ -191,4 +192,16 @@ export const deleteFn = (url, data, options) => {
     ...options
   });
 };
+
+/**
+ *
+ * @param url put 请求
+ * @param data
+ * @param options
+ * @returns
+ */
+export const put = (url, data, options) => {
+  return instance.put(`${url}?`, qs.stringify(data), options);
+};
+
 export default instance;

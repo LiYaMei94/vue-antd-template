@@ -44,7 +44,8 @@ import {
   RadioGroup,
   Radio,
   Popconfirm,
-  Modal
+  Modal,
+  Switch
 } from 'ant-design-vue';
 
 import {
@@ -118,6 +119,7 @@ export default {
     app.component(Radio.name, Radio);
     app.component(Popconfirm.name, Popconfirm);
     app.component(Modal.name, Modal);
+    app.component(Switch.name, Switch);
 
     // 图标
     app.component('SyncOutlined', SyncOutlined);

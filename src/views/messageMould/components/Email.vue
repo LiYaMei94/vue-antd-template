@@ -16,7 +16,7 @@
                   columns,
                   dataSource: tableData,
                   rowKey: 'id',
-                  tableRowClick
+                  customRow: tableRowClick
                 }"
                 bordered
                 :pagination="false"
@@ -174,10 +174,13 @@ const handleEdit = (record, index) => {
 };
 
 // 双击表格行将参数写入富文本编辑器内
-const tableRowClick = (record, index) => {
+const tableRowClick = (record) => {
   return {
     onDblclick: () => {
       // insertText.value && insertText.value(`${record?.name}`);
+    },
+    onClick: () => {
+      insertText.value && insertText.value(`${record?.name}`);
     }
   };
 };
@@ -207,7 +210,7 @@ const handleSubmit = async () => {
 
     if (tableInfo.length === 0) {
       message.error('请编写模板参数');
-      return;
+      return Promise.reject('请编写模板参数');
     }
     return {
       ...formData,
