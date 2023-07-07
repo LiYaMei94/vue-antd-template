@@ -34,7 +34,9 @@ import { useRouter } from 'vue-router';
 import { ACCESS_TOKEN } from '@/utils/const';
 import { allEnum } from '@/apis/index';
 import { useStore } from 'vuex';
+import { usePermission } from '@/hooks/usePermission';
 
+const { getMenuList } = usePermission();
 const { dispatch } = useStore();
 const router = useRouter();
 const DB = new db();
@@ -66,11 +68,19 @@ const onFinish = async (values) => {
   try {
     const result = await login({ ...formState.value });
     resultCallBack({ result, successMessage: '登录成功' }).then(async (res) => {
+      // 设置token
       DB.setLocal(ACCESS_TOKEN, res);
-      router.push({ name: `ChannelList` });
+
+      // 动态加载菜单和路由
+      await getMenuList();
+
+      // 全局枚举
       const allEnumData = (await allEnum()).data;
-      // JSON.stringify(allEnumData) !== '{}' && DB.setLocal('allEnum', allEnumData);
       dispatch('setAllEnum', allEnumData);
+
+      // FIXME:跳转首页,如果是登录失效重新登录之后跳转到之前的页面
+      router.push({ name: `ChannelList` });
+
       // 记住密码
       if (values.remember) {
         DB.setLocal('username', values.username);

@@ -12,16 +12,16 @@
       v-model:selectedKeys="selectedKeys"
       @openChange="onOpenChange"
     >
-      <template v-for="item in list" :key="item.key">
-        <template v-if="!item.children">
+      <template v-for="item in sideMenuList" :key="item.key">
+        <template v-if="!item.children?.length">
           <a-menu-item :key="item.key">
             <template #icon>
-              <component :is="item.icon"></component>
+              <component :is="item.meta?.icon"></component>
             </template>
             <template v-if="item.name">
-              <router-link :to="{ name: item.name }">{{ item.title }}</router-link>
+              <router-link :to="{ name: item.name }">{{ item.meta?.title }}</router-link>
             </template>
-            <template v-else>{{ item.title }}</template>
+            <template v-else>{{ item.meta?.title }}</template>
           </a-menu-item>
         </template>
         <template v-else>
@@ -33,11 +33,13 @@
 </template>
 
 <script setup>
-import { ref, unref } from 'vue';
+import { computed, ref, unref } from 'vue';
 import { LIGHT_THEME } from '@/theme';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const { currentRoute } = useRouter();
+const { state } = useStore();
 
 const props = defineProps({
   theme: {
@@ -50,32 +52,13 @@ const props = defineProps({
   }
 });
 
-const currentRouteKey = unref(currentRoute).meta?.key;
+const currentRouteKey = unref(currentRoute).meta?.activeMenu;
 const openKeys = ref(['1']);
 const selectedKeys = ref([currentRouteKey]);
 const collapsed = ref(false);
-
-const list = [
-  {
-    key: '1',
-    title: '配置管理',
-    icon: 'MailOutlined',
-    children: [
-      {
-        key: '1-1',
-        title: '渠道账号',
-        icon: 'PieChartOutlined',
-        name: 'ChannelList'
-      },
-      {
-        key: '1-2',
-        title: '消息模板',
-        icon: 'PieChartOutlined',
-        name: 'MessageMouldList'
-      }
-    ]
-  }
-];
+const sideMenuList = computed(() => {
+  return state?.user?.sideMenuList;
+});
 
 const onOpenChange = (keys) => {
   openKeys.value = props.isShowCurrent ? [keys[keys.length - 1]] : keys;

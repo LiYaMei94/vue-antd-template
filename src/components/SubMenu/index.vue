@@ -1,19 +1,19 @@
 <template>
   <a-sub-menu :key="menuInfo.key">
     <template #icon>
-      <component :is="menuInfo.icon"></component>
+      <component :is="menuInfo.meta?.icon"></component>
     </template>
-    <template #title>{{ menuInfo.title }}</template>
+    <template #title>{{ menuInfo.meta?.title }}</template>
     <template v-for="item in menuInfo.children" :key="item.key">
-      <template v-if="!item.children">
-        <a-menu-item :key="item.key">
+      <template v-if="!item.children?.length">
+        <a-menu-item :key="item.key" v-if="!item?.meta?.isHide">
           <template #icon>
-            <component :is="item.icon"></component>
+            <component :is="item.meta?.icon"></component>
           </template>
           <template v-if="item.name">
-            <router-link :to="{ name: item.name }">{{ item.title }}</router-link>
+            <router-link :to="{ name: item.name }">{{ item.meta?.title }}</router-link>
           </template>
-          <template v-else>{{ item.title }}</template>
+          <template v-else>{{ item.meta?.title }}</template>
         </a-menu-item>
       </template>
       <template v-else>
