@@ -12,6 +12,7 @@ import {
   LayoutHeader,
   Form,
   FormItem,
+  FormItemRest,
   TabPane,
   Tabs,
   Input,
@@ -120,6 +121,7 @@ export default {
     app.component(Popconfirm.name, Popconfirm);
     app.component(Modal.name, Modal);
     app.component(Switch.name, Switch);
+    app.component(FormItemRest.name, FormItemRest);
 
     // 图标
     app.component('SyncOutlined', SyncOutlined);

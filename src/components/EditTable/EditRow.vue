@@ -21,8 +21,8 @@
       </template>
       <slot name="bodyCell" :dataInfo="{ column, text, record, index }"></slot>
     </template>
-    <template #headerCell="{ column, text, record }">
-      <slot name="headerCell" :dataInfo="{ column, text, record }"></slot>
+    <template #headerCell="{ column, text, record, index }">
+      <slot name="headerCell" :dataInfo="{ column, text, record, index }"></slot>
     </template>
   </a-table>
   <div class="table-pagination" v-if="pagination.total > 1">

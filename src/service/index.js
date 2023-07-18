@@ -11,8 +11,8 @@ const DB = new db();
 
 const instance = axios.create({
   // FIXME:如果是多个baseURL关闭此处，在api调用是加入
-  // baseURL: process.env.VUE_APP_BASE_API,
-  baseURL: '/api',
+  baseURL: process.env.VUE_APP_BASE_API, // 打包时使用
+  // baseURL: '/api', // 本地开发联调跨域时使用代理
   responseType: 'json',
   skipHandleResponse: false //默认不跳过数据处理
 });

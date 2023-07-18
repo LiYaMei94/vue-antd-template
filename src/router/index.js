@@ -16,7 +16,7 @@ const routerWhiteNameList = ['UserLogin', '404', '403', '500'];
 // 路由拦截
 router.beforeEach(async (to, from, next) => {
   try {
-    console.log('to, from, next', to, from, next);
+    // console.log('to, from, next', to, from, next);
     const { getMenuList } = usePermission();
     const { state } = useStore();
     // FIXME:1.动态设置标题，根据各平台自行配置

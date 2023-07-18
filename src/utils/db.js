@@ -1,5 +1,4 @@
 import { isNull } from '@/utils/utils';
-// import { allEnum } from '@/apis/index';
 
 class DB {
   constructor() {}

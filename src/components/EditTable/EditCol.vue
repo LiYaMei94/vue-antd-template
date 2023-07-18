@@ -20,7 +20,7 @@
         <slot name="action" :dataInfo="{ column, text, record, index }"></slot>
       </template>
     </template>
-    <template #headerCell="{ column, text, record }">
+    <template #headerCell="{ column, text, record, index }">
       <slot name="headerCell" :dataInfo="{ column, text, record, index }"></slot>
     </template>
   </a-table>

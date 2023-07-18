@@ -4,11 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "serve:pre": "vue-cli-service serve  --mode pre",
-    "serve:test": "vue-cli-service serve  --mode test",
     "build": "vue-cli-service build",
     "build:pre": "vue-cli-service build --mode pre",
-    "build:test": "vue-cli-service build --mode test",
+    "build:stage": "vue-cli-service build --mode stage",
     "lint": "vue-cli-service lint",
     "prepare": "husky install"
   },

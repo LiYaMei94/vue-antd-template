@@ -62,6 +62,17 @@ body,
   }
 
   /*========================antd form表单&元素=============================*/
+  /*自定义 校验规则展示小红点*/
+  .nesting-form-item .ant-form-item-label:before {
+    display: inline-block;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+  }
+
   .ant-input-number {
     width: 100%;
   }

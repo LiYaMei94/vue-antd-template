@@ -18,95 +18,18 @@
 export const basicLayoutRouters = [
   {
     key: '1',
-    name: 'ConfigManage',
-    path: '',
-    redirect: '/channel/list',
+    name: 'Home',
+    path: '/home',
+    component: () => import(/* webpackChunkName: "Home" */ '@/views/home'),
     meta: {
       icon: 'PieChartOutlined',
-      title: '渠道管理',
+      title: '首页',
       isAffix: false,
       isFull: false,
       isHide: false,
       isKeepAlive: false,
       isLink: ''
     },
-    children: [
-      /*渠道账号*/
-      {
-        key: '1-1',
-        name: 'ChannelList',
-        path: '/channel/list',
-        component: () => import(/* webpackChunkName: "channel" */ '@/views/channelManage/list.vue'),
-        meta: {
-          icon: 'PieChartOutlined',
-          title: '渠道账户',
-          isAffix: false,
-          isFull: false,
-          isHide: false,
-          isKeepAlive: false,
-          isLink: '',
-          activeMenu: '1-1'
-        }
-      },
-      /*消息模板*/
-      {
-        key: '1-2',
-        name: 'MessageMouldList',
-        path: '/message/mould/list',
-        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/list.vue'),
-        meta: {
-          icon: 'PieChartOutlined',
-          title: '消息模板',
-          isAffix: false,
-          isFull: false,
-          isHide: false,
-          isKeepAlive: false,
-          isLink: '',
-          activeMenu: '1-2'
-        }
-      },
-      {
-        name: 'MessageMouldCreate',
-        path: '/message/mould/:type',
-        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/edit.vue'),
-        meta: {
-          title: '消息模板创建',
-          isAffix: false,
-          isFull: false,
-          isHide: true,
-          isKeepAlive: false,
-          isLink: '',
-          activeMenu: '1-2'
-        }
-      },
-      {
-        name: 'MessageMouldEdit',
-        path: '/message/mould/:type/:id',
-        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/edit.vue'),
-        meta: {
-          title: '消息模板更新',
-          isAffix: false,
-          isFull: false,
-          isHide: true,
-          isKeepAlive: false,
-          isLink: '',
-          activeMenu: '1-2'
-        }
-      },
-      {
-        name: 'MessageMouldDetail',
-        path: '/message/mould/:type/:id',
-        component: () => import(/* webpackChunkName: "MessageMould" */ '@/views/messageMould/edit.vue'),
-        meta: {
-          title: '消息模板详情',
-          isAffix: false,
-          isFull: false,
-          isHide: true,
-          isKeepAlive: false,
-          isLink: '',
-          activeMenu: '1-2'
-        }
-      }
-    ]
+    children: []
   }
 ];

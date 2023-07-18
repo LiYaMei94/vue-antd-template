@@ -4,7 +4,7 @@ export const staticRoutes = [
   {
     path: '/',
     component: BasicLayout,
-    redirect: '/channel/list',
+    redirect: '/home',
     name: 'BasicLayout',
     children: []
   },
