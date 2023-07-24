@@ -1,37 +1,67 @@
-# vue-antd-template
+# longi-工程管理平台-v2-web
 
-## Project setup
+## 项目目录
+
+```js
+|-- .env.XXX // 打包环境配置文件
+|-- .prettierignore // 无需校验代码格式的文件在此设置
+|-- .prettierrc.js // 代码风格
+|-- .husky // 为 git 客户端增加 hook 的工具
+|-- src
+    |-- api // api接口，可以根据模块，或者功能分类，小驼峰命名
+    |   |-- index.js
+    |   |-- user.js
+    |-- assets // 静态资源
+    |   |-- iconfonts // 阿里巴巴矢量图或者其他字体文件
+    |   |-- images
+    |   |-- style
+    |       |-- common.less // 公共样式
+    |       |-- variables.module.less  // 公共less变量，可以在此导出变量在js中使用
+    |-- components // 公共组件，局部组件放在功能目录下即可，大驼峰命名
+    |-- config // 项目配置
+    |   |-- theme.js // 主题配置
+    |-- directives // 自定义指令
+    |-- hooks // 自定义hooks，命名小驼峰命名，使用useXXXX命名，比如useTable
+    |-- layouts // 布局文件，.vue文件大驼峰命名
+    |   |-- BasicLayout.vue // 上、中(左右布局，有左侧菜单)、下布局
+    |   |-- UpperMiddleLayout.vue // 上、中(无左侧菜单)、下布局
+    |   |-- UserLayout.vue // 用户相关页面布局
+    |-- lib // 封装第三方库、第三方库文件
+    |   |-- axios.js // 封装axios请求
+    |-- plugins
+    |-- router
+    |   |-- dynamicRouter.js // 动态路由
+    |   |-- index.js
+    |   |-- staticRouter.js // 静态路由
+    |-- store
+    |-- utils
+    |   |-- const.js // 常量，命名使用大写字母+下划线
+    |-- views // 页面。文件夹名称最好是单个单词，多个单词时使用小驼峰命名
+
+```
+
+## 安装依赖
 
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 本地开发
 
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 打包
 
-```
+```html
+<!-- 打包生产环境 -->
 npm run build
+<!-- 打包预发环境 -->
+npm run build:pre
+<!-- 打包测试环境 -->
+npm run build:stage
 ```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-### TODO
-
-- 权限（菜单（静态路由+动态路由），按钮：自定义指令，缓存）
-- tab 页（权限、缓存）
 
 # 组件文档
 

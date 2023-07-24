@@ -1,8 +1,8 @@
 <template>
   <a-layout-header :theme="theme" class="header-container">
     <div class="logo">
-      <img src="~@/assets/images/logo.svg" />
-      <span>消息平台</span>
+      <img src="~@/assets/images/logo.png" />
+      <span>工程管理平台</span>
     </div>
     <div class="header-menu">
       <slot name="headerMenu"></slot>
@@ -21,7 +21,7 @@
   </a-layout-header>
 </template>
 <script setup>
-import { LIGHT_THEME } from '@/theme';
+import { LIGHT_THEME } from '@/config/theme';
 import Avatar from './components/Avatar.vue';
 import Fullscreen from './components/Fullscreen.vue';
 import Theme from './components/Theme.vue';
@@ -56,6 +56,9 @@ const handleRefresh = () => {
   }
   .header-menu {
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
   .header-right-tool {
     display: flex;

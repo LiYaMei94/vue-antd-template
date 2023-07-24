@@ -1,10 +1,15 @@
-import { BasicLayout, UserLayout } from '@/layouts';
+import { BasicLayout, UserLayout, UpperMiddleLayout } from '@/layouts';
 
 export const staticRoutes = [
   {
     path: '/',
-    component: BasicLayout,
+    component: UpperMiddleLayout,
     redirect: '/home',
+    name: 'UpperMiddleLayout',
+    children: []
+  },
+  {
+    component: BasicLayout,
     name: 'BasicLayout',
     children: []
   },

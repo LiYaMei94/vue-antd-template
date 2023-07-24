@@ -4,17 +4,25 @@ const DB = new db();
 
 export default {
   state: () => ({
-    sideMenuList: []
+    buttonList: DB.getLocal('buttonList') || [],
+    menuData: {}
   }),
   actions: {
-    setSideMenuList({ commit }, val) {
-      commit('setSideMenuList', val);
+    setMenuData({ commit }, val) {
+      commit('setMenuData', val);
+    },
+    setButtonList({ commit }, val) {
+      commit('setButtonList', val);
     }
   },
   mutations: {
-    setSideMenuList(state, val) {
-      DB.setLocal('sideMenuList', val);
-      state.sideMenuList = val;
+    setMenuData(state, val) {
+      DB.setLocal('menuData', val);
+      state.menuData = val;
+    },
+    setButtonList(state, val) {
+      DB.setLocal('buttonList', val);
+      state.buttonList = val;
     }
   }
 };

@@ -15,3 +15,6 @@ export const PAGE_ROUTE_NAME_MAP = {
   [EDIT]: 'Edit',
   [DETAIL]: 'Detail'
 };
+
+export const ROUTE_MENU_TYPE_TOP = 'top';
+export const ROUTE_MENU_TYPE_SIDE = 'side';

@@ -28,15 +28,15 @@
 import { ref, reactive, onMounted } from 'vue';
 import db from '@/utils/db';
 import { Base64 } from 'js-base64';
-import { code, login, logout } from '@/apis/user';
+import { code, login, logout } from '@/api/user';
 import { resultCallBack } from '@/utils/utils';
 import { useRouter } from 'vue-router';
 import { ACCESS_TOKEN } from '@/utils/const';
-import { allEnum } from '@/apis/index';
+import { allEnum } from '@/api/index';
 import { useStore } from 'vuex';
 import { usePermission } from '@/hooks/usePermission';
 
-const { getMenuList } = usePermission();
+const { getMenuData } = usePermission();
 const { dispatch } = useStore();
 const router = useRouter();
 const DB = new db();
@@ -72,7 +72,7 @@ const onFinish = async (values) => {
       DB.setLocal(ACCESS_TOKEN, res);
 
       // 动态加载菜单和路由
-      await getMenuList();
+      await getMenuData();
 
       // 全局枚举
       const allEnumData = (await allEnum()).data;

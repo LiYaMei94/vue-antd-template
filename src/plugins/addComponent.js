@@ -70,6 +70,7 @@ import {
 } from '@ant-design/icons-vue';
 
 import CustomSubMenu from '@/components/SubMenu';
+import CustomMenu from '@/components/Menu';
 import MyIcon from '@/components/Icon.vue';
 
 export default {
@@ -123,29 +124,28 @@ export default {
     app.component(Switch.name, Switch);
     app.component(FormItemRest.name, FormItemRest);
 
-    // 图标
-    app.component('SyncOutlined', SyncOutlined);
-    app.component('DownOutlined', DownOutlined);
-    app.component('UpOutlined', UpOutlined);
-    app.component('SettingOutlined', SettingOutlined);
-    app.component('PieChartOutlined', PieChartOutlined);
-    app.component('MailOutlined', MailOutlined);
-    app.component('UserOutlined', UserOutlined);
-    app.component('FullscreenOutlined', FullscreenOutlined);
-    app.component('FullscreenExitOutlined', FullscreenExitOutlined);
-    app.component('MenuFoldOutlined', MenuFoldOutlined);
-    app.component('MenuUnfoldOutlined', MenuUnfoldOutlined);
-    app.component('CloseOutlined', CloseOutlined);
-    app.component('EditOutlined', EditOutlined);
-    app.component('CheckOutlined', CheckOutlined);
-    app.component('DeleteOutlined', DeleteOutlined);
-    app.component('DoubleRightOutlined', DoubleRightOutlined);
-    app.component('WindowsOutlined', WindowsOutlined);
+    // 图标，使用<SyncOutlined></SyncOutlined>或者<sync-outlined></sync-outlined>
+    app.component(SyncOutlined.name, SyncOutlined);
+    app.component(DownOutlined.name, DownOutlined);
+    app.component(UpOutlined.name, UpOutlined);
+    app.component(SettingOutlined.name, SettingOutlined);
+    app.component(PieChartOutlined.name, PieChartOutlined);
+    app.component(MailOutlined.name, MailOutlined);
+    app.component(UserOutlined.name, UserOutlined);
+    app.component(FullscreenOutlined.name, FullscreenOutlined);
+    app.component(FullscreenExitOutlined.name, FullscreenExitOutlined);
+    app.component(MenuFoldOutlined.name, MenuFoldOutlined);
+    app.component(MenuUnfoldOutlined.name, MenuUnfoldOutlined);
+    app.component(CloseOutlined.name, CloseOutlined);
+    app.component(EditOutlined.name, EditOutlined);
+    app.component(CheckOutlined.name, CheckOutlined);
+    app.component(DeleteOutlined.name, DeleteOutlined);
+    app.component(DoubleRightOutlined.name, DoubleRightOutlined);
+    app.component(WindowsOutlined.name, WindowsOutlined);
 
     // 自定义组件
     app.component('CustomSubMenu', CustomSubMenu);
+    app.component('CustomMenu', CustomMenu);
     app.component('MyIcon', MyIcon);
-
-    app.config.globalProperties.$message = message;
   }
 };

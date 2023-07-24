@@ -9,7 +9,7 @@
               <span class="title">后台系统</span>
             </a>
           </div>
-          <div class="desc">消息平台</div>
+          <div class="desc">工程管理平台</div>
         </div>
 
         <router-view />
