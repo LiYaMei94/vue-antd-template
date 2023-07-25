@@ -1,5 +1,15 @@
 # longi-工程管理平台-v2-web
 
+## 部署说明
+
+- 部署内网环境
+  - 打包之前修改 `/deploy/test/nginx_package.sh` 文件中的 `AppName` 变量
+  - 进入服务器目录 `/home/haojinke/package_images/vue`
+    - 删除该目录下的 `dist` 目录，命令 `rm -rf dist`
+    - 将打包之后的 `dist` 文件夹放到该目录下
+    - 执行脚本部署：`sh ./dist/deploy/test/nginx_package.sh`
+    - 内网访问：`http://10.0.88.198:9098/${AppName}/#/`
+
 ## 项目目录
 
 ```js
