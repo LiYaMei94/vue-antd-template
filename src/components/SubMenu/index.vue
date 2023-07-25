@@ -6,7 +6,7 @@
     <template #title>{{ menuInfo.meta?.title }}</template>
     <template v-for="item in menuInfo.children" :key="item.key">
       <template v-if="!item.children?.length">
-        <a-menu-item :key="item.key" v-if="!item?.meta?.isHide">
+        <a-menu-item :key="item.key" v-if="!item?.meta?.isHide" @click="routeChange($event, item)">
           <template #icon>
             <component :is="item.meta?.icon"></component>
           </template>
@@ -34,6 +34,10 @@ const props = defineProps({
   },
   key: {
     type: [Number | String],
+    default: null
+  },
+  routeChange: {
+    type: Function,
     default: null
   }
 });

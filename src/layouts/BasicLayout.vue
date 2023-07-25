@@ -10,13 +10,17 @@
     </LayoutHeader>
     <a-layout>
       <LayoutSider v-model:theme="state.global.theme"></LayoutSider>
-      <a-layout-content><router-view /></a-layout-content>
+      <div class="main">
+        <PageTabs v-if="state.global.showTabs"></PageTabs>
+        <a-layout-content><router-view /></a-layout-content>
+      </div>
     </a-layout>
   </a-layout>
 </template>
 <script setup>
 import LayoutSider from './LayoutSider';
 import LayoutHeader from './LayoutHeader';
+import PageTabs from './components/Tabs';
 import { useStore } from 'vuex';
 
 const { state } = useStore();

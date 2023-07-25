@@ -21,14 +21,13 @@ export const routerData = [
   {
     key: '1',
     name: 'Home',
-    path: 'https://docs.dhtmlx.com/gantt/desktop__howtostart_guides.html',
+    path: '/home',
     component: () => import(/* webpackChunkName: "Home" */ '@/views/home'),
     meta: {
       title: '首页',
       activeMenu: '1',
       isFull: true,
-      type: [ROUTE_MENU_TYPE_TOP],
-      isLink: true
+      type: [ROUTE_MENU_TYPE_TOP]
     }
   },
   {
@@ -55,5 +54,46 @@ export const routerData = [
       type: [ROUTE_MENU_TYPE_TOP, ROUTE_MENU_TYPE_SIDE],
       icon: 'MailOutlined'
     }
+  },
+  {
+    key: '4',
+    name: 'Test',
+    path: '/test',
+    component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
+    meta: {
+      title: '侧边栏3',
+      activeMenu: '4',
+      isFull: false,
+      type: [ROUTE_MENU_TYPE_SIDE],
+      icon: 'MailOutlined'
+    }
+  },
+  {
+    key: '5',
+    name: 'Name',
+    path: '/name',
+    component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
+    meta: {
+      title: 'name',
+      isFull: false,
+      type: [ROUTE_MENU_TYPE_SIDE],
+      icon: 'MailOutlined'
+    },
+    children: [
+      {
+        key: '5-1',
+        name: 'Name',
+        path: '/name',
+        component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
+        meta: {
+          title: 'name1111',
+          activeMenu: '5-1',
+          parentID: '5',
+          isFull: false,
+          type: [ROUTE_MENU_TYPE_SIDE],
+          icon: 'MailOutlined'
+        }
+      }
+    ]
   }
 ];

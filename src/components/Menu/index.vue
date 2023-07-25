@@ -9,7 +9,7 @@
   >
     <template v-for="item in menuList" :key="item.key">
       <template v-if="!item.children?.length">
-        <a-menu-item :key="item.key">
+        <a-menu-item :key="item.key" @click="routeChange($event, item)">
           <template #icon>
             <component :is="item.meta?.icon"></component>
           </template>
@@ -23,7 +23,7 @@
         </a-menu-item>
       </template>
       <template v-else>
-        <CustomSubMenu :key="item.key" :menuInfo="item" />
+        <CustomSubMenu :key="item.key" :menuInfo="item" :routeChange="routeChange" />
       </template>
     </template>
   </a-menu>
@@ -32,8 +32,11 @@
 import { defineProps, unref, ref } from 'vue';
 import { LIGHT_THEME } from '@/config/theme';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import _ from 'lodash';
 
 const { currentRoute } = useRouter();
+const { state, dispatch } = useStore();
 
 const props = defineProps({
   menuList: {
@@ -57,10 +60,26 @@ const props = defineProps({
   }
 });
 const currentRouteKey = unref(currentRoute).meta?.activeMenu;
-const openKeys = ref([]);
+const openKeys = ref([unref(currentRoute).meta?.parentID]);
 const selectedKeys = ref([currentRouteKey]);
 
 const onOpenChange = (keys) => {
   openKeys.value = props.isShowCurrent ? [keys[keys.length - 1]] : keys;
+};
+
+const routeChange = (event, to) => {
+  const isSide = !to.meta?.type?.includes('top');
+  if (state.global.showTabs && isSide) {
+    const flag = _.find(state.global.tabsMenuList, (item) => item.path === to.path);
+    if (flag) {
+      return;
+    }
+    const tabsMenuList = _.cloneDeep(state.global.tabsMenuList);
+    tabsMenuList.push({
+      path: to.path,
+      title: to?.meta?.title
+    });
+    dispatch('setTabsMenuList', tabsMenuList);
+  }
 };
 </script>

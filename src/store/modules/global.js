@@ -9,7 +9,73 @@ export default {
     // 主题模式
     theme: DB.getLocal('theme') || LIGHT_THEME,
     allEnum: DB.getLocal('allEnum') || {},
-    antConfig: DB.getLocal('antConfig') || 'middle'
+    antConfig: DB.getLocal('antConfig') || 'middle',
+    // 标签页
+    showTabs: true,
+    // 标签页图标
+    tabsIcon: true,
+    tabsMenuList: [
+      {
+        path: '/home',
+        title: '首页',
+        icon: ''
+      },
+      {
+        path: '/dashboard',
+        title: '数据大屏',
+        icon: ''
+      },
+      {
+        path: '/side',
+        title: '侧边栏11',
+        icon: ''
+      },
+      {
+        path: '/test',
+        title: 'test',
+        icon: ''
+      },
+      {
+        path: '/home',
+        title: '首页',
+        icon: ''
+      },
+      {
+        path: '/dashboard',
+        title: '数据大屏',
+        icon: ''
+      },
+      {
+        path: '/side',
+        title: '侧边栏11',
+        icon: ''
+      }
+      // {
+      //   path: '/test',
+      //   title: 'test',
+      //   icon: ''
+      // },
+      // {
+      //   path: '/home',
+      //   title: '首页',
+      //   icon: ''
+      // },
+      // {
+      //   path: '/dashboard',
+      //   title: '数据大屏',
+      //   icon: ''
+      // },
+      // {
+      //   path: '/side',
+      //   title: '侧边栏11',
+      //   icon: ''
+      // },
+      // {
+      //   path: '/test',
+      //   title: 'test',
+      //   icon: ''
+      // }
+    ]
   }),
   getters: {},
   actions: {
@@ -24,6 +90,9 @@ export default {
     },
     setAntConfig({ commit }, val) {
       commit('setAntConfig', val);
+    },
+    setTabsMenuList({ commit }, val) {
+      commit('setTabsMenuList', val);
     }
   },
   mutations: {
@@ -42,6 +111,10 @@ export default {
     setAntConfig(state, val) {
       DB.setLocal('antConfig', val);
       state.antConfig = val;
+    },
+    setTabsMenuList(state, val) {
+      DB.setLocal('tabsMenuList', val);
+      state.tabsMenuList = val;
     }
   }
 };
