@@ -1,5 +1,5 @@
 #!/bin/bash
-AppName='vue-antd-template'
+AppName={{name}}
 
 if [ -z $AppName ]; then
         echo '请输入应用名称'
