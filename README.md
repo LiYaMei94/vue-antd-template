@@ -3,11 +3,11 @@
 ## 部署说明
 
 - 部署内网环境
-  - 打包之前修改 `/deploy/test/nginx_package.sh` 文件中的 `AppName` 变量
+  - 打包之前修改 `/deploy/intranet/nginx_package.sh` 文件中的 `AppName` 变量
   - 进入服务器目录 `/home/haojinke/package_images/vue`
     - 删除该目录下的 `dist` 目录，命令 `rm -rf dist`
     - 将打包之后的 `dist` 文件夹放到该目录下
-    - 执行脚本部署：`sh ./dist/deploy/test/nginx_package.sh`
+    - 执行脚本部署：`sh ./{{name}}/deploy/intranet/nginx_package.sh`
     - 内网访问：`http://10.0.88.198:9098/${AppName}/#/`
 
 ## 项目目录
@@ -17,6 +17,7 @@
 |-- .prettierignore // 无需校验代码格式的文件在此设置
 |-- .prettierrc.js // 代码风格
 |-- .husky // 为 git 客户端增加 hook 的工具
+|-- deploy // 部署配置
 |-- src
     |-- api // api接口，可以根据模块，或者功能分类，小驼峰命名
     |   |-- index.js
