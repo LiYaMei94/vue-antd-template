@@ -8,7 +8,7 @@
     - 删除该目录下的 `dist` 目录，命令 `rm -rf dist`
     - 将打包之后的 `dist` 文件夹放到该目录下
     - 执行脚本部署：`sh ./{{name}}/deploy/intranet/nginx_package.sh`
-    - 内网访问：`http://10.0.88.198:9098/${AppName}/#/`
+    - 内网访问：`http://10.0.88.198:9098/{{name}}/#/`
 
 ## 项目目录
 
