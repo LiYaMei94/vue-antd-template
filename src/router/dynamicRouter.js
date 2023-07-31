@@ -44,54 +44,49 @@ export const routerData = [
   },
   {
     key: '3',
-    name: 'Side',
-    path: '/side',
-    component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
+    name: 'System',
+    path: '/system',
     meta: {
-      title: '侧边栏2',
+      title: '系统设置',
       activeMenu: '3',
       isFull: false,
-      type: [ROUTE_MENU_TYPE_TOP, ROUTE_MENU_TYPE_SIDE],
-      icon: 'MailOutlined'
-    }
-  },
-  {
-    key: '4',
-    name: 'Test',
-    path: '/test',
-    component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
-    meta: {
-      title: '侧边栏3',
-      activeMenu: '4',
-      isFull: false,
-      type: [ROUTE_MENU_TYPE_SIDE],
-      icon: 'MailOutlined'
-    }
-  },
-  {
-    key: '5',
-    name: 'Name',
-    path: '/name',
-    component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
-    meta: {
-      title: 'name',
-      isFull: false,
-      type: [ROUTE_MENU_TYPE_SIDE],
-      icon: 'MailOutlined'
+      type: [ROUTE_MENU_TYPE_TOP, ROUTE_MENU_TYPE_SIDE]
     },
     children: [
       {
-        key: '5-1',
-        name: 'Name',
-        path: '/name',
-        component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
+        key: '3-1',
+        name: 'System',
+        path: '/system',
+        component: () => import(/* webpackChunkName: "System" */ '@/views/system'),
         meta: {
-          title: 'name1111',
-          activeMenu: '5-1',
-          parentID: '5',
+          title: '系统设置',
+          activeMenu: '3-1',
           isFull: false,
-          type: [ROUTE_MENU_TYPE_SIDE],
-          icon: 'MailOutlined'
+          type: [ROUTE_MENU_TYPE_SIDE]
+        }
+      },
+      {
+        key: '3-2',
+        name: 'SystemUser',
+        path: '/system/user',
+        component: () => import(/* webpackChunkName: "SystemUser" */ '@/views/system/user.vue'),
+        meta: {
+          title: '用户管理',
+          activeMenu: '3-2',
+          isFull: false,
+          type: [ROUTE_MENU_TYPE_SIDE]
+        }
+      },
+      {
+        key: '3-3',
+        name: 'SystemRole',
+        path: '/system/role',
+        component: () => import(/* webpackChunkName: "SystemRole" */ '@/views/system/role.vue'),
+        meta: {
+          title: '角色管理',
+          activeMenu: '3-3',
+          isFull: false,
+          type: [ROUTE_MENU_TYPE_SIDE]
         }
       }
     ]

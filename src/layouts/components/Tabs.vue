@@ -1,9 +1,10 @@
 <template>
-  <div class="tabs-box">
+  <div class="tabs-box" :style="{ padding: state.global.tabsMenuList?.length > 0 ? '4px 10px' : 0 }">
     <div class="tabs-menu">
       <a-tabs v-model:activeKey="activeKey" hide-add type="editable-card">
         <a-tab-pane v-for="item in state.global.tabsMenuList" :key="item.path">
           <template #tab>
+            <MyIcon class="icon" type="icon-dian1"></MyIcon>
             <span @click="navigatorChange($event, item.path)">
               {{ item.title }}
             </span>
@@ -133,10 +134,20 @@ const handleRemove = (event, fullPath) => {
 .tabs-box {
   background-color: var(--ant-content-bg);
   width: 100%;
-  padding: 0 10px;
   box-sizing: border-box;
   .tabs-menu {
     width: 100%;
+    .icon {
+      font-size: 16px;
+      display: none;
+      margin-right: 5px;
+      margin-top: 2px;
+    }
+    .ant-tabs-tab-active {
+      .icon {
+        display: inline-block;
+      }
+    }
   }
   .extra-icon-wrap {
     width: 25px;
@@ -152,6 +163,10 @@ const handleRemove = (event, fullPath) => {
   .tabs-menu .ant-tabs-top .ant-tabs-nav {
     margin: 0;
   }
+  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
+  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
+    padding: 5px 10px;
+  }
   .ant-tabs-tab .anticon.anticon-close {
     margin: 0;
     margin-left: 10px;
@@ -166,6 +181,26 @@ const handleRemove = (event, fullPath) => {
   .ant-tabs-top > .ant-tabs-nav:before,
   .ant-tabs-top > div > .ant-tabs-nav:before {
     border-bottom: 0px solid #f0f0f0;
+  }
+
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
+    border: 1px solid #f0f0f0;
+    background-color: var(--ant-primary-color);
+    .ant-tabs-tab-remove {
+      color: #fff;
+    }
+  }
+  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #fff;
+  }
+  .ant-tabs-tab-remove {
+    margin-left: 0;
+    padding-left: 0;
+  }
+  .ant-tabs-tab-btn {
+    display: flex;
+    align-items: center;
   }
 }
 </style>

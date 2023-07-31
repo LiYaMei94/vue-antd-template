@@ -14,68 +14,7 @@ export default {
     showTabs: true,
     // 标签页图标
     tabsIcon: true,
-    tabsMenuList: [
-      {
-        path: '/home',
-        title: '首页',
-        icon: ''
-      },
-      {
-        path: '/dashboard',
-        title: '数据大屏',
-        icon: ''
-      },
-      {
-        path: '/side',
-        title: '侧边栏11',
-        icon: ''
-      },
-      {
-        path: '/test',
-        title: 'test',
-        icon: ''
-      },
-      {
-        path: '/home',
-        title: '首页',
-        icon: ''
-      },
-      {
-        path: '/dashboard',
-        title: '数据大屏',
-        icon: ''
-      },
-      {
-        path: '/side',
-        title: '侧边栏11',
-        icon: ''
-      }
-      // {
-      //   path: '/test',
-      //   title: 'test',
-      //   icon: ''
-      // },
-      // {
-      //   path: '/home',
-      //   title: '首页',
-      //   icon: ''
-      // },
-      // {
-      //   path: '/dashboard',
-      //   title: '数据大屏',
-      //   icon: ''
-      // },
-      // {
-      //   path: '/side',
-      //   title: '侧边栏11',
-      //   icon: ''
-      // },
-      // {
-      //   path: '/test',
-      //   title: 'test',
-      //   icon: ''
-      // }
-    ]
+    tabsMenuList: DB.getSession('tabsMenuList') || []
   }),
   getters: {},
   actions: {
@@ -113,7 +52,7 @@ export default {
       state.antConfig = val;
     },
     setTabsMenuList(state, val) {
-      DB.setLocal('tabsMenuList', val);
+      DB.setSession('tabsMenuList', val);
       state.tabsMenuList = val;
     }
   }

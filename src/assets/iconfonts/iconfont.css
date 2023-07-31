@@ -1,7 +1,7 @@
 @font-face {
   font-family: 'iconfont'; /* Project id 4140184 */
-  src: url('iconfont.woff2?t=1688439448077') format('woff2'), url('iconfont.woff?t=1688439448077') format('woff'),
-    url('iconfont.ttf?t=1688439448077') format('truetype');
+  src: url('iconfont.woff2?t=1690769364852') format('woff2'), url('iconfont.woff?t=1690769364852') format('woff'),
+    url('iconfont.ttf?t=1690769364852') format('truetype');
 }
 
 .iconfont {
@@ -10,6 +10,14 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-dian1:before {
+  content: '\e608';
+}
+
+.icon-dian:before {
+  content: '\ec1e';
 }
 
 .icon-question-circle:before {
