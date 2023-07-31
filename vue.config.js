@@ -52,7 +52,7 @@ module.exports = defineConfig({
   devServer: {
     hot: false,
     liveReload: false,
-    open: true,
+    open: false,
     proxy: {
       '/api': {
         target: process.env.VUE_APP_BASE_API, //要代理的本地api地址，也可以换成线上测试地址

@@ -11,6 +11,7 @@ export const staticRoutes = [
   {
     component: BasicLayout,
     name: 'BasicLayout',
+    path: '/basic',
     children: []
   },
   {

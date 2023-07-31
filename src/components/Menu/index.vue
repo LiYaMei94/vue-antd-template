@@ -23,13 +23,13 @@
         </a-menu-item>
       </template>
       <template v-else>
-        <CustomSubMenu :key="item.key" :menuInfo="item" :routeChange="routeChange" />
+        <CustomSubMenu :mode="mode" :key="item.key" :menuInfo="item" :routeChange="routeChange" />
       </template>
     </template>
   </a-menu>
 </template>
 <script setup>
-import { defineProps, unref, ref } from 'vue';
+import { defineProps, unref, ref, watch } from 'vue';
 import { LIGHT_THEME } from '@/config/theme';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -62,6 +62,15 @@ const props = defineProps({
 const currentRouteKey = unref(currentRoute).meta?.activeMenu;
 const openKeys = ref([unref(currentRoute).meta?.parentID]);
 const selectedKeys = ref([currentRouteKey]);
+
+watch(
+  () => currentRoute,
+  (val) => {
+    const activeMenu = unref(val).meta?.activeMenu;
+    selectedKeys.value = activeMenu ? [unref(val).meta?.activeMenu] : null;
+  },
+  { deep: true }
+);
 
 const onOpenChange = (keys) => {
   openKeys.value = props.isShowCurrent ? [keys[keys.length - 1]] : keys;
