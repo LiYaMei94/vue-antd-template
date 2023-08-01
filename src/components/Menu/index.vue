@@ -29,7 +29,7 @@
   </a-menu>
 </template>
 <script setup>
-import { defineProps, unref, ref, watch } from 'vue';
+import { defineProps, unref, ref, watch, computed } from 'vue';
 import { LIGHT_THEME } from '@/config/theme';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -51,6 +51,10 @@ const props = defineProps({
     type: String,
     default: 'inline'
   },
+  type: {
+    type: String,
+    default: 'side-menu'
+  },
   options: {
     type: Object,
     default: {
@@ -59,17 +63,28 @@ const props = defineProps({
     }
   }
 });
-const currentRouteKey = unref(currentRoute).meta?.activeMenu;
-const openKeys = ref([unref(currentRoute).meta?.parentID]);
-const selectedKeys = ref([currentRouteKey]);
+const openKeys = ref([]);
+const selectedKeys = ref([]);
+const isTopMenu = computed(() => props.type === 'top-menu');
 
 watch(
   () => currentRoute,
   (val) => {
     const activeMenu = unref(val).meta?.activeMenu;
-    selectedKeys.value = activeMenu ? [unref(val).meta?.activeMenu] : null;
+    const parentID = unref(val).meta?.parentID;
+
+    // 顶部菜单
+    if (isTopMenu.value) {
+      selectedKeys.value = parentID ? [parentID] : [activeMenu];
+    }
+
+    // 侧边栏
+    if (!isTopMenu.value) {
+      selectedKeys.value = activeMenu ? [activeMenu] : parentID ? [parentID] : [];
+      openKeys.value = parentID ? [parentID] : [activeMenu];
+    }
   },
-  { deep: true }
+  { deep: true, immediate: true }
 );
 
 const onOpenChange = (keys) => {

@@ -4,7 +4,7 @@
       <template #headerMenu>
         <div class="header-menu-left"></div>
         <div class="header-menu-right">
-          <CustomMenu v-model:theme="state.global.theme" mode="horizontal" :menuList="state.user?.menuData?.top"></CustomMenu>
+          <CustomMenu v-model:theme="state.global.theme" mode="horizontal" :menuList="state.user?.menuData?.top" type="top-menu"></CustomMenu>
         </div>
       </template>
     </LayoutHeader>

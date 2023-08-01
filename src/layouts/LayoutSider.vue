@@ -3,7 +3,7 @@
     <template #trigger>
       <component :is="collapsed ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined'"></component>
     </template>
-    <CustomMenu :theme="theme" mode="inline" :menuList="state?.user?.menuData?.side"></CustomMenu>
+    <CustomMenu :theme="theme" mode="inline" :menuList="state?.user?.menuData?.side" type="side-menu"></CustomMenu>
   </a-layout-sider>
 </template>
 
