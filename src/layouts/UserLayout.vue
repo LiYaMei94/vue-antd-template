@@ -30,15 +30,6 @@
 #userLayout.user-layout-wrapper {
   height: 100%;
 
-  &.mobile {
-    .container {
-      .main {
-        max-width: 368px;
-        width: 98%;
-      }
-    }
-  }
-
   .container {
     width: 100%;
     min-height: 100%;
@@ -78,12 +69,6 @@
           margin-top: 12px;
           margin-bottom: 40px;
         }
-      }
-
-      .main {
-        min-width: 260px;
-        width: 368px;
-        margin: 0 auto;
       }
 
       //   .footer {

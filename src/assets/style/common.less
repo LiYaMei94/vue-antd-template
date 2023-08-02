@@ -28,12 +28,13 @@ body,
     height: 39px;
   }
   /*========================antd布局=============================*/
-  .main {
-    width: calc(100% - 200px);
-  }
   .ant-layout {
-    min-height: 100vh;
+    min-height: 100%;
     background-color: var(--ant-body-bg);
+  }
+
+  .main {
+    flex: 1;
   }
 
   .ant-layout-header {
