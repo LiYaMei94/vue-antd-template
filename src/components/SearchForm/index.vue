@@ -90,7 +90,7 @@ const showCollapse = computed(() => {
       const col = current?.col || {};
       prev += (col[breakPoint.value]?.span || col.span || 1) + (col[breakPoint.value]?.offset || col.offset || 0);
       if (typeof props?.searchFormCol !== 'number') {
-        if (prev >= props?.searchFormCol[breakPoint.value]) {
+        if (prev > props?.searchFormCol[breakPoint.value]) {
           show = true;
         }
       } else {

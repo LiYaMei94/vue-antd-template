@@ -12,8 +12,7 @@ export default {
     antConfig: DB.getLocal('antConfig') || 'middle',
     // 标签页
     showTabs: true,
-    // 标签页图标
-    tabsIcon: true,
+    menuModel: DB.getLocal('menuModel') || '',
     tabsMenuList: DB.getSession('tabsMenuList') || []
   }),
   getters: {},
@@ -32,6 +31,9 @@ export default {
     },
     setTabsMenuList({ commit }, val) {
       commit('setTabsMenuList', val);
+    },
+    setMenuModel({ commit }, val) {
+      commit('setMenuModel', val);
     }
   },
   mutations: {
@@ -54,6 +56,10 @@ export default {
     setTabsMenuList(state, val) {
       DB.setSession('tabsMenuList', val);
       state.tabsMenuList = val;
+    },
+    setMenuModel(state, val) {
+      DB.setLocal('menuModel', val);
+      state.menuModel = val;
     }
   }
 };

@@ -3,7 +3,7 @@
     <template #trigger>
       <component :is="collapsed ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined'"></component>
     </template>
-    <CustomMenu :theme="theme" mode="inline" :menuList="state?.user?.menuData?.side" type="side-menu"></CustomMenu>
+    <CustomMenu :theme="theme" mode="inline" :menuList="menuData" type="side-menu"></CustomMenu>
   </a-layout-sider>
 </template>
 
@@ -27,6 +27,9 @@ const props = defineProps({
 });
 
 const collapsed = ref(false);
+const menuData = computed(() => {
+  return state?.user?.menuData?.side[state?.global?.menuModel] || [];
+});
 </script>
 
 <style lang="less" scope></style>

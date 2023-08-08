@@ -4,6 +4,7 @@ import { staticRoutes, errorRouter } from './staticRouter';
 import { usePermission } from '@/hooks/usePermission';
 import { useStore } from 'vuex';
 
+const isPermission = process.env.VUE_APP_route_permission === 'true';
 const router = createRouter({
   history: createWebHashHistory(),
   strict: false,
@@ -11,13 +12,12 @@ const router = createRouter({
 });
 
 // FIXME:白名单
-const routerWhiteNameList = ['UserLogin', '404', '403', '500', 'Home'];
+const routerWhiteNameList = ['UserLogin', 'UserEditPassword', '404', '403', '500'];
 
 // 路由拦截
 router.beforeEach(async (to, from, next) => {
   try {
-    // console.log('to, from', to, from);
-    const { getMenuData } = usePermission();
+    const { getRouteData, setDefaultRoute } = usePermission();
     const { state } = useStore();
     // FIXME:1.动态设置标题，根据各平台自行配置
     const title = '工程管理平台';
@@ -27,8 +27,9 @@ router.beforeEach(async (to, from, next) => {
     if (routerWhiteNameList.includes(to.name)) return next();
 
     // 3.如果没有侧边菜单数据就重新请求，并生成路由
-    if (JSON.stringify(state?.user?.menuData) === '{}') {
-      await getMenuData();
+    console.log('state?.user?.menuData', state?.user?.menuData);
+    if (!state?.user?.menuData) {
+      isPermission ? await getRouteData() : setDefaultRoute();
       return next({ ...to, replace: true });
     }
 

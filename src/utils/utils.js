@@ -97,3 +97,31 @@ export const resultCallBack = (options) => {
     }
   });
 };
+
+/**
+ * 查找树形数据的值
+ * @param {*} treeData
+ * @param {*} key
+ * @param {*} value
+ * @returns
+ */
+export const findTreeData = (treeData, key, value) => {
+  let hasFound = false, // 表示是否有找到id值
+    result = null;
+  const fn = function (data) {
+    if (Array.isArray(data) && !hasFound) {
+      // 判断是否是数组并且没有的情况下，
+      data.forEach((item) => {
+        if (item[key] === value) {
+          // 数据循环每个子项，并且判断子项下边是否有id值
+          result = item; // 返回的结果等于每一项
+          hasFound = true; // 并且找到id值
+        } else if (item.children) {
+          fn(item.children); // 递归调用下边的子项
+        }
+      });
+    }
+  };
+  fn(treeData); // 调用一下
+  return result;
+};

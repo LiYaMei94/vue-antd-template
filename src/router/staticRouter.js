@@ -1,18 +1,16 @@
-import { BasicLayout, UserLayout, UpperMiddleLayout } from '@/layouts';
+import { BasicLayout, UserLayout } from '@/layouts';
 
+import { routerData } from './dynamicRouter';
+
+const isPermission = process.env.VUE_APP_route_permission === 'true';
+const defaultPermission = !isPermission ? routerData : [];
 export const staticRoutes = [
-  {
-    path: '/',
-    component: UpperMiddleLayout,
-    redirect: '/home',
-    name: 'UpperMiddleLayout',
-    children: []
-  },
   {
     component: BasicLayout,
     name: 'BasicLayout',
-    path: '/basic',
-    children: []
+    path: '/',
+    redirect: '/home',
+    children: [...defaultPermission]
   },
   {
     path: '/user',

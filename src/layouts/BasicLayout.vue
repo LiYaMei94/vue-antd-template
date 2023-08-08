@@ -9,9 +9,9 @@
       </template>
     </LayoutHeader>
     <a-layout>
-      <LayoutSider v-model:theme="state.global.theme"></LayoutSider>
+      <LayoutSider v-model:theme="state.global.theme" v-if="menuData.length"></LayoutSider>
       <div class="main">
-        <PageTabs v-if="state.global.showTabs"></PageTabs>
+        <PageTabs v-if="state.global.showTabs && menuData.length"></PageTabs>
         <a-layout-content><router-view /></a-layout-content>
       </div>
     </a-layout>
@@ -22,6 +22,10 @@ import LayoutSider from './LayoutSider';
 import LayoutHeader from './LayoutHeader';
 import PageTabs from './components/Tabs';
 import { useStore } from 'vuex';
+import { computed } from 'vue';
 
 const { state } = useStore();
+const menuData = computed(() => {
+  return state?.user?.menuData?.side[state?.global?.menuModel] || [];
+});
 </script>

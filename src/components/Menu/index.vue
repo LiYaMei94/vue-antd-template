@@ -7,10 +7,10 @@
     v-model:selectedKeys="selectedKeys"
     @openChange="onOpenChange"
   >
-    <template v-for="item in menuList" :key="item.key">
+    <template v-for="item in menuList" :key="item.name">
       <template v-if="!item.children?.length">
-        <a-menu-item :key="item.key" @click="routeChange($event, item)">
-          <template #icon>
+        <a-menu-item :key="item.name" @click="routeChange($event, item)">
+          <template #icon v-if="!isNull(item.meta?.icon)">
             <component :is="item.meta?.icon"></component>
           </template>
           <template v-if="item.path && !item?.meta?.isLink">
@@ -23,7 +23,7 @@
         </a-menu-item>
       </template>
       <template v-else>
-        <CustomSubMenu :mode="mode" :key="item.key" :menuInfo="item" :routeChange="routeChange" />
+        <CustomSubMenu :mode="mode" :key="item.name" :menuInfo="item" :routeChange="routeChange" />
       </template>
     </template>
   </a-menu>
@@ -34,8 +34,9 @@ import { LIGHT_THEME } from '@/config/theme';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import _ from 'lodash';
+import { isNull, findTreeData } from '@/utils/utils';
 
-const { currentRoute } = useRouter();
+const { currentRoute, getRoutes } = useRouter();
 const { state, dispatch } = useStore();
 
 const props = defineProps({
@@ -67,21 +68,38 @@ const openKeys = ref([]);
 const selectedKeys = ref([]);
 const isTopMenu = computed(() => props.type === 'top-menu');
 
+const getOpenKeys = (parentName, openKeys) => {
+  const fun = function (parentId) {
+    const result = findTreeData(props.menuList, 'name', parentId);
+    if (JSON.stringify(result) !== '{}' && result) {
+      openKeys.push(result?.meta?.parentName);
+      fun(result?.meta?.parentName);
+    }
+    return;
+  };
+  fun(parentName);
+  return openKeys;
+};
+
 watch(
   () => currentRoute,
   (val) => {
-    const activeMenu = unref(val).meta?.activeMenu;
-    const parentID = unref(val).meta?.parentID;
+    const modelName = unref(val).meta?.modelName;
+    const name = unref(val)?.name;
+    const parentName = unref(val).meta?.parentName;
 
     // 顶部菜单
     if (isTopMenu.value) {
-      selectedKeys.value = parentID ? [parentID] : [activeMenu];
+      selectedKeys.value = modelName ? [modelName] : [name];
     }
 
     // 侧边栏
     if (!isTopMenu.value) {
-      selectedKeys.value = activeMenu ? [activeMenu] : parentID ? [parentID] : [];
-      openKeys.value = parentID ? [parentID] : [activeMenu];
+      let keys = parentName ? [parentName] : [];
+      keys = getOpenKeys(parentName, keys);
+
+      selectedKeys.value = name ? [name] : [];
+      openKeys.value = keys;
     }
   },
   { deep: true, immediate: true }
@@ -92,8 +110,11 @@ const onOpenChange = (keys) => {
 };
 
 const routeChange = (event, to) => {
-  const isSide = !to.meta?.type?.includes('top');
-  if (state.global.showTabs && isSide) {
+  if (isTopMenu.value) {
+    dispatch('setMenuModel', to?.name);
+  }
+
+  if (state.global.showTabs && !isTopMenu.value) {
     const flag = _.find(state.global.tabsMenuList, (item) => item.path === to.path);
     if (flag) {
       return;

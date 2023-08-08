@@ -5,7 +5,7 @@ const DB = new db();
 export default {
   state: () => ({
     buttonList: DB.getLocal('buttonList') || [],
-    menuData: {}
+    menuData: null
   }),
   actions: {
     setMenuData({ commit }, val) {
