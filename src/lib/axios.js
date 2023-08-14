@@ -24,9 +24,9 @@ const instance = axios.create({
 const errorHandler = (error, Status200 = false) => {
   if (error) {
     let errorMap = {};
-    const { status, data, code, message } = error.response || error || {};
+    const { status, data, code, message, msg } = error.response || error || {};
     const newCode = Number(status || code);
-    const newMessage = data?.message || message;
+    const newMessage = data?.message || message || msg;
     switch (newCode) {
       case 400:
         errorMap = {
@@ -94,7 +94,8 @@ const errorHandler = (error, Status200 = false) => {
     }
   }
   // 网络请求成功，code非200使用resolve返回
-  return Status200 ? Promise.resolve(error) : Promise.reject(error);
+  // return Status200 ? Promise.resolve(error) : Promise.reject(error);
+  throw error;
 };
 
 /**
@@ -136,10 +137,10 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use((response) => {
   const result = response?.data || {};
-  const { code, data, total, pageNum, pageSize } = result || {};
+  const { code, data, rows, total, pageNum, pageSize } = result || {};
   const { skipHandleResponse = false } = response?.config || {};
   if (!skipHandleResponse && code == 200) {
-    return { data, total, pageNum, pageSize };
+    return { data: data || rows, total, pageNum, pageSize };
   }
 
   if (!skipHandleResponse && code != 200) {
@@ -201,7 +202,7 @@ export const deleteFn = (url, data, options) => {
  * @returns
  */
 export const put = (url, data, options) => {
-  return instance.put(`${url}?`, qs.stringify(data), options);
+  return instance.put(url, data, options);
 };
 
 export default instance;

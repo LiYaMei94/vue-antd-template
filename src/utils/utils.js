@@ -1,6 +1,10 @@
 import { message as Message } from 'ant-design-vue';
 import _ from 'lodash';
 
+export const isString = (value) => {
+  return Object.prototype.toString.call(value) === '[object String]';
+};
+
 export const isNumber = (value) => {
   return Object.prototype.toString.call(value) === '[object Number]';
 };
@@ -88,12 +92,12 @@ export const syntaxHighlight = (json) => {
 export const resultCallBack = (options) => {
   const { result, successMessage } = options || {};
   return new Promise((resolve, reject) => {
-    const { code, data: res, message } = result || {};
+    const { code, data: res, message, msg } = result || {};
     if (code && Number(code) === 200) {
       Message.success(successMessage || '操作成功');
       return resolve(res);
     } else {
-      Message.error(message);
+      Message.error(message || msg);
     }
   });
 };
@@ -123,5 +127,37 @@ export const findTreeData = (treeData, key, value) => {
     }
   };
   fn(treeData); // 调用一下
+  return result;
+};
+
+/**
+ * 一维数组转树形
+ * @param {*} arr
+ * @returns
+ */
+export const arrToTree = (arr, id, parentId) => {
+  const result = [];
+  //判断参数是否为数组
+  if (!Array.isArray(arr)) {
+    return result;
+  }
+  //防止参数对象数组中，存在children
+  arr.forEach((item) => {
+    delete item.children;
+  });
+  //id为key
+  let map = new Map();
+  arr.forEach((item) => {
+    map.set(item[id], item);
+  });
+  //parentId为父节点
+  arr.forEach((item) => {
+    if (map.has(item[parentId])) {
+      let parent = map.get(item[parentId]);
+      (parent.children || (parent.children = [])).push(item);
+    } else {
+      result.push(item);
+    }
+  });
   return result;
 };

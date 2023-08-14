@@ -3,7 +3,7 @@ import route from '@/router';
 import _ from 'lodash';
 import db from '@/utils/db';
 import { useStore } from 'vuex';
-import { isNull } from '@/utils/utils';
+import { isNull, isString } from '@/utils/utils';
 import { getRoutes } from '@/api/user';
 import { routerData } from '@/router/dynamicRouter';
 
@@ -27,8 +27,8 @@ export const usePermission = (options) => {
       const routes = filterRouter(_.cloneDeep(routesData), undefined);
       const topMenuData = filterTopMenu(_.cloneDeep(routesData));
       const sideMenuData = filterSideMenu(_.cloneDeep(routesData));
-      console.log('topMenuData', topMenuData);
-      console.log('sideMenuData', sideMenuData);
+      // console.log('topMenuData', topMenuData);
+      // console.log('sideMenuData', sideMenuData);
       // 设置路由
       setRoutes(routes);
       // 设置菜单
@@ -50,7 +50,7 @@ export const usePermission = (options) => {
         if (route?.children?.length > 0) {
           route.children = filterChildren(route.children, undefined);
         }
-        if (route.component) {
+        if (!isNull(route.component) && isString(route.component)) {
           route.component = () => import(`@/views/${currentRouter.component}.vue`);
         }
         return true;
@@ -77,7 +77,7 @@ export const usePermission = (options) => {
             c.path = `${cloneEl.path}/${c.path}`;
             c.name = `${cloneEl.name}${c.name}`;
             c.meta.parentName = `${cloneEl.name}`;
-            if (c.component) {
+            if (!isNull(c.component) && isString(c.component)) {
               c.component = () => import(`@/views/${currentRouter.component}.vue`);
             }
             if (c?.children?.length > 0) {
@@ -89,7 +89,7 @@ export const usePermission = (options) => {
           return;
         }
 
-        if (cloneEl.component) {
+        if (!isNull(cloneEl.component) && isString(cloneEl.component)) {
           cloneEl.component = () => import(`@/views/${el.component}.vue`);
         }
 
@@ -224,7 +224,6 @@ export const usePermission = (options) => {
   const setDefaultRoute = () => {
     const topMenuData = filterTopMenu(_.cloneDeep(routerData));
     const sideMenuData = filterSideMenu(_.cloneDeep(routerData));
-    console.log('topMenuData', topMenuData);
     // 设置菜单
     dispatch('setMenuData', { side: sideMenuData, top: topMenuData || [] });
   };

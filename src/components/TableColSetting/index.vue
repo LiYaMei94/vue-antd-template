@@ -46,7 +46,7 @@ const dataSource = ref(props.colData);
 const show = ref(props.visible);
 const columns = [
   {
-    title: '列展示',
+    title: '列表字段选择',
     dataIndex: 'title'
   }
 ];

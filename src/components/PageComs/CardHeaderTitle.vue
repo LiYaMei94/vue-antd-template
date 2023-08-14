@@ -14,6 +14,7 @@ const props = defineProps({
 </script>
 <style lang="less" scoped>
 .card-header-title {
+  margin-bottom: 10px;
   .title {
     color: var(--ant-primary-color);
     position: relative;

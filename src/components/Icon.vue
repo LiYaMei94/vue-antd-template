@@ -1,13 +1,19 @@
 <template>
-  <IconFont :type="type"></IconFont>
+  <IconFont :type="type" v-if="source === 'iconfont'"></IconFont>
+  <component :is="type" v-else></component>
 </template>
 <script setup>
-import { createFromIconfontCN } from '@ant-design/icons-vue';
+import Icon, { createFromIconfontCN } from '@ant-design/icons-vue';
 import Iconfont from '@/assets/iconfonts/iconfont.js';
+
 const props = defineProps({
   type: {
     type: String,
     default: ''
+  },
+  source: {
+    type: String,
+    default: 'iconfont'
   }
 });
 

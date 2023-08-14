@@ -9,7 +9,7 @@ export default {
     // 主题模式
     theme: DB.getLocal('theme') || LIGHT_THEME,
     allEnum: DB.getLocal('allEnum') || {},
-    antConfig: DB.getLocal('antConfig') || 'middle',
+    antConfig: DB.getLocal('antConfig') || {},
     // 标签页
     showTabs: true,
     menuModel: DB.getLocal('menuModel') || '',

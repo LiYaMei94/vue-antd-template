@@ -88,6 +88,8 @@ watch(
     const name = unref(val)?.name;
     const parentName = unref(val).meta?.parentName;
 
+    dispatch('setMenuModel', modelName);
+
     // 顶部菜单
     if (isTopMenu.value) {
       selectedKeys.value = modelName ? [modelName] : [name];

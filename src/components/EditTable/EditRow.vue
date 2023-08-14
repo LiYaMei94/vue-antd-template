@@ -1,13 +1,13 @@
 <template>
   <a-table :columns="columns" :dataSource="newDataSource" bordered :pagination="false" :rowKey="rowKey" :customRow="tableRowClick">
     <template #bodyCell="{ column, text, record, index }">
-      <template v-if="editColumns.includes(column.dataIndex)">
+      <template v-if="editColumns.includes(column?.dataIndex)">
         <div>
           <component
             v-if="!isNull(record[key])"
             :is="column?.render || (column?.el && `a-${column?.el}`) || `a-input`"
             placeholder="输入内容"
-            @change="handleRowChange($event, column.dataIndex, record)"
+            @change="handleRowChange($event, column?.dataIndex, record)"
             :value="text"
             v-bind="{ ...column.props }"
           ></component>
@@ -16,7 +16,7 @@
           </template>
         </div>
       </template>
-      <template v-else-if="column.dataIndex === 'action'">
+      <template v-else-if="column?.dataIndex === 'action'">
         <slot name="actionOther" :dataInfo="{ column, text, record, index }"></slot>
       </template>
       <slot name="bodyCell" :dataInfo="{ column, text, record, index }"></slot>

@@ -60,12 +60,16 @@ watch(
 );
 
 onMounted(() => {
-  navListDom = document.getElementsByClassName('ant-tabs-nav-list') && document.getElementsByClassName('ant-tabs-nav-list')[0];
-  // 监听元素大小
-  const observer = new ResizeObserver(handleResize);
-  observer.observe(navListDom, { box: 'border-box' });
-  tabMenuWidth.value = navListDom?.clientWidth;
-  navScroll = document.getElementsByClassName('ant-tabs-nav-wrap') && document.getElementsByClassName('ant-tabs-nav-wrap')[0]?.clientWidth;
+  try {
+    navListDom = document.getElementsByClassName('ant-tabs-nav-list') && document.getElementsByClassName('ant-tabs-nav-list')[0];
+    // 监听元素大小
+    const observer = new ResizeObserver(handleResize);
+    if (navListDom) {
+      observer.observe(navListDom, { box: 'border-box' });
+      tabMenuWidth.value = navListDom?.clientWidth;
+      navScroll = document.getElementsByClassName('ant-tabs-nav-wrap') && document.getElementsByClassName('ant-tabs-nav-wrap')[0]?.clientWidth;
+    }
+  } catch (error) {}
 });
 
 // tabMenu元素大小监听

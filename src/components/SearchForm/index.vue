@@ -22,7 +22,7 @@
   </div>
 </template>
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import SearchFormItem from './components/SearchFormItem.vue';
 import Grid from '@/components/Grid/index.vue';
 import GridItem from '@/components/Grid/GridItem.vue';
@@ -72,6 +72,13 @@ const getResponsive = (item) => {
     xl: col.xl
   };
 };
+
+watch(
+  () => props.initSearchParams,
+  (val) => {
+    searchParam.value = { ...searchParam.value, ...val };
+  }
+);
 
 const formRef = ref(null);
 const searchParam = ref({ ...props.initSearchParams });
