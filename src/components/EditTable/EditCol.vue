@@ -1,5 +1,5 @@
 <template>
-  <a-table :columns="columns" :data-source="newDataSource" bordered :pagination="false" :rowKey="rowKey" :customRow="tableRowClick">
+  <a-table :columns="columns" :dataSource="newDataSource" :rowKey="rowKey" :customRow="tableRowClick" v-bind="{ ...options }">
     <template #bodyCell="{ column, text, record, index }">
       <template v-if="editColumns.includes(column?.dataIndex)">
         <div class="editable-cell">
@@ -16,9 +16,7 @@
           </div>
         </div>
       </template>
-      <template v-else-if="column?.dataIndex === 'action'">
-        <slot name="action" :dataInfo="{ column, text, record, index }"></slot>
-      </template>
+      <slot name="bodyCell" :dataInfo="{ column, text, record, index }"></slot>
     </template>
     <template #headerCell="{ column, text, record, index }">
       <slot name="headerCell" :dataInfo="{ column, text, record, index }"></slot>
@@ -27,7 +25,7 @@
   <div class="table-pagination" v-if="pagination.total > 1">
     <a-pagination v-bind="{ ...pagination }" :total="pagination.total" @change="handleChange" />
   </div>
-  <div class="table-add" v-if="tableAddRow">
+  <div class="table-add" v-if="showTableAddRow">
     <a-button type="link" @click="handleAdd">+ 添加行</a-button>
     <slot name="tableAdd"></slot>
   </div>
@@ -52,6 +50,7 @@ const props = defineProps({
     default: []
   },
   editColumns: {
+    // 可编辑的列，string []
     type: Array,
     default: []
   },
@@ -67,13 +66,18 @@ const props = defineProps({
     type: Function,
     default: null
   },
-  tableAddRow: {
+  showTableAddRow: {
     type: Boolean,
     default: true
   },
   key: {
+    // 编辑行的唯一标识
     type: [String, Number],
     default: 'myKey'
+  },
+  options: {
+    type: [Object],
+    default: { bordered: true, pagination: false }
   }
 });
 const key = props.key;
@@ -101,11 +105,7 @@ const handleAdd = () => {
   let newData = { [key]: count.value };
   dataIndexArr.forEach((element) => {
     if (element === 'action') return;
-    if (element.includes(props.editColumns) !== -1) {
-      newData[element] = ``;
-    } else {
-      newData[element] = '';
-    }
+    newData[element] = ``;
   });
   newDataSource.value.push(newData);
 };

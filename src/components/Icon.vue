@@ -1,6 +1,6 @@
 <template>
   <IconFont :type="type" v-if="source === 'iconfont'"></IconFont>
-  <component :is="type" v-else></component>
+  <component :is="type" v-if="source === 'anticonfont'"></component>
 </template>
 <script setup>
 import Icon, { createFromIconfontCN } from '@ant-design/icons-vue';
@@ -13,7 +13,7 @@ const props = defineProps({
   },
   source: {
     type: String,
-    default: 'iconfont'
+    default: 'iconfont' // 可选值：iconfont/anticonfont
   }
 });
 

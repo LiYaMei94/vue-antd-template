@@ -1,5 +1,5 @@
 <template>
-  <SearchForm v-bind="{ formConfig, initSearchParams, labelCol }" :search="search" :reset="reset"></SearchForm>
+  <SearchForm v-bind="{ formConfig, defaultSearchParams, labelCol, searchFormCol, search, reset }"></SearchForm>
   <div class="pro-table">
     <div class="pro-table-header">
       <div class="pro-table-header-left">
@@ -7,9 +7,11 @@
       </div>
       <div class="pro-table-header-right" v-if="showToolButton">
         <slot name="toolButton">
+          <!-- 刷新表格 -->
           <a-button v-if="refreshTableButton" shape="circle" @click="handleSearch">
             <template #icon><SyncOutlined /></template>
           </a-button>
+          <!-- 设置表格展示列 -->
           <TableColSetting v-if="showColSettingButton" v-bind="{ visible, colData: columns, callback: updateColumns, tableName }">
             <template #button>
               <a-button class="margin-left-12" v-if="customColumnsButton" shape="circle" @click="visible = !visible">
@@ -24,10 +26,9 @@
       :customRow="rowDrag ? customRow : null"
       :dataSource="tableData"
       :columns="newColumns"
-      v-bind="{ ...tableConfig, expandIcon }"
-      :rowKey="rowKey"
-      :pagination="false"
-      :size="state.global.antConfig?.size || 'small'"
+      v-bind="{ ...tableConfig, expandIcon, rowKey, pagination: false, expandedRowKeys }"
+      :size="state.global?.antConfig?.size || 'small'"
+      @expand="onTableExpand"
     >
       <template #bodyCell="{ column, text, record, index }">
         <slot name="bodyCell" :dataInfo="{ column, text, record, index }"></slot>
@@ -45,12 +46,9 @@
 import SearchForm from '@/components/SearchForm';
 import TableColSetting from '@/components/TableColSetting';
 import { useTable } from '@/hooks/useTable';
-import { ref, unref, h } from 'vue';
+import { ref, unref, h, watch, computed } from 'vue';
 import { useStore } from 'vuex';
 
-const { state } = useStore();
-const searchParam = ref({});
-const visible = ref(false);
 const props = defineProps({
   tableName: {
     type: String,
@@ -61,6 +59,7 @@ const props = defineProps({
     default: []
   },
   formatSearchParams: {
+    // 更新参数格式
     type: Function,
     default: null
   },
@@ -72,9 +71,10 @@ const props = defineProps({
     type: [Number, Object],
     default: { xs: 1, sm: 2, md: 2, lg: 3, xl: 4 }
   },
-  initSearchParams: {
+  defaultSearchParams: {
+    // 默认查询参数
     type: Object,
-    default: null
+    default: {}
   },
   requestApi: {
     type: Function,
@@ -102,7 +102,10 @@ const props = defineProps({
   },
   tableConfig: {
     type: Object,
-    default: {}
+    default: {
+      pagination: false,
+      expandedRowKeys: []
+    }
   },
   rowKey: {
     type: [String, Function],
@@ -122,18 +125,35 @@ const props = defineProps({
     default: { expanded: 'DownOutlined', collapsed: 'RightOutlined' }
   },
   firstRequestAuto: {
-    // 行拖拽排序
     type: Boolean,
     default: true
   }
 });
 
+const searchParam = ref({});
+const expandedRowKeys = ref();
+watch(
+  () => props.defaultSearchParams,
+  (val) => {
+    searchParam.value = { ...searchParam.value, ...val };
+  },
+  { deep: true, immediate: true }
+);
+watch(
+  () => props?.tableConfig?.expandedRowKeys,
+  (val) => {
+    expandedRowKeys.value = [...val];
+  },
+  { deep: true, immediate: true }
+);
+
+const { state } = useStore();
+const visible = ref(false);
 const newColumns = ref(props.columns);
 const { config, handleSizeChange, tableData, page, getTableData } =
   useTable({
     searchParam,
     requestApi: props.requestApi,
-    initSearchParams: props.initSearchParams,
     firstRequestAuto: props.firstRequestAuto,
     formatSearchParams: props.formatSearchParams
   }) || {};
@@ -145,22 +165,22 @@ const updateColumns = (cols) => {
 
 // 查询
 const search = (params) => {
-  searchParam.value = { ...props.initSearchParams, ...params };
+  searchParam.value = { ...searchParam.value, ...params };
   getTableData && getTableData();
 };
 
 // 刷新表格
 const handleSearch = () => {
-  searchParam.value = { ...props.initSearchParams, ...searchParam.value };
   getTableData && getTableData();
 };
 
 // 重置
 const reset = (params) => {
-  searchParam.value = { ...props.initSearchParams, ...params };
+  searchParam.value = { ...props.defaultSearchParams };
   getTableData && getTableData();
 };
 
+// 更新行数据
 const updateRowData = (record, index) => {
   tableData.value.splice(index, 1, record);
 };
@@ -220,11 +240,23 @@ const expandIcon = (options) => {
     icon = props.expandIcon?.collapsed;
   }
   return (
-    <MyIcon source='ant-icon' type={icon} onClick={(e) => options.onExpand(options.record, e)} class='custom-ant-table-row-expand-icon'></MyIcon>
+    options.record?.children?.length && (
+      <MyIcon source='anticonfont' type={icon} onClick={(e) => options.onExpand(options.record, e)} class='custom-ant-table-row-expand-icon'></MyIcon>
+    )
   );
 };
+
+// 点击展开行
+const onTableExpand = (expanded, record) => {
+  if (expanded) {
+    expandedRowKeys.value.push(record[props.rowKey]);
+  } else {
+    expandedRowKeys.value.splice(expandedRowKeys.value.indexOf(record[props.rowKey]), 1);
+  }
+};
+
 // 暴露给上层组件的方法
-defineExpose({ getTableData, updateRowData });
+defineExpose({ getTableData, updateRowData, tableData: tableData.value });
 </script>
 
 <style lang="less">

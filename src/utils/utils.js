@@ -135,7 +135,7 @@ export const findTreeData = (treeData, key, value) => {
  * @param {*} arr
  * @returns
  */
-export const arrToTree = (arr, id, parentId) => {
+export const arrayToTree = (arr, id, parentId) => {
   const result = [];
   //判断参数是否为数组
   if (!Array.isArray(arr)) {

@@ -1,7 +1,16 @@
 import { reactive, toRefs, unref } from 'vue';
 
+/**
+ *
+ * @param {*} searchParam 查询参数
+ * @param {*} requestApi api请求
+ * @param {*} firstRequestAuto 进入页面是否自动请求
+ * @param {*} hideOnSinglePage 只有1页时隐藏页码
+ * @param {*} formatSearchParams 重置查询参数或格式
+ * @returns
+ */
 export const useTable = (options) => {
-  const { searchParam, requestApi, firstRequestAuto = true, hideOnSinglePage = false, initSearchParams, formatSearchParams } = options || {};
+  const { searchParam, requestApi, firstRequestAuto = true, hideOnSinglePage = false, formatSearchParams } = options || {};
   const state = reactive({
     // 表格数据
     tableData: [],
@@ -21,7 +30,7 @@ export const useTable = (options) => {
   const getTableData = async (options) => {
     try {
       const { pageSize, current } = state.page || {};
-      const params = { ...initSearchParams, ...searchParam.value, pageSize, pageNum: current, ...options };
+      const params = { ...searchParam.value, pageSize, pageNum: current, ...options };
       const newParams = formatSearchParams ? formatSearchParams(params) : params;
       const data = await (requestApi && requestApi({ ...newParams }));
       const { total, data: result, pageNum, pageSize: size } = data || {};

@@ -40,9 +40,9 @@ onUnmounted(() => {
 const resize = (e) => {
   let width = e.target.innerWidth;
   switch (!!width) {
-    // case width < 768:
-    //   breakPoint.value = 'xs';
-    //   break;
+    case width < 768:
+      breakPoint.value = 'xs';
+      break;
     case width >= 768 && width < 992:
       breakPoint.value = 'sm';
       break;

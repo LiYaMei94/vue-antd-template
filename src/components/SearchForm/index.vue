@@ -50,12 +50,14 @@ const props = defineProps({
     default: { span: 5 }
   },
   formatSearchParams: {
+    // 更新参数格式
     type: Function,
     default: null
   },
-  initSearchParams: {
+  defaultSearchParams: {
+    // 默认参数
     type: Object,
-    default: null
+    default: {}
   }
 });
 
@@ -73,15 +75,16 @@ const getResponsive = (item) => {
   };
 };
 
+const searchParam = ref();
 watch(
-  () => props.initSearchParams,
+  () => props.defaultSearchParams,
   (val) => {
     searchParam.value = { ...searchParam.value, ...val };
-  }
+  },
+  { deep: true, immediate: true }
 );
 
 const formRef = ref(null);
-const searchParam = ref({ ...props.initSearchParams });
 // 是否默认折叠搜索项
 const collapsed = ref(true);
 
@@ -120,10 +123,8 @@ const handleSearch = () => {
 
 // 重置
 const handleReset = () => {
-  searchParam.value = { ...props.initSearchParams };
-  const params = (props.formatSearchParams && props.formatSearchParams(searchParam.value)) || searchParam.value;
   formRef.value.resetFields();
-  props.reset && props.reset(params);
+  props.reset && props.reset(props.defaultSearchParams);
 };
 </script>
 

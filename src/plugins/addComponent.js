@@ -74,6 +74,7 @@ import {
 import CustomSubMenu from '@/components/SubMenu';
 import CustomMenu from '@/components/Menu';
 import MyIcon from '@/components/Icon.vue';
+import { DeleteButton } from '@/components/ActionButtons';
 
 export default {
   install: (app, options) => {
@@ -151,5 +152,6 @@ export default {
     app.component('CustomSubMenu', CustomSubMenu);
     app.component('CustomMenu', CustomMenu);
     app.component('MyIcon', MyIcon);
+    app.component('DeleteButton', DeleteButton);
   }
 };

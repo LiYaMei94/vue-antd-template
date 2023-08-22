@@ -32,7 +32,6 @@ import { code, login, logout } from '@/api/user';
 import { resultCallBack } from '@/utils/utils';
 import { useRouter } from 'vue-router';
 import { ACCESS_TOKEN } from '@/utils/const';
-import { allEnum } from '@/api/index';
 import { useStore } from 'vuex';
 import { usePermission } from '@/hooks/usePermission';
 
@@ -74,10 +73,6 @@ const onFinish = async (values) => {
       // 动态加载菜单和路由
       await getMenuData();
 
-      // 全局枚举
-      const allEnumData = (await allEnum()).data;
-      dispatch('setAllEnum', allEnumData);
-
       // FIXME:跳转首页,如果是登录失效重新登录之后跳转到之前的页面
       router.push({ name: `ChannelList` });
 
@@ -113,7 +108,7 @@ const onFinish = async (values) => {
     padding: 0 15px;
     font-size: 16px;
     width: 100%;
-    height: @height40;
+    height: 40px;
   }
 }
 </style>

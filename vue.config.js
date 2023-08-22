@@ -50,6 +50,7 @@ module.exports = defineConfig({
     );
   },
   devServer: {
+    allowedHosts: 'all', // 本地内网穿透
     hot: false,
     liveReload: false,
     open: false,

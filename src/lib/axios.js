@@ -26,7 +26,7 @@ const errorHandler = (error, Status200 = false) => {
     let errorMap = {};
     const { status, data, code, message, msg } = error.response || error || {};
     const newCode = Number(status || code);
-    const newMessage = data?.message || message || msg;
+    const newMessage = data?.message || data?.msg || message || msg;
     switch (newCode) {
       case 400:
         errorMap = {

@@ -20,6 +20,7 @@ import { ref, computed, reactive, unref } from 'vue';
 import _ from 'lodash';
 import db from '@/utils/db';
 import { useRouter } from 'vue-router';
+import { isNull } from '@/utils/utils';
 const DB = new db();
 const { currentRoute } = useRouter();
 
@@ -57,8 +58,15 @@ const disabledKeys = props.colData.reduce((result, current) => {
   current.disabled && result.push(current.dataIndex);
   return result;
 }, []);
+
 // 默认传入的都展示
-const allSelectedRowKeys = _.map(props.colData, 'dataIndex');
+const allSelectedRowKeys = props.colData.reduce((result, current) => {
+  if (isNull(current.show) || current.show) {
+    result.push(current.dataIndex);
+  }
+  return result;
+}, []);
+
 // 没有传入tableName使用当前路由的name值
 const tableName = props.tableName || unref(currentRoute).name;
 // 缓存当前表格的列设置
@@ -85,7 +93,7 @@ const handleChange = () => {
   DB.setLocal(storageKey, unref(selectedRowKeys));
   props.callback && props.callback(result);
 };
-handleChange();
+handleChange && handleChange();
 
 // 拖拽排序
 let change1 = null; // 源目标数据序号
@@ -130,7 +138,7 @@ const customRow = (record, index) => {
       const temp = data[change1];
       dataSource.value[change1] = dataSource.value[change2];
       dataSource.value[change2] = temp;
-      handleChange();
+      handleChange && handleChange();
     }
   };
 };

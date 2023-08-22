@@ -1,12 +1,5 @@
 <template>
-  <a-menu
-    :mode="mode"
-    :theme="theme"
-    v-bind="{ ...options }"
-    v-model:openKeys="openKeys"
-    v-model:selectedKeys="selectedKeys"
-    @openChange="onOpenChange"
-  >
+  <a-menu v-bind="{ theme, mode, ...options }" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" @openChange="onOpenChange">
     <template v-for="item in menuList" :key="item.name">
       <template v-if="!item.children?.length">
         <a-menu-item :key="item.name" @click="routeChange($event, item)">
@@ -116,12 +109,12 @@ const routeChange = (event, to) => {
     dispatch('setMenuModel', to?.name);
   }
 
-  if (state.global.showTabs && !isTopMenu.value) {
+  if (state.global?.showTabs && !isTopMenu.value) {
     const flag = _.find(state.global.tabsMenuList, (item) => item.path === to.path);
     if (flag) {
       return;
     }
-    const tabsMenuList = _.cloneDeep(state.global.tabsMenuList);
+    const tabsMenuList = _.cloneDeep(state.global?.tabsMenuList);
     tabsMenuList.push({
       path: to.path,
       title: to?.meta?.title

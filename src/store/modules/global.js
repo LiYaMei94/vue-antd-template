@@ -8,10 +8,11 @@ export default {
     primary: DB.getLocal('primary-color') || DEFAULT_PRIMARY_COLOR,
     // 主题模式
     theme: DB.getLocal('theme') || LIGHT_THEME,
-    allEnum: DB.getLocal('allEnum') || {},
+    // antd-design-vue 全局配置
     antConfig: DB.getLocal('antConfig') || {},
     // 标签页
     showTabs: true,
+    // 当前模块
     menuModel: DB.getLocal('menuModel') || '',
     tabsMenuList: DB.getSession('tabsMenuList') || []
   }),
@@ -23,9 +24,6 @@ export default {
     setThemeModel({ commit }, val) {
       commit('setThemeModel', val);
     },
-    setAllEnum({ commit }, val) {
-      commit('setAllEnum', val);
-    },
     setAntConfig({ commit }, val) {
       commit('setAntConfig', val);
     },
@@ -34,6 +32,9 @@ export default {
     },
     setMenuModel({ commit }, val) {
       commit('setMenuModel', val);
+    },
+    setShowTabs({ commit }, val) {
+      commit('setShowTabs', val);
     }
   },
   mutations: {
@@ -44,10 +45,6 @@ export default {
     setThemeModel(state, val) {
       DB.setLocal('theme', val);
       state.theme = val;
-    },
-    setAllEnum(state, val) {
-      DB.setLocal('allEnum', val);
-      state.allEnum = val;
     },
     setAntConfig(state, val) {
       DB.setLocal('antConfig', val);
@@ -60,6 +57,9 @@ export default {
     setMenuModel(state, val) {
       DB.setLocal('menuModel', val);
       state.menuModel = val;
+    },
+    setShowTabs(state, val) {
+      state.setShowTabs = val;
     }
   }
 };

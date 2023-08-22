@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import { isNull } from './utils';
+
+export const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 /**
  * 时间转字符串
@@ -6,15 +9,17 @@ import dayjs from 'dayjs';
  * @param {*} format
  * @returns
  */
-export const dateFormat = (date, format = 'YYYY-MM-DD') => {
+export const dateFormat = (date, format = DATE_FORMAT) => {
+  if (isNull(date) || date == 0) return '';
   return dayjs(date).format(format);
 };
 
 /**
  * 时间转时间戳 unix 秒 valueOf 毫秒
  * @param {*} date
- * @param {*} isUnix 是否到秒
+ * @param {*} isUnix 是否到秒，默认是毫秒
  */
-export const getTime = (date, isUnix = true) => {
+export const getTime = (date, isUnix = false) => {
+  if (isNull(date) && date == 0) return '';
   return isUnix ? dayjs(date).unix() : dayjs(date).valueOf();
 };
