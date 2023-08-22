@@ -34,7 +34,7 @@ export const usePermission = (options) => {
       // 设置菜单
       dispatch('setMenuData', { side: sideMenuData, top: topMenuData || [] });
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-getRouteData', error);
     }
   };
 
@@ -56,7 +56,7 @@ export const usePermission = (options) => {
         return true;
       });
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-filterRouter', error);
     }
   };
 
@@ -102,7 +102,7 @@ export const usePermission = (options) => {
       });
       return children;
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-filterChildren', error);
     }
   };
 
@@ -118,7 +118,7 @@ export const usePermission = (options) => {
         route.addRoute('BasicLayout', { ...router });
       }
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-addRoute', error);
     }
   };
 
@@ -155,7 +155,7 @@ export const usePermission = (options) => {
       });
       // console.log(route.getRoutes());
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-setRoutes', error);
     }
   };
 
@@ -174,7 +174,7 @@ export const usePermission = (options) => {
         return [];
       });
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-filterTopMenu', error);
     }
   };
 
@@ -192,7 +192,7 @@ export const usePermission = (options) => {
       });
       return menuMap;
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-filterSideMenu', error);
     }
   };
 
@@ -211,7 +211,7 @@ export const usePermission = (options) => {
         return true;
       });
     } catch (error) {
-      console.log(error);
+      console.error('hooks-usePermission-filterSideChildren', error);
     }
   };
 

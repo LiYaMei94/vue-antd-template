@@ -10,7 +10,15 @@ import { reactive, toRefs, unref } from 'vue';
  * @returns
  */
 export const useTable = (options) => {
-  const { searchParam, requestApi, firstRequestAuto = true, hideOnSinglePage = false, formatSearchParams } = options || {};
+  const {
+    searchParam,
+    requestApi,
+    firstRequestAuto = true,
+    hideOnSinglePage = false,
+    formatSearchParams,
+    customHandle,
+    loading = true
+  } = options || {};
   const state = reactive({
     // 表格数据
     tableData: [],
@@ -23,7 +31,8 @@ export const useTable = (options) => {
       // 总条数
       total: 0
     },
-    colData: []
+    colData: [],
+    loading
   });
 
   //   获取表格数据
@@ -34,10 +43,14 @@ export const useTable = (options) => {
       const newParams = formatSearchParams ? formatSearchParams(params) : params;
       const data = await (requestApi && requestApi({ ...newParams }));
       const { total, data: result, pageNum, pageSize: size } = data || {};
+      customHandle && customHandle(data);
       state.tableData = result || [];
       state.page = { total, current: pageNum, pageSize: size };
+      state.loading = false;
+      return { total, data: result, pageNum, pageSize: size };
     } catch (error) {
-      console.log('表格数据获取失败：', error);
+      state.loading = false;
+      console.error('hooks-useTable-getTableData', error);
     }
   };
 
@@ -63,7 +76,8 @@ export const useTable = (options) => {
       hideOnSinglePage,
       showSizeChanger: true,
       showQuickJumper: true,
-      showTotal: showTotalText
+      showTotal: showTotalText,
+      pageSizeOptions: ['20', '50', '100'] // 默认是['10', '20', '30', '40']
     },
     handleSizeChange,
     getTableData

@@ -69,7 +69,9 @@ onMounted(() => {
       tabMenuWidth.value = navListDom?.clientWidth;
       navScroll = document.getElementsByClassName('ant-tabs-nav-wrap') && document.getElementsByClassName('ant-tabs-nav-wrap')[0]?.clientWidth;
     }
-  } catch (error) {}
+  } catch (error) {
+    console.error('layouts-Tabs-onMounted', error);
+  }
 });
 
 // tabMenu元素大小监听
@@ -115,7 +117,7 @@ const navigatorChange = (event, fullPath) => {
 // 删除标签
 const handleRemove = (event, fullPath) => {
   let lastIndex = 0;
-  const tabsMenuList = _.cloneDeep(state.global.tabsMenuList);
+  const tabsMenuList = _.cloneDeep(state.global?.tabsMenuList);
   _.remove(tabsMenuList, (item, index) => {
     lastIndex = index - 1;
     return item.path === fullPath;
@@ -124,11 +126,11 @@ const handleRemove = (event, fullPath) => {
   //   删除当前高亮tab之后
   if (tabsMenuList.length && activeKey.value === fullPath) {
     if (lastIndex >= 0) {
-      activeKey.value = tabsMenuList[lastIndex].path;
-      router.push({ path: tabsMenuList[lastIndex].path });
+      activeKey.value = tabsMenuList[lastIndex]?.path;
+      router.push({ path: tabsMenuList[lastIndex]?.path });
     } else {
-      activeKey.value = tabsMenuList[0].path;
-      router.push({ path: tabsMenuList[0].path });
+      activeKey.value = tabsMenuList[0]?.path;
+      router.push({ path: tabsMenuList[0]?.path });
     }
   }
 };

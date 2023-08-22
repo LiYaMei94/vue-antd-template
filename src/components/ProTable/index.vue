@@ -26,7 +26,7 @@
       :customRow="rowDrag ? customRow : null"
       :dataSource="tableData"
       :columns="newColumns"
-      v-bind="{ ...tableConfig, expandIcon, rowKey, pagination: false, expandedRowKeys }"
+      v-bind="{ ...tableConfig, expandIcon, rowKey, pagination: false, expandedRowKeys, loading }"
       :size="state.global?.antConfig?.size || 'small'"
       @expand="onTableExpand"
     >
@@ -150,7 +150,7 @@ watch(
 const { state } = useStore();
 const visible = ref(false);
 const newColumns = ref(props.columns);
-const { config, handleSizeChange, tableData, page, getTableData } =
+const { config, handleSizeChange, tableData, page, getTableData, loading } =
   useTable({
     searchParam,
     requestApi: props.requestApi,
@@ -239,10 +239,10 @@ const expandIcon = (options) => {
   if (!options.expanded) {
     icon = props.expandIcon?.collapsed;
   }
-  return (
-    options.record?.children?.length && (
-      <MyIcon source='anticonfont' type={icon} onClick={(e) => options.onExpand(options.record, e)} class='custom-ant-table-row-expand-icon'></MyIcon>
-    )
+  return options.record?.children?.length > 0 ? (
+    <MyIcon source='anticonfont' type={icon} onClick={(e) => options.onExpand(options.record, e)} class='custom-ant-table-row-expand-icon'></MyIcon>
+  ) : (
+    <span class='anticon anticon-down custom-ant-table-row-expand-icon'></span>
   );
 };
 
@@ -284,7 +284,6 @@ defineExpose({ getTableData, updateRowData, tableData: tableData.value });
     color: #666;
     font-size: 12px;
     width: 20px;
-    margin-right: 3;
   }
 }
 </style>

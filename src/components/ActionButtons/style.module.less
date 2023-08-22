@@ -1,0 +1,35 @@
+.page-layout-select {
+  display: flex;
+  align-items: center;
+  .layout-type-item {
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+    .layout-type-item-content {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .select-bg {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -10px;
+      margin-left: -10px;
+    }
+    .selected {
+      background: url('~@/assets/images/selected-green.png');
+      background-size: contain;
+    }
+    .disabled {
+      background: url('~@/assets/images/selected-green-disabled.png');
+      background-size: contain;
+    }
+    .layout-type-item-label {
+      margin-top: 5px;
+      text-align: center;
+    }
+  }
+}

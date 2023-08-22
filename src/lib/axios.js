@@ -113,7 +113,10 @@ const clearEmptyParam = (config) => {
         } else {
           for (let key in data) {
             if (isNull(data[key])) {
-              data[key] = null;
+              // FIXME:null、undefined、''一致传''，根据合作后端选择值类型
+              data[key] = '';
+              // data[key] = null;
+              // delete data[key];
             } else if (typeof data[key] === 'object') {
               fn(data[key]);
             }
@@ -131,7 +134,7 @@ instance.interceptors.request.use((config) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
-  clearEmptyParam(config);
+  // clearEmptyParam(config);
   return config;
 }, errorHandler);
 

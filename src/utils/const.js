@@ -16,13 +16,54 @@ export const PAGE_ROUTE_NAME_MAP = {
   [DETAIL]: 'Detail'
 };
 
-export const ROUTE_MENU_TYPE_TOP = 'top'; // 顶部菜单
-export const ROUTE_MENU_TYPE_SIDE = 'side'; // 侧边栏菜单
-export const ROUTE_MENU_LAYOUT_FULLSCREEN = 'fullScreen'; // 菜单页面全屏
-export const ROUTE_MENU_LAYOUT_BASIC = 'basic'; // 菜单页面基本布局(上、中(侧边栏-内容)、下)
-export const ROUTE_MENU_LAYOUT_UPPER_MIDDLE = 'upperMiddle'; // 菜单页面布局(上、中、下)
-export const ROUTE_MENU_MAP = {
-  [ROUTE_MENU_LAYOUT_UPPER_MIDDLE]: 'UpperMiddleLayout',
-  [ROUTE_MENU_LAYOUT_BASIC]: 'BasicLayout',
-  [ROUTE_MENU_LAYOUT_FULLSCREEN]: null
-};
+export const CONST_0 = 0; // 启用、开、成功、否、隐藏
+export const CONST_1 = 1; // 停用、关、失败、是、显示
+export const CONST_STRING_0 = '0'; // 启用、开、成功、否、隐藏
+export const CONST_STRING_1 = '1'; // 停用、关、失败、是、显示
+
+// 成功、失败枚举
+export const SUCCESS_FAIL_STATUS_ENUM = [
+  {
+    label: '成功',
+    value: CONST_STRING_0,
+    color: 'blue'
+  },
+  {
+    label: '失败',
+    value: CONST_STRING_1,
+    color: 'red'
+  }
+];
+
+// 启用、停用枚举
+export const ENABLE_DISABLE_STATUS_ENUM = [
+  // {
+  //   label: '全部',
+  //   value: null
+  // },
+  {
+    label: '启用',
+    value: CONST_STRING_0,
+    color: 'blue'
+  },
+  {
+    label: '停用',
+    value: CONST_STRING_1,
+    color: '#ddd'
+  }
+];
+
+export const PAGE_LAYOUT = [
+  {
+    value: CONST_STRING_1,
+    label: '默认',
+    icon: 'icon-icon-',
+    style: 'font-size: 53px;color: #7D7D7D;'
+  },
+  {
+    value: CONST_STRING_0,
+    label: '全屏',
+    icon: 'icon-juxing1',
+    style: 'font-size: 57px;color: #7D7D7D;'
+  }
+];

@@ -27,7 +27,6 @@ router.beforeEach(async (to, from, next) => {
     if (routerWhiteNameList.includes(to.name)) return next();
 
     // 3.如果没有侧边菜单数据就重新请求，并生成路由
-    console.log('state?.user?.menuData', state?.user?.menuData);
     if (!state?.user?.menuData) {
       isPermission ? await getRouteData() : setDefaultRoute();
       return next({ ...to, replace: true });
@@ -35,7 +34,7 @@ router.beforeEach(async (to, from, next) => {
 
     return next();
   } catch (error) {
-    console.log('error', error);
+    console.error('router.beforeEach', error);
   }
 });
 export default router;

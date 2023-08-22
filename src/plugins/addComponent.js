@@ -26,6 +26,7 @@ import {
   Tag,
   Select,
   DatePicker,
+  RangePicker,
   TimePicker,
   Cascader,
   TreeSelect,
@@ -46,35 +47,16 @@ import {
   Radio,
   Popconfirm,
   Modal,
-  Switch
+  Switch,
+  CheckboxGroup
 } from 'ant-design-vue';
 
-import {
-  SyncOutlined,
-  DownOutlined,
-  UpOutlined,
-  SettingOutlined,
-  PieChartOutlined,
-  MailOutlined,
-  UserOutlined,
-  FullscreenOutlined,
-  FullscreenExitOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  CloseOutlined,
-  EditOutlined,
-  CheckOutlined,
-  DeleteOutlined,
-  DoubleRightOutlined,
-  WindowsOutlined,
-  LeftOutlined,
-  RightOutlined
-} from '@ant-design/icons-vue';
+import * as AntIcons from '@ant-design/icons-vue';
 
 import CustomSubMenu from '@/components/SubMenu';
 import CustomMenu from '@/components/Menu';
 import MyIcon from '@/components/Icon.vue';
-import { DeleteButton } from '@/components/ActionButtons';
+import * as ActionButtons from '@/components/ActionButtons';
 
 export default {
   install: (app, options) => {
@@ -104,6 +86,7 @@ export default {
     app.component(Tag.name, Tag);
     app.component(Select.name, Select);
     app.component(DatePicker.name, DatePicker);
+    app.component(RangePicker.name, RangePicker);
     app.component(TimePicker.name, TimePicker);
     app.component(Cascader.name, Cascader);
     app.component(TreeSelect.name, TreeSelect);
@@ -126,32 +109,19 @@ export default {
     app.component(Modal.name, Modal);
     app.component(Switch.name, Switch);
     app.component(FormItemRest.name, FormItemRest);
+    app.component(CheckboxGroup.name, CheckboxGroup);
 
     // 图标，使用<SyncOutlined></SyncOutlined>或者<sync-outlined></sync-outlined>
-    app.component(SyncOutlined.name, SyncOutlined);
-    app.component(DownOutlined.name, DownOutlined);
-    app.component(UpOutlined.name, UpOutlined);
-    app.component(SettingOutlined.name, SettingOutlined);
-    app.component(PieChartOutlined.name, PieChartOutlined);
-    app.component(MailOutlined.name, MailOutlined);
-    app.component(UserOutlined.name, UserOutlined);
-    app.component(FullscreenOutlined.name, FullscreenOutlined);
-    app.component(FullscreenExitOutlined.name, FullscreenExitOutlined);
-    app.component(MenuFoldOutlined.name, MenuFoldOutlined);
-    app.component(MenuUnfoldOutlined.name, MenuUnfoldOutlined);
-    app.component(CloseOutlined.name, CloseOutlined);
-    app.component(EditOutlined.name, EditOutlined);
-    app.component(CheckOutlined.name, CheckOutlined);
-    app.component(DeleteOutlined.name, DeleteOutlined);
-    app.component(DoubleRightOutlined.name, DoubleRightOutlined);
-    app.component(WindowsOutlined.name, WindowsOutlined);
-    app.component(LeftOutlined.name, LeftOutlined);
-    app.component(RightOutlined.name, RightOutlined);
+    for (const i in AntIcons) {
+      app.component(AntIcons[i].name, AntIcons[i]);
+    }
 
     // 自定义组件
     app.component('CustomSubMenu', CustomSubMenu);
     app.component('CustomMenu', CustomMenu);
     app.component('MyIcon', MyIcon);
-    app.component('DeleteButton', DeleteButton);
+    for (const i in ActionButtons) {
+      app.component(ActionButtons[i].name, ActionButtons[i]);
+    }
   }
 };
