@@ -38,16 +38,16 @@ module.exports = defineConfig({
   configureWebpack: (config) => {
     // 打包体积分析
     // config.plugins.push(new BundleAnalyzerPlugin({ openAnalyzer: false }));
-    config.plugins.push(
-      new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: __dirname + '/deploy',
-            to: __dirname + `/dist/${process.env.VUE_APP_outputDir}/deploy`
-          }
-        ]
-      })
-    );
+    // config.plugins.push(
+    //   new CopyWebpackPlugin({
+    //     patterns: [
+    //       {
+    //         from: __dirname + '/deploy',
+    //         to: __dirname + `/dist/${process.env.VUE_APP_outputDir}/deploy`
+    //       }
+    //     ]
+    //   })
+    // );
   },
   devServer: {
     allowedHosts: 'all', // 本地内网穿透
