@@ -3,7 +3,6 @@ import Style from './style.module.less';
 
 const PageLayoutSelect = (props, context) => {
   const { selectID = CONST_STRING_1, handleClick, disabled = false } = props || {};
-  console.log('disabled', disabled);
   return (
     <div className={Style['page-layout-select']}>
       {PAGE_LAYOUT?.map((item) => {

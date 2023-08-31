@@ -1,4 +1,6 @@
-import DeleteButton from './Delete.jsx';
-import PageLayoutSelect from './PageLayoutSelect.jsx';
+import DeleteButton from './Delete';
+import PageLayoutSelect from './PageLayoutSelect';
+import QuestionTooltip from './QuestionTooltip';
+import StatusSwitch from './StatusSwitch';
 
-export { DeleteButton, PageLayoutSelect };
+export { DeleteButton, PageLayoutSelect, QuestionTooltip, StatusSwitch };

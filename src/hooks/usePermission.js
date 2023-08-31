@@ -1,36 +1,52 @@
 import { reactive, toRefs } from 'vue';
 import route from '@/router';
 import _ from 'lodash';
-import db from '@/utils/db';
 import { useStore } from 'vuex';
-import { isNull, isString } from '@/utils/utils';
-import { getRoutes } from '@/api/user';
+import { isNull, isString, treeToArr } from '@/utils/utils';
+import { getUserInfo, getRoutesInfo } from '@/api/user';
 import { routerData } from '@/router/dynamicRouter';
+import { CONST_STRING_1, MENU_TYPE_R } from '@/utils/const';
 
-const DB = new db();
-const isPermission = process.env.VUE_APP_route_permission === 'true';
-
+/**
+ *
+ * @param {*} options
+ * @returns
+ */
 export const usePermission = (options) => {
   const { dispatch } = useStore();
 
   const state = reactive({});
+
+  // 重新分配角色刷新;
+  const refresh = () => {
+    getRouteData();
+    getUserData();
+  };
 
   /**
    * 获取路由数据
    */
   const getRouteData = async () => {
     try {
-      const data = await getRoutes();
-      const routesData = _.cloneDeep(data);
-
+      const routeInfo = (await getRoutesInfo())?.data;
+      let newRouteInfo = []; // 所有路由数据
+      // FIXME:删除业务平台和管理平台这级的菜单
+      const deleteIndex = _.findIndex(routeInfo, (item) => item?.menuType === MENU_TYPE_R);
+      if (!isNull(deleteIndex)) {
+        _.forEach(routeInfo, (item) => {
+          newRouteInfo = item.children?.length ? newRouteInfo.concat(item.children) : newRouteInfo;
+        });
+      }
       // 路由
-      const routes = filterRouter(_.cloneDeep(routesData), undefined);
-      const topMenuData = filterTopMenu(_.cloneDeep(routesData));
-      const sideMenuData = filterSideMenu(_.cloneDeep(routesData));
+      const routes = filterRouter(newRouteInfo);
+      // 顶部导航
+      const topMenuData = filterTopMenu(_.cloneDeep(newRouteInfo));
+      // 侧边栏
+      const sideMenuData = filterSideMenu(_.cloneDeep(newRouteInfo));
       // console.log('topMenuData', topMenuData);
       // console.log('sideMenuData', sideMenuData);
       // 设置路由
-      setRoutes(routes);
+      addRoute(treeToArr(routes));
       // 设置菜单
       dispatch('setMenuData', { side: sideMenuData, top: topMenuData || [] });
     } catch (error) {
@@ -39,21 +55,19 @@ export const usePermission = (options) => {
   };
 
   /**
-   * 遍历后台传来的路由数据，转换为组件对象
-   * @param asyncRouterMap 后台传来的路由数据
-   * @param lastRouter 上一级路由
+   * 过滤路由数据
+   * @param {*} asyncRouterMap
+   * @returns
    */
-  const filterRouter = (asyncRouterMap, lastRouter) => {
+  const filterRouter = (asyncRouterMap) => {
     try {
-      return asyncRouterMap.filter((route) => {
-        const currentRouter = _.cloneDeep(route);
+      return asyncRouterMap.map((route) => {
         if (route?.children?.length > 0) {
-          route.children = filterChildren(route.children, undefined);
+          // 设置redirect地址
+          route.redirect = setRedirect(route);
+          route.children = filterChildren(route.children, route.name, route.name);
         }
-        if (!isNull(route.component) && isString(route.component)) {
-          route.component = () => import(`@/views/${currentRouter.component}.vue`);
-        }
-        return true;
+        return route;
       });
     } catch (error) {
       console.error('hooks-usePermission-filterRouter', error);
@@ -62,100 +76,76 @@ export const usePermission = (options) => {
 
   /**
    * 子路由
-   * @param {*} childrenMap
-   * @param {*} lastRouter
+   * @param {*} children
+   * @param {*} modelName
+   * @param {*} parentName
    * @returns
    */
-  const filterChildren = (childrenMap, lastRouter) => {
+  const filterChildren = (children, modelName, parentName) => {
     try {
-      let children = [];
-      childrenMap.forEach((el) => {
-        const cloneEl = _.cloneDeep(el);
-        if (cloneEl?.children?.length > 0) {
-          cloneEl.children.forEach((c) => {
-            const currentRouter = _.cloneDeep(c);
-            c.path = `${cloneEl.path}/${c.path}`;
-            c.name = `${cloneEl.name}${c.name}`;
-            c.meta.parentName = `${cloneEl.name}`;
-            if (!isNull(c.component) && isString(c.component)) {
-              c.component = () => import(`@/views/${currentRouter.component}.vue`);
-            }
-            if (c?.children?.length > 0) {
-              children = children.concat(filterChildren(c.children, c));
-              return;
-            }
-            children.push(c);
-          });
-          return;
+      return children.map((child) => {
+        child = {
+          ...child,
+          redirect: setRedirect(child),
+          meta: {
+            ...child.meta,
+            modelName,
+            parentName
+          }
+        };
+        if (child?.children?.length > 0) {
+          child.children = filterChildren(child?.children, modelName, child.name);
         }
-
-        if (!isNull(cloneEl.component) && isString(cloneEl.component)) {
-          cloneEl.component = () => import(`@/views/${el.component}.vue`);
-        }
-
-        if (lastRouter) {
-          cloneEl.path = `${lastRouter.path}/${el.path}`;
-          cloneEl.name = `${lastRouter.name}${el.name}`;
-          cloneEl.meta.parentName = `${lastRouter.name}`;
-        }
-        children = children.concat(cloneEl);
+        return child;
       });
-      return children;
     } catch (error) {
       console.error('hooks-usePermission-filterChildren', error);
     }
   };
 
   /**
-   * 添加路由
-   * @param {*} router
+   * 设置重定向地址
+   * @param {*} route
+   * @returns
    */
-  const addRoute = (router) => {
+  const setRedirect = (route) => {
     try {
-      if (router?.meta?.isFull) {
-        route.addRoute({ ...router });
-      } else {
-        route.addRoute('BasicLayout', { ...router });
-      }
+      const redirect =
+        route?.redirect && !isNull(route?.redirect)
+          ? route.redirect
+          : route?.children?.length && !route?.children[0]?.hidden
+          ? route?.children[0]?.path
+          : ``;
+      return redirect;
     } catch (error) {
-      console.error('hooks-usePermission-addRoute', error);
+      console.error('hooks-usePermission-setRedirect', error);
     }
   };
 
   /**
-   * 设置路由
-   * @param {*} routes
+   * 添加路由
+   * @param {*} routers
    */
-  const setRoutes = (routes) => {
+  const addRoute = (routers) => {
     try {
-      _.forEach(routes, (item) => {
-        item = {
-          ...item,
-          path: `/${item.path}`
-        };
-        if (item?.children?.length > 0) {
-          item.redirect = !isNull(item.redirect) ? item.redirect : !item?.children[0]?.hidden ? `${item.path}/${item?.children[0]?.path}` : ``;
-          item.children = _.map(item.children, (child) => {
-            const path = `${item.path}/${child.path}`;
-            const name = `${item.name}${child.name}`;
-            child = {
-              ...child,
-              path,
-              name,
-              meta: {
-                ...child.meta,
-                modelName: item.name,
-                parentName: `${item.name}${child.meta.parentName}`
-              }
-            };
-            return child;
-          });
+      _.forEach(routers, (router) => {
+        const newRouter = _.cloneDeep(router);
+        delete router?.children;
+        // 设置组件
+        if (!isNull(router.component) && isString(router.component)) {
+          router.component = () => import(`@/views/${newRouter.component}.vue`);
         }
-        addRoute(item);
+        if (!isNull(router?.path)) {
+          if (router?.meta?.pageLayout !== CONST_STRING_1) {
+            route.addRoute({ ...router });
+          } else {
+            route.addRoute('BasicLayout', { ...router });
+          }
+        }
       });
-      // console.log(route.getRoutes());
+      // console.log('所有路由', route.getRoutes());
     } catch (error) {
-      console.error('hooks-usePermission-setRoutes', error);
+      console.error('hooks-usePermission-addRoute', error);
     }
   };
 
@@ -167,7 +157,6 @@ export const usePermission = (options) => {
   const filterTopMenu = (asyncRouterMap) => {
     try {
       return asyncRouterMap.filter((route) => {
-        route.path = isPermission ? `/${route.path}` : `${route.path}`;
         if (route?.children?.length > 0) {
           delete route['children'];
         }
@@ -188,7 +177,9 @@ export const usePermission = (options) => {
       const menuMap = {};
       asyncRouterMap.map((route) => {
         const model = _.cloneDeep(route);
-        menuMap[model.name] = isPermission ? filterSideChildren(model.children || [], { ...model, path: `/${model.path}` }) : model.children || [];
+        if (model.name) {
+          menuMap[model.name] = filterSideChildren(model.children);
+        }
       });
       return menuMap;
     } catch (error) {
@@ -196,17 +187,14 @@ export const usePermission = (options) => {
     }
   };
 
-  const filterSideChildren = (childrenMap, firstRouter) => {
+  const filterSideChildren = (childrenMap = []) => {
     try {
       return childrenMap.filter((el) => {
         if (el?.hidden) {
           return false;
         }
-        el.path = `${firstRouter.path}/${el.path}`;
-        el.name = `${firstRouter.name}${el.name}`;
-        el.meta.parentName = `${firstRouter.name}`;
         if (el?.children?.length > 0) {
-          el.children = filterSideChildren(el.children, el);
+          el.children = filterSideChildren(el.children);
         }
         return true;
       });
@@ -215,9 +203,15 @@ export const usePermission = (options) => {
     }
   };
 
-  // 获取按钮数据
-  const getButtonList = async () => {
-    dispatch('setButtonList', []);
+  // 用户信息&&按钮权限
+  const getUserData = async () => {
+    try {
+      const result = await getUserInfo({});
+      const userInfo = result?.data?.user || {};
+      const permissions = result?.data?.permissions || [];
+      dispatch('setButtonList', permissions);
+      dispatch('setUserInfo', userInfo);
+    } catch (error) {}
   };
 
   // 不校验路由权限，使用本地的路由即可
@@ -230,8 +224,9 @@ export const usePermission = (options) => {
 
   return {
     ...toRefs(state),
+    refresh,
     getRouteData,
-    getButtonList,
+    getUserData,
     setDefaultRoute
   };
 };

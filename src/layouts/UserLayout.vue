@@ -4,24 +4,13 @@
       <div class="user-layout-content">
         <div class="top">
           <div class="header">
-            <a href="/">
-              <!-- <img src="~@/assets/logo.svg" class="logo" alt="logo" /> -->
-              <span class="title">后台系统</span>
-            </a>
+            <img src="~@/assets/images/login-logo.png" class="logo" alt="logo" />
+            <div class="title">后台系统</div>
           </div>
-          <div class="desc">工程管理平台</div>
+          <!-- <div class="desc">工程管理平台</div> -->
         </div>
 
         <router-view />
-
-        <!-- <div class="footer">
-          <div class="links">
-            <a href="_self">帮助</a>
-            <a href="_self">隐私</a>
-            <a href="_self">条款</a>
-          </div>
-          <div class="copyright">Copyright &copy; 2018 vueComponent</div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -33,34 +22,34 @@
   .container {
     width: 100%;
     min-height: 100%;
-    background: #f0f2f5 url(~@/assets/images/background.svg) no-repeat 50%;
-    background-size: 100%;
+    background: url(~@/assets/images/user-layout-bg.png) no-repeat 50%;
+    background-size: cover;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     .user-layout-content {
-      padding: 80px 0 24px;
-
+      width: 400px;
       .top {
         text-align: center;
+        margin-bottom: 69px;
 
         .header {
-          height: 44px;
-          line-height: 44px;
-
           .logo {
-            height: 44px;
+            height: 132px;
+            width: 132px;
             vertical-align: top;
-            margin-right: 16px;
             border-style: none;
+            margin-bottom: 24px;
           }
 
           .title {
-            font-size: 33px;
+            font-size: 24px;
             color: rgba(0, 0, 0, 0.85);
             font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-            font-weight: 600;
-            position: relative;
-            top: 2px;
+            font-weight: 500;
+            color: #fff;
           }
         }
         .desc {
@@ -70,30 +59,6 @@
           margin-bottom: 40px;
         }
       }
-
-      //   .footer {
-      //     width: 100%;
-      //     bottom: 0;
-      //     padding: 0 16px;
-      //     margin: 48px 0 24px;
-      //     text-align: center;
-
-      //     .links {
-      //       margin-bottom: 8px;
-      //       font-size: 14px;
-      //       a {
-      //         color: rgba(0, 0, 0, 0.45);
-      //         transition: all 0.3s;
-      //         &:not(:last-child) {
-      //           margin-right: 40px;
-      //         }
-      //       }
-      //     }
-      //     .copyright {
-      //       color: rgba(0, 0, 0, 0.45);
-      //       font-size: 14px;
-      //     }
-      //   }
     }
 
     a {

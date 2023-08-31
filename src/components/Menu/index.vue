@@ -4,12 +4,12 @@
       <template v-if="!item.children?.length">
         <a-menu-item :key="item.name" @click="routeChange($event, item)">
           <template #icon v-if="!isNull(item.meta?.icon)">
-            <component :is="item.meta?.icon"></component>
+            <MyIcon :type="item.meta?.icon" source="anticonfont"></MyIcon>
           </template>
-          <template v-if="item.path && !item?.meta?.isLink">
+          <template v-if="item.path && !isFrame(item?.meta?.isFrame)">
             <router-link :to="{ path: item.path }">{{ item.meta?.title }}</router-link>
           </template>
-          <template v-else-if="item.path && item?.meta?.isLink">
+          <template v-else-if="item.path && isFrame(item?.meta?.isFrame)">
             <a :href="item.path" target="_blank">{{ item.meta?.title }}</a>
           </template>
           <template v-else>{{ item.meta?.title }}</template>
@@ -28,6 +28,7 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import _ from 'lodash';
 import { isNull, findTreeData } from '@/utils/utils';
+import { CONST_STRING_1 } from '@/utils/const';
 
 const { currentRoute, getRoutes } = useRouter();
 const { state, dispatch } = useStore();
@@ -72,6 +73,10 @@ const getOpenKeys = (parentName, openKeys) => {
   };
   fun(parentName);
   return openKeys;
+};
+
+const isFrame = (flag) => {
+  return flag !== CONST_STRING_1;
 };
 
 watch(

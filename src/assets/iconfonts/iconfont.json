@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "12550614",
+      "name": "矩形",
+      "font_class": "juxing1",
+      "unicode": "e636",
+      "unicode_decimal": 58934
+    },
+    {
+      "icon_id": "5774411",
+      "name": "icon_layout",
+      "font_class": "icon-",
+      "unicode": "e739",
+      "unicode_decimal": 59193
+    },
+    {
       "icon_id": "15838466",
       "name": "drag",
       "font_class": "drag",

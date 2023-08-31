@@ -112,22 +112,22 @@ export const resultCallBack = (options) => {
  * 根据指定key和value查找树形数据对应的上级数据
  * @param {*} treeData
  * @param {*} nodeKey
- * @param {*} parentValue
+ * @param {*} nodeValue
  * @returns
  */
-export const findTreeData = (treeData, nodeKey, parentValue) => {
+export const findTreeData = (treeData, nodeKey, nodeValue, childName = 'children') => {
   let hasFound = false, // 表示是否有找到key值
     result = null;
   const fn = function (data) {
     if (Array.isArray(data) && !hasFound) {
       // 判断是否是数组并且没有的情况下，
       data.forEach((item) => {
-        if (item[nodeKey] === parentValue) {
+        if (item[nodeKey] === nodeValue) {
           // 数据循环每个子项，并且判断子项下边是否有key值
           result = item; // 返回的结果等于每一项
           hasFound = true; // 并且找到key值
-        } else if (item.children) {
-          fn(item.children); // 递归调用下边的子项
+        } else if (item[childName]) {
+          fn(item[childName]); // 递归调用下边的子项
         }
       });
     }
@@ -177,8 +177,9 @@ export const treeToArr = (source) => {
   if (!Array.isArray(source)) return [];
   let res = [];
   source?.forEach((el) => {
+    const newEl = _.cloneDeep(el);
     res.push(el);
-    el.children && res.push(...treeToArr(el.children));
+    newEl?.children && res.push(...treeToArr(newEl?.children));
   });
   return res;
 };
@@ -212,14 +213,15 @@ export const getTreeDataValues = (tree, key, level) => {
  * @param {*} nodeKey 节点名称
  * @param {*} parentValue 初始父节点值
  * @param {*} parentKeys 所有长辈节点
+ * @param {*} isTag
+ * @param {*} childName
  * @returns
  */
-export const getTreeRootKeys = (treeData, parentKey, nodeKey, parentValue, parentKeys = [], isTag = true) => {
-  // console.log('treeData, parentKey, nodeKey, parentValue', treeData, parentKey, nodeKey, parentValue);
+export const getTreeRootKeys = (treeData, parentKey, nodeKey, parentValue, parentKeys = [], isTag = false, childName = 'children') => {
   const fun = function (value) {
-    const result = findTreeData(treeData, nodeKey, value);
-    if (JSON.stringify(result) !== '{}' && result) {
-      isTag ? parentKeys.push(result[parentKey]) : parentKeys.push(result);
+    const result = findTreeData(treeData, nodeKey, value, childName);
+    if (result && !_.isEmpty(result) && result[parentKey] !== '0') {
+      isTag ? parentKeys.push(result) : parentKeys.push(result[parentKey]);
       fun(result[parentKey]);
     }
     return;

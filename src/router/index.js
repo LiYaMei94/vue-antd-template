@@ -3,8 +3,12 @@ import _ from 'lodash';
 import { staticRoutes, errorRouter } from './staticRouter';
 import { usePermission } from '@/hooks/usePermission';
 import { useStore } from 'vuex';
+import db from '@/utils/db';
+import { isNull } from '@/utils/utils';
+import { ACCESS_TOKEN } from '@/utils/const';
 
-const isPermission = process.env.VUE_APP_route_permission === 'true';
+const DB = new db();
+const isPermission = process.env?.VUE_APP_route_permission === 'true';
 const router = createRouter({
   history: createWebHashHistory(),
   strict: false,
@@ -18,6 +22,7 @@ const routerWhiteNameList = ['UserLogin', 'UserEditPassword', '404', '403', '500
 router.beforeEach(async (to, from, next) => {
   try {
     const { getRouteData, setDefaultRoute } = usePermission();
+    const token = DB.getLocal(ACCESS_TOKEN);
     const { state } = useStore();
     // FIXME:1.动态设置标题，根据各平台自行配置
     const title = '工程管理平台';
@@ -27,9 +32,15 @@ router.beforeEach(async (to, from, next) => {
     if (routerWhiteNameList.includes(to.name)) return next();
 
     // 3.如果没有侧边菜单数据就重新请求，并生成路由
-    if (!state?.user?.menuData) {
-      isPermission ? await getRouteData() : setDefaultRoute();
-      return next({ ...to, replace: true });
+    if (!state?.user?.menuDataLoaded) {
+      if (!isNull(token)) {
+        isPermission ? await getRouteData() : setDefaultRoute();
+        return next({ ...to, replace: true });
+      } else {
+        return next({
+          path: '/user/login'
+        });
+      }
     }
 
     return next();

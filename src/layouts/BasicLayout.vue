@@ -9,7 +9,7 @@
       </template>
     </LayoutHeader>
     <a-layout>
-      <LayoutSider v-model:theme="state.global.theme" v-if="menuData.length"></LayoutSider>
+      <LayoutSider v-model:theme="state.global.theme" v-if="menuData?.length"></LayoutSider>
       <div class="main">
         <PageTabs v-if="state.global.showTabs && menuData.length"></PageTabs>
         <a-layout-content><router-view /></a-layout-content>

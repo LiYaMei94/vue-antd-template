@@ -6,7 +6,7 @@
 
 <script setup>
 import { ref, watch, useSlots, computed, provide, onBeforeMount, onMounted, onUnmounted } from 'vue';
-import { isObject, isNull, isArray } from '@/utils/utils';
+import { isObject, isNull } from '@/utils/utils';
 
 const props = defineProps({
   cols: {
@@ -71,7 +71,7 @@ const gridCols = computed(() => {
 });
 
 // 注入 gap 间距
-provide('gap', isArray(props.gap) ? props.gap[0] : props.gap);
+provide('gap', Array.isArray(props.gap) ? props.gap[0] : props.gap);
 // 注入响应式断点
 provide('breakPoint', breakPoint);
 // 注入要开始折叠的 index
@@ -89,7 +89,7 @@ const findIndex = () => {
     // suffix
     if (isObject(slot.type) && slot.type.name === 'GridItem' && isNull(slot.props?.suffix)) suffix = slot;
     // slot children
-    if (typeof slot.type === 'symbol' && isArray(slot.children)) fields.push(...slot.children);
+    if (typeof slot.type === 'symbol' && Array.isArray(slot.children)) fields.push(...slot.children);
   });
 
   // 计算 suffix 所占用的列
@@ -136,7 +136,7 @@ watch(
 // 设置间距
 const gridGap = computed(() => {
   if (typeof props.gap === 'number') return `${props.gap}px`;
-  if (isArray(props.gap)) return `${props.gap[1]}px ${props.gap[0]}px`;
+  if (Array.isArray(props.gap)) return `${props.gap[1]}px ${props.gap[0]}px`;
   return 'unset';
 });
 

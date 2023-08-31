@@ -32,7 +32,7 @@ export const useTheme = () => {
     const themeConfig = MAIN_THEME_MAP[type];
     // 当前主题模式下颜色
     const themeColor = THEME_COLOR[type];
-    // TODO:单独修改主题色的话可以加 global?.primary ||
+    // FIXME:单独修改主题色的话可以加 global?.primary ||
     const primaryColor = MAIN_THEME_MAP[type]?.antd?.primaryColor;
 
     dispatch('setThemeModel', type);

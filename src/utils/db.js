@@ -4,7 +4,7 @@ class DB {
   constructor() {}
 
   getLocal(key) {
-    return !isNull(localStorage.getItem(key)) && JSON.parse(localStorage.getItem(key));
+    return !isNull(localStorage.getItem(key)) ? JSON.parse(localStorage.getItem(key)) : null;
   }
 
   setLocal(key, val) {
@@ -20,7 +20,7 @@ class DB {
   }
 
   getSession(key) {
-    return !isNull(sessionStorage.getItem(key)) && JSON.parse(sessionStorage.getItem(key));
+    return !isNull(sessionStorage.getItem(key)) ? JSON.parse(sessionStorage.getItem(key)) : null;
   }
 
   setSession(key, val) {

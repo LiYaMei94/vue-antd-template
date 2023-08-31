@@ -14,7 +14,6 @@ body,
 :-webkit-any(article, aside, nav, section) h1 {
   font-size: 2em;
 }
-
 :root {
   .margin-left-12 {
     margin-left: 12px;
@@ -65,6 +64,17 @@ body,
   .page-form-content {
     padding: 15px;
     box-sizing: border-box;
+  }
+
+  .ant-menu-dark .ant-menu-sub,
+  .ant-menu.ant-menu-dark,
+  .ant-menu.ant-menu-dark .ant-menu-sub {
+    background-color: var(--ant-layout-header-bg);
+  }
+
+  .ant-menu-dark,
+  .ant-menu-horizontal {
+    border-bottom: 1px solid var(--ant-line-color);
   }
 
   /*========================antd form表单&元素=============================*/
@@ -131,8 +141,6 @@ body,
   .ant-select {
     color: var(--ant-body-color);
   }
-
-  /*========================antd table=============================*/
   .form-all-disable {
     pointer-events: none;
 
@@ -170,10 +178,57 @@ body,
         background-color: #0003;
       }
     }
+    .ant-checkbox-wrapper {
+      border-color: #d9d9d9;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 1;
+      .ant-checkbox {
+        background-color: #0003;
+      }
+      .ant-checkbox-inner {
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+      }
+      .ant-checkbox-checked {
+        .ant-checkbox-inner:after {
+          border-color: rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+
+    .ant-tree {
+      border-color: #d9d9d9;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 1;
+      .ant-tree-checkbox-inner {
+        background-color: #f5f5f5;
+        border-color: #d9d9d9;
+      }
+      .ant-tree-checkbox-checked {
+        .ant-tree-checkbox-inner:after {
+          border-color: rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+  }
+
+  /*========================antd table=============================*/
+
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right {
+    background: var(--ant-table-td-bg);
   }
 
   .table-custom-primary {
     color: var(--ant-primary-color);
+  }
+
+  .table-custom-primary-disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    color: var(--ant-body-color);
   }
 
   .table-custom-danger {

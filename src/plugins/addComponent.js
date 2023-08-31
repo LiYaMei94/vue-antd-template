@@ -48,7 +48,8 @@ import {
   Popconfirm,
   Modal,
   Switch,
-  CheckboxGroup
+  CheckboxGroup,
+  Tree
 } from 'ant-design-vue';
 
 import * as AntIcons from '@ant-design/icons-vue';
@@ -57,6 +58,7 @@ import CustomSubMenu from '@/components/SubMenu';
 import CustomMenu from '@/components/Menu';
 import MyIcon from '@/components/Icon.vue';
 import * as ActionButtons from '@/components/ActionButtons';
+import ProTable from '@/components/ProTable';
 
 export default {
   install: (app, options) => {
@@ -110,6 +112,7 @@ export default {
     app.component(Switch.name, Switch);
     app.component(FormItemRest.name, FormItemRest);
     app.component(CheckboxGroup.name, CheckboxGroup);
+    app.component(Tree.name, Tree);
 
     // 图标，使用<SyncOutlined></SyncOutlined>或者<sync-outlined></sync-outlined>
     for (const i in AntIcons) {
@@ -123,5 +126,6 @@ export default {
     for (const i in ActionButtons) {
       app.component(ActionButtons[i].name, ActionButtons[i]);
     }
+    app.component('ProTable', ProTable);
   }
 };

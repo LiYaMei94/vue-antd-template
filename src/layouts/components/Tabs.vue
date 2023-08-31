@@ -67,7 +67,8 @@ onMounted(() => {
     if (navListDom) {
       observer.observe(navListDom, { box: 'border-box' });
       tabMenuWidth.value = navListDom?.clientWidth;
-      navScroll = document.getElementsByClassName('ant-tabs-nav-wrap') && document.getElementsByClassName('ant-tabs-nav-wrap')[0]?.clientWidth;
+      const navScrollDom = document.getElementsByClassName('ant-tabs-nav-wrap') && document.getElementsByClassName('ant-tabs-nav-wrap')[0];
+      navScroll = navScrollDom?.clientWidth;
     }
   } catch (error) {
     console.error('layouts-Tabs-onMounted', error);
@@ -85,7 +86,7 @@ const showExtra = computed(() => {
 });
 
 const getTranslate = () => {
-  const transX = document.defaultView.getComputedStyle(navListDom, null).transform;
+  const transX = document.defaultView.getComputedStyle(navListDom, null)?.transform;
   return transX.split(',');
 };
 

@@ -8,12 +8,12 @@
       <template v-if="!item.children?.length">
         <a-menu-item :key="item.name" @click="handleRouteChange($event, item)">
           <template #icon v-if="!isNull(item.meta?.icon)">
-            <component :is="item.meta?.icon"></component>
+            <MyIcon :type="item.meta?.icon" source="anticonfont"></MyIcon>
           </template>
-          <template v-if="item.path && !item?.meta?.isLink">
+          <template v-if="item.path && !isFrame(item?.meta?.isFrame)">
             <router-link :to="{ path: item.path }">{{ item.meta?.title }}</router-link>
           </template>
-          <template v-else-if="item.path && item?.meta?.isLink">
+          <template v-else-if="item.path && isFrame(item?.meta?.isFrame)">
             <a :href="item.path" target="_blank">{{ item.meta?.title }}</a>
           </template>
           <template v-else>{{ item.meta?.title }}</template>
@@ -28,6 +28,7 @@
 
 <script setup>
 import { isNull } from '@/utils/utils/';
+import { CONST_STRING_1 } from '@/utils/const';
 const props = defineProps({
   menuInfo: {
     type: Object,
@@ -42,6 +43,10 @@ const props = defineProps({
     default: null
   }
 });
+
+const isFrame = (flag) => {
+  return flag !== CONST_STRING_1;
+};
 
 const handleRouteChange = (event, to) => {
   props.routeChange && props.routeChange(event, to);

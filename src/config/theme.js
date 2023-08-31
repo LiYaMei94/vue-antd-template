@@ -7,6 +7,17 @@ export const LIGHT_THEME = 'light';
 // 黑色主题
 export const DARK_THEME = 'dark';
 
+export const THEME_ENUM = [
+  {
+    value: LIGHT_THEME,
+    label: '浅色模式'
+  },
+  {
+    value: DARK_THEME,
+    label: '暗黑模式'
+  }
+];
+
 // 主题枚举
 export const MAIN_THEME_MAP = {
   [LIGHT_THEME]: {

@@ -8,7 +8,7 @@
 
 <script setup>
 import { computed, inject, ref } from 'vue';
-import { isArray, isNull } from '@/utils/utils';
+import { isNull } from '@/utils/utils';
 import { useStore } from 'vuex';
 
 const props = defineProps({
@@ -26,18 +26,29 @@ const { dispatch, state } = useStore();
 
 // 属性透传
 const handleSearchProps = computed(() => {
+  const type = props.column.el;
   let searchProps = props.column?.props || {};
-  return searchProps;
+  let selectProps = {};
+  const selectArr = ['select', 'tree-select', 'TreeSelect'];
+  if (selectArr.includes(type)) {
+    selectProps = { showSearch: true, optionFilterProp: 'label' };
+  }
+  return { ...selectProps, ...searchProps };
 });
 
 // 处理默认 placeholder
 const placeholder = computed(() => {
-  const attr = props.column.props;
-  const type = ['datetimerange', 'daterange', 'monthrange'];
-  if (type.includes(attr?.type) || attr?.isRange) {
-    return { rangeSeparator: '至', startPlaceholder: '开始时间', endPlaceholder: '结束时间' };
+  const type = props.column.el;
+  let placeholder = props.column?.props?.placeholder;
+  const rangArr = ['range-picker', 'RangePicker', 'time-range-picker', 'TimeRangePicker'];
+
+  if (rangArr.includes(type)) {
+    placeholder = ['开始时间', '结束时间'];
+  } else if (type?.includes('input')) {
+    placeholder = '请输入';
+  } else {
+    placeholder = '请选择';
   }
-  const placeholder = attr?.placeholder || (props.column?.el?.includes('input') ? '请输入' : '请选择');
   return { placeholder };
 });
 

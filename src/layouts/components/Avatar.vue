@@ -9,8 +9,8 @@
         </a-avatar>
       </div>
       <div class="user-info">
-        <div>admin</div>
-        <div>系统管理员</div>
+        <div>{{ state?.user?.userInfo?.userName }}</div>
+        <div>{{ state?.user?.userInfo?.nickName }}</div>
       </div>
     </div>
     <template #overlay>
@@ -20,7 +20,7 @@
         </a-menu-item>
         <a-menu-divider /> -->
         <a-menu-item key="2">
-          <a href="javaScript:;" @click="logout">退出登录</a>
+          <a href="javaScript:;" @click="handleLogout">退出登录</a>
         </a-menu-item>
       </a-menu>
     </template>
@@ -30,14 +30,22 @@
 import db from '@/utils/db';
 import { ACCESS_TOKEN } from '@/utils/const';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import { logout } from '@/api/user';
 
+const { state } = useStore();
 const router = useRouter();
 const DB = new db();
 const changePassword = () => {};
-const logout = () => {
-  DB.clearLocal();
-  DB.clearSession();
-  router.push('/user/login');
+const handleLogout = async () => {
+  try {
+    await logout();
+    DB.deleteLocal(ACCESS_TOKEN);
+    DB.deleteSession(ACCESS_TOKEN);
+    router.push('/user/login');
+  } catch (error) {
+    console.error('user-login-handleLogout', error);
+  }
 };
 </script>
 <style lang="less" scoped>

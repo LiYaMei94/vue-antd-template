@@ -5,6 +5,7 @@ import directives from '@/directives';
 import addComponent from '@/plugins/addComponent';
 import 'ant-design-vue/dist/antd.variable.min.css';
 import store from './store';
+import './assets/style/common.less';
 
 const app = createApp(App);
 

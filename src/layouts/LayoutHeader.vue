@@ -9,7 +9,7 @@
     </div>
     <div class="header-right-tool">
       <a-space align="center" size="large">
-        <PageDensity></PageDensity>
+        <!-- <PageDensity></PageDensity> -->
         <Theme></Theme>
         <Fullscreen></Fullscreen>
         <div class="header-tool-right-icon">

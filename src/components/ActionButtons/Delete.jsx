@@ -1,16 +1,16 @@
 import { Modal } from 'ant-design-vue';
 
 const DeleteButton = (props, context) => {
-  const { text = '删除', isModal = true, deleteFun, modalOptions } = props || {};
-  const { title = '删除提示', content = '确定要删除吗？' } = modalOptions || {};
+  const { text = '删除', isModal = true, deleteFun, modalOptions, type = 'confirm' } = props || {};
+  const { title = '删除提示', content = '确定要删除吗？', okText = '确定', okType = 'danger' } = modalOptions || {};
 
   // 删除
   const handleDelete = () => {
-    Modal.confirm({
+    Modal[type]({
       title,
       content,
-      okText: '确定',
-      okType: 'danger',
+      okText,
+      okType,
       cancelText: '取消',
       onOk() {
         deleteFun && deleteFun();
