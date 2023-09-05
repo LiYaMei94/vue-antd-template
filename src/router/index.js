@@ -32,15 +32,20 @@ router.beforeEach(async (to, from, next) => {
     if (routerWhiteNameList.includes(to.name)) return next();
 
     // 3.如果没有侧边菜单数据就重新请求，并生成路由
-    if (!state?.user?.menuDataLoaded) {
+    if (!state?.user?.menuDataLoaded && isPermission) {
       if (!isNull(token)) {
-        isPermission ? await getRouteData() : setDefaultRoute();
+        await getRouteData();
         return next({ ...to, replace: true });
       } else {
         return next({
           path: '/user/login'
         });
       }
+    }
+
+    // 4.不做权限校验
+    if (!isPermission) {
+      await setDefaultRoute();
     }
 
     return next();

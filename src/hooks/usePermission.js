@@ -5,7 +5,7 @@ import { useStore } from 'vuex';
 import { isNull, isString, treeToArr } from '@/utils/utils';
 import { getUserInfo, getRoutesInfo } from '@/api/user';
 import { routerData } from '@/router/dynamicRouter';
-import { CONST_STRING_1, MENU_TYPE_R } from '@/utils/const';
+import { CONST_STRING_1 } from '@/utils/const';
 
 /**
  *
@@ -29,14 +29,14 @@ export const usePermission = (options) => {
   const getRouteData = async () => {
     try {
       const routeInfo = (await getRoutesInfo())?.data;
-      let newRouteInfo = []; // 所有路由数据
+      let newRouteInfo = routeInfo; // 所有路由数据
       // FIXME:删除业务平台和管理平台这级的菜单
-      const deleteIndex = _.findIndex(routeInfo, (item) => item?.menuType === MENU_TYPE_R);
-      if (!isNull(deleteIndex)) {
-        _.forEach(routeInfo, (item) => {
-          newRouteInfo = item.children?.length ? newRouteInfo.concat(item.children) : newRouteInfo;
-        });
-      }
+      // const deleteIndex = _.findIndex(routeInfo, (item) => item?.menuType === MENU_TYPE_R);
+      // if (!isNull(deleteIndex)) {
+      //   _.forEach(routeInfo, (item) => {
+      //     newRouteInfo = item.children?.length ? newRouteInfo.concat(item.children) : newRouteInfo;
+      //   });
+      // }
       // 路由
       const routes = filterRouter(newRouteInfo);
       // 顶部导航

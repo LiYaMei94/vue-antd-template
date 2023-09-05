@@ -16,3 +16,12 @@ export const code = (data) => {
 export const getRoutes = (data) => {
   return Promise.resolve(routeInfo);
 };
+
+export const getRoutesInfo = async (data) => {
+  return get('/getRouters', data);
+};
+
+// 用户信息
+export const getUserInfo = (data) => {
+  return get('/getInfo', data);
+};

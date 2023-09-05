@@ -15,6 +15,7 @@ export const useTheme = () => {
     // 修改antd的主题色
     ConfigProvider.config({
       theme: {
+        ...MAIN_THEME_MAP[global?.theme]?.antd,
         primaryColor: val
       }
     });

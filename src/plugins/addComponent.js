@@ -49,7 +49,10 @@ import {
   Modal,
   Switch,
   CheckboxGroup,
-  Tree
+  Tree,
+  Upload,
+  UploadDragger,
+  Progress
 } from 'ant-design-vue';
 
 import * as AntIcons from '@ant-design/icons-vue';
@@ -113,6 +116,9 @@ export default {
     app.component(FormItemRest.name, FormItemRest);
     app.component(CheckboxGroup.name, CheckboxGroup);
     app.component(Tree.name, Tree);
+    app.component(Upload.name, Upload);
+    app.component(UploadDragger.name, UploadDragger);
+    app.component(Progress.name, Progress);
 
     // 图标，使用<SyncOutlined></SyncOutlined>或者<sync-outlined></sync-outlined>
     for (const i in AntIcons) {

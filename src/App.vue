@@ -29,9 +29,10 @@ const { initTheme } = useTheme();
 onMounted(async () => {
   const token = DB.getLocal(ACCESS_TOKEN);
   initTheme();
-  if (!isNull(token)) {
-    await getUserData();
-  }
+  // TODO:用户信息
+  // if (!isNull(token)) {
+  //   await getUserData();
+  // }
 });
 </script>
 <style></style>
