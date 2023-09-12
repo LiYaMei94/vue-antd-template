@@ -14,12 +14,12 @@ import { CONST_STRING_1 } from '@/utils/const';
  */
 export const usePermission = (options) => {
   const { dispatch } = useStore();
-
+  const isPermission = process.env?.VUE_APP_route_permission === 'true';
   const state = reactive({});
 
   // 重新分配角色刷新;
   const refresh = () => {
-    getRouteData();
+    isPermission ? getRouteData() : setDefaultMenu();
     getUserData();
   };
 
@@ -215,7 +215,7 @@ export const usePermission = (options) => {
   };
 
   // 不校验路由权限，使用本地的路由即可
-  const setDefaultRoute = () => {
+  const setDefaultMenu = () => {
     const topMenuData = filterTopMenu(_.cloneDeep(routerData));
     const sideMenuData = filterSideMenu(_.cloneDeep(routerData));
     // 设置菜单
@@ -227,6 +227,6 @@ export const usePermission = (options) => {
     refresh,
     getRouteData,
     getUserData,
-    setDefaultRoute
+    setDefaultMenu
   };
 };

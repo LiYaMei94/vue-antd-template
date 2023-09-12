@@ -17,7 +17,7 @@ export const useTable = (options) => {
     hideOnSinglePage = false,
     formatSearchParams,
     customHandle,
-    loading = true
+    loading = false
   } = options || {};
   const state = reactive({
     // 表格数据
@@ -38,6 +38,7 @@ export const useTable = (options) => {
   //   获取表格数据
   const getTableData = async (options) => {
     try {
+      state.loading = true;
       const { pageSize, current } = state.page || {};
       const params = { ...searchParam.value, pageSize, pageNum: current, ...options };
       const newParams = formatSearchParams ? formatSearchParams(params) : params;

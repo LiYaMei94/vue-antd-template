@@ -19,7 +19,7 @@ import { ACCESS_TOKEN } from '@/utils/const';
 const DB = new db();
 
 const { dispatch, state } = useStore();
-const { getUserData } = usePermission();
+const { getUserData, setDefaultMenu } = usePermission();
 // 设置日期组件语言
 dayjs.locale('en');
 
@@ -28,11 +28,16 @@ const { initTheme } = useTheme();
 
 onMounted(async () => {
   const token = DB.getLocal(ACCESS_TOKEN);
+  const isPermission = process.env?.VUE_APP_route_permission === 'true';
   initTheme();
   // TODO:用户信息
   // if (!isNull(token)) {
   //   await getUserData();
   // }
+
+  if (!isPermission) {
+    await setDefaultMenu();
+  }
 });
 </script>
 <style></style>
