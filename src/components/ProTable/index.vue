@@ -8,13 +8,13 @@
       <div class="pro-table-header-right" v-if="showToolButton">
         <slot name="toolButton">
           <!-- 刷新表格 -->
-          <a-button v-if="refreshTableButton" shape="circle" @click="handleSearch">
+          <a-button v-if="refreshTableButton" shape="circle" @click="handleSearch" class="pro-table-right-tool-btn">
             <template #icon><SyncOutlined /></template>
           </a-button>
           <!-- 设置表格展示列 -->
           <TableColSetting v-if="showColSettingButton" v-bind="{ visible, colData: columns, callback: updateColumns, tableName }">
             <template #button>
-              <a-button class="margin-left-12" v-if="customColumnsButton" shape="circle" @click="visible = !visible">
+              <a-button class="margin-left-12 pro-table-right-tool-btn" v-if="customColumnsButton" shape="circle" @click="visible = !visible">
                 <template #icon><SettingOutlined /></template>
               </a-button>
             </template>
@@ -284,6 +284,15 @@ defineExpose({ getTableData, updateRowData, tableData: tableData.value });
     color: #666;
     font-size: 12px;
     width: 20px;
+  }
+  .pro-table-right-tool-btn {
+    background: transparent;
+    border: 1px solid var(--private-form-border);
+    color: var(--private-primary-text-color);
+  }
+  .pro-table-right-tool-btn:focus,
+  .pro-table-right-tool-btn:hover {
+    background: transparent;
   }
 }
 </style>

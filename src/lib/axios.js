@@ -140,8 +140,16 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use((response) => {
   const result = response?.data || {};
-  const { code, data, rows, total, pageNum, pageSize } = result || {};
   const { skipHandleResponse = false } = response?.config || {};
+  const headers = response.headers;
+
+  // 接收文件流
+  if (!skipHandleResponse && response?.status === 200 && headers['content-type']?.includes('octet-stream')) {
+    return { file: result, fileName: decodeURIComponent(headers['download-filename']) };
+  }
+
+  // 其他数据
+  const { code, data, rows, total, pageNum, pageSize } = result || {};
   if (!skipHandleResponse && code == 200) {
     return { data: data || rows, total, pageNum, pageSize };
   }
@@ -149,7 +157,7 @@ instance.interceptors.response.use((response) => {
   if (!skipHandleResponse && code != 200) {
     errorHandler(result, true);
   }
-  return response.data;
+  return result;
 }, errorHandler);
 
 /**
@@ -208,4 +216,14 @@ export const put = (url, data, options) => {
   return instance.put(url, data, options);
 };
 
+/**
+ *
+ * @param url upload 请求
+ * @param data
+ * @param options
+ * @returns
+ */
+export const upload = (url, data, options) => {
+  return instance.post(url, data, options);
+};
 export default instance;

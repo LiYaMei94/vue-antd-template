@@ -18,9 +18,9 @@ export const usePermission = (options) => {
   const state = reactive({});
 
   // 重新分配角色刷新;
-  const refresh = () => {
-    isPermission ? getRouteData() : setDefaultMenu();
-    getUserData();
+  const refresh = async () => {
+    isPermission ? await getRouteData() : await setDefaultMenu();
+    await getUserData();
   };
 
   /**

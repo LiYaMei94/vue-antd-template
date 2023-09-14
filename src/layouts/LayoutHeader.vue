@@ -13,7 +13,7 @@
         <Theme></Theme>
         <Fullscreen></Fullscreen>
         <div class="header-tool-right-icon">
-          <SyncOutlined style="font-size: 20px; color: var(--ant-body-color)" @click="handleRefresh" />
+          <SyncOutlined style="font-size: 20px; color: var(--private-primary-text-color)" @click="handleRefresh" />
         </div>
         <Avatar></Avatar>
       </a-space>

@@ -23,7 +23,7 @@ const props = defineProps({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--ant-line-color);
+  border-bottom: 1px solid var(--private-border-color);
   padding: 15px 20px;
   box-sizing: border-box;
 }

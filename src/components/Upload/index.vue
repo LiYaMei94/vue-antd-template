@@ -11,6 +11,7 @@
       v-model:fileList="fileList"
       :action="action"
       @change="uploadChange"
+      :disabled="disabled || (fileList.length >= maxCount && maxCount !== 1)"
     >
       <template v-if="isDefaultButton">
         <template v-if="isDragger"><DraggerDom></DraggerDom></template>
@@ -20,28 +21,52 @@
         <slot name="uploadButton"></slot>
       </template>
 
-      <!-- 自定义上传 -->
-      <template #itemRender="{ file }">
-        <div class="upload-item" v-if="isUploadItemRender">
-          <div class="upload-item-content">
-            <span :style="file.status === 'exception' ? 'color: red' : ''">{{ file.name }}</span>
-            <div class="action-button">
-              <a href="javascript:;" @click="handleRemove">删除{{ file.percent }}</a>
-              <a href="javascript:;" class="margin-left-10" @click="handleResume" v-if="file.status === 'exception'">继续上传</a>
+      <!-- 自定义上传列表 -->
+      <template #itemRender="{ file, fileList }">
+        <!-- 组件调用方自定义 -->
+        <template v-if="!isUploadItemRender">
+          <slot name="uploadItemRender" :dataInfo="{ originNode, file, fileList }"></slot>
+        </template>
+        <!-- 组件内部自定义 -->
+        <template v-else>
+          <div class="upload-item">
+            <div class="upload-item-left">
+              <div :style="file?.status === UPLOAD_STATUS_ERROR ? 'color: error' : ''" class="text-ellipsis file-name">
+                {{ file?.name }}
+              </div>
+              <div>
+                <UploadStatus :file="file"></UploadStatus>
+                <span v-if="!isNull(file?.size)">{{ Math.ceil(file?.size / 1024) }} KB</span>
+              </div>
+              <a-progress
+                size="small"
+                :stroke-color="{
+                  from: '#108ee9',
+                  to: '#87d068'
+                }"
+                :percent="file?.percent?.toFixed(2)"
+                v-if="!isNull(file?.percent)"
+              />
+            </div>
+            <div class="upload-item-right">
+              <div class="action-button">
+                <DeleteOutlined @click="handleRemove($event, file)" style="font-size: 20px; color: var(--ant-error-color)" />
+
+                <a href="javascript:;" class="margin-left-10" @click="handleCancelUpload()" v-if="file?.status === UPLOAD_STATUS_UPLOADING">
+                  取消/终止
+                </a>
+
+                <a
+                  href="javascript:;"
+                  class="margin-left-10"
+                  @click="handleResume($event, file)"
+                  v-if="file?.status === UPLOAD_STATUS_ERROR || file?.status === UPLOAD_STATUS_STOP"
+                >
+                  继续上传
+                </a>
+              </div>
             </div>
           </div>
-          <a-progress
-            size="small"
-            :stroke-color="{
-              from: '#108ee9',
-              to: '#87d068'
-            }"
-            :percent="file.percent"
-            v-if="file.percent !== 0 && file.percent !== 100"
-          />
-        </div>
-        <template v-else>
-          <slot name="uploadItemRender"></slot>
         </template>
       </template>
     </component>
@@ -49,11 +74,22 @@
 </template>
 
 <script setup lang="jsx">
-import { computed, useSlots, defineExpose, ref } from 'vue';
-import { isNull } from '@/utils/utils';
-import { message } from 'ant-design-vue';
+import { computed, useSlots, defineExpose, ref, onMounted, watch, onUnmounted } from 'vue';
+import { isNull, filterEnum } from '@/utils/utils';
+import { message, Modal } from 'ant-design-vue';
 import axios from 'axios';
 import _ from 'lodash';
+import {
+  getFileMD5,
+  getHashMD5,
+  getDuration,
+  UPLOAD_STATUS_ENUM,
+  UPLOAD_STATUS_SUCCESS,
+  UPLOAD_STATUS_ERROR,
+  UPLOAD_STATUS_UPLOADING,
+  UPLOAD_STATUS_STOP
+} from './index';
+import { checkUploadTask, addShardTask, uploadShard, mergeShard, fileDelete, uploadFile } from '@/api/upload';
 
 const props = defineProps({
   trigger: {
@@ -70,7 +106,7 @@ const props = defineProps({
   },
   shardSize: {
     type: Number,
-    default: 200 // 分片大小，单位字节(KB)
+    default: 5 * 1024 // FIXME:最小必须是5M ，分片大小，单位字节(KB)
   },
   accept: {
     type: String,
@@ -82,62 +118,71 @@ const props = defineProps({
   },
   maxCount: {
     type: Number,
-    default: null
+    default: 1
   },
-  checkRequest: {
-    type: Promise,
-    default: null // 分片上传之前校验未成功上传的
-  },
-  shardRequest: {
-    type: Promise,
-    default: null // 不走action自动上传，isAutoUpload必须为true，分片上传
-  },
-  request: {
-    type: Promise,
-    default: null // 不走action自动上传，isAutoUpload必须为true，不分片上传
-  },
-  mergeShardRequest: {
-    type: Promise,
-    default: null // 分片上传完成之后合并分片
+  defaultFileList: {
+    type: Array, // 回显文件列表
+    default: []
   },
   name: {
     type: String,
     default: 'file', // 后端接收文件的参数
     require: true
   },
-  isCustomUpload: {
-    type: Boolean,
-    // 组件调用方自己上传，组件暴露出文件列表，包括已分片的，比如和form表单的其他内容一起提交等场景
-    default: false
-  },
   isAutoUpload: {
     type: Boolean,
     default: true // 是否自动上传，和action搭配使用
   },
   action: {
-    type: String, // action自动上传，isAutoUpload必须是true
+    type: String, // FIXME:action自动上传，isAutoUpload必须是false
     default: null
+  },
+  isEncode: {
+    type: Boolean, // 是否加密
+    default: false
+  },
+  disabled: {
+    type: Boolean, // 是否禁止点击
+    default: false
   }
 });
 
-const shardList = ref([]); // 所有分片数据
 const fileList = ref([]); // 文件上传列表
 const isDragger = computed(() => props.trigger === 'dragger'); // 是否是拖拽上传
 const isDefaultButton = !useSlots().uploadButton; // 是否自定义点击按钮
 const isUploadItemRender = !useSlots().uploadItemRender; // 是否自定义上传列表
-let config = {
-  headers: {
-    'Content-Type': 'multipart/form-data'
-  },
-  transformRequest: [
-    function (data) {
-      return data;
+// 终止请求
+const requestSource = axios.CancelToken.source();
+const deleteRequestSource = axios.CancelToken.source();
+const continueUploadFile = [];
+const progressList = [];
+
+watch(
+  () => props.defaultFileList,
+  (newVal, oldVal) => {
+    if (!_.isEqual(newVal, oldVal)) {
+      fileList.value = newVal || [];
     }
-  ],
-  onUploadProgress: (progressEvent) => {
-    let persent = ((progressEvent.loaded / progressEvent.total) * 100) | 0; //上传进度百分比
-    console.log(persent);
-  }
+  },
+  { immediate: true, deep: true }
+);
+
+onUnmounted(() => {
+  requestSource?.cancel('终止上传请求~');
+  deleteRequestSource?.cancel('终止删除请求~');
+});
+
+// 上传状态DOM
+const UploadStatus = (props) => {
+  const { file } = props || {};
+  const item = filterEnum(file?.status, UPLOAD_STATUS_ENUM, {}, 'group');
+  return (
+    !isNull(item) && (
+      <a-tag color={item?.color || 'default'} icon={<MyIcon type={item?.icon} source='anticonfont'></MyIcon>}>
+        {item?.label || ' '}
+      </a-tag>
+    )
+  );
 };
 
 // 点击上传按钮DOM
@@ -161,9 +206,9 @@ const DraggerDom = (
   </>
 );
 
-// 上传文件之前校验文件大小等操作
+// 上传文件之前校验文件大小、数量等操作
 const beforeFileUpload = (file, fileList) => {
-  // 使用者自定义beforeUpload
+  // 组件调用方自定义beforeUpload
   if (props.beforeUpload) {
     props.beforeUpload(file, fileList);
     return false;
@@ -172,20 +217,18 @@ const beforeFileUpload = (file, fileList) => {
   // 校验文件大小和数量;
   return new Promise((resolve) => {
     try {
-      updateFileList({ file, percent: 0 });
-      // 校验文件大小是否符合要求
+      // 校验文件大小是否符合要求，file.size是字节(K)
       if (!isNull(props.size) && !(file.size / 1024 / 1024 <= props.size)) {
-        message.error(`上传文件不能大于大于${props.size}M!`);
+        message.error(`注意：上传的文件不能大于${props.size}M!`);
         return false;
       }
 
-      // 文件数量
-      if (props.multiple && !isNull(props.maxCount) && fileList.length > props.maxCount) {
-        message.error(`只能上传${props.maxCount}个文件！`);
+      // 文件数量，当maxCount是1时新文件覆盖旧文件，当maxCount>1时，已上传的文件超过maxCount时不能再上传
+      if (!isNull(props.maxCount) && fileList.length >= props.maxCount && props.maxCount !== 1) {
+        message.error(`注意：最多只能上传${props.maxCount}个文件！`);
         return false;
       }
 
-      // action主动上传
       return resolve(!props.isAutoUpload);
     } catch (error) {
       console.error('components-upload-beforeFileUpload', error);
@@ -196,160 +239,306 @@ const beforeFileUpload = (file, fileList) => {
 
 // 上传文件改变
 const uploadChange = async (file) => {
+  console.log('file-uploadChange', file);
+  upload(file.file);
+  continueUploadFile.push(file.file);
+};
+
+// 上传
+const upload = async (file) => {
+  const { size, name, uid } = file || {};
   try {
-    console.log('file', file);
-    const size = file.file.size;
-    const shardSize = 1024 * props.shardSize;
+    const shardSize = 1024 * props.shardSize; // 分片大小，单位字节(K)
     const count = Math.ceil(size / shardSize); // 总片数
-    let shardArr = Array.from({ length: count }, (v, i) => i + 1);
+    let shardArr = Array.from({ length: count }, (v, i) => i + 1); // 分片序号数组
 
+    // 一个分片直接上传
     if (count === 1) {
-      await upload({ file });
+      await fileUpload({ file });
+      return;
     }
 
-    if (count > 1) {
-      let needUpload = await checkFileUpload({ shardArr });
-      shardArr = Array.isArray(needUpload) && needUpload.length > 0 ? needUpload : shardArr;
-      await shardUpload({ shardArr, shardSize, file: file.file, size, count });
+    // 分片数大于1，开启分片上传
+    let identifier = await getFileMD5(file); // 文件MD5
+    identifier = await getHashMD5(`${identifier}-${name}`); // FIXME:文件MD5 + 文件名称MD5，确保修改文件名称后可以上传
+
+    // 检查已经上传的分片
+    let checkResult = await checkFileUpload({ shardArr, identifier, file, size, name });
+
+    if (checkResult) {
+      return;
     }
+
+    let fileId = checkResult?.fileId; // 不是初次上传、但没上传完成
+
+    // 当前文件第一次上传，初始分片任务
+    if (isNull(checkResult)) {
+      const duration = await getDuration(file); // 文件时长
+      const newTaskInfo = await addShardTask(
+        { identifier, totalSize: size, chunkSize: shardSize, fileName: name, duration },
+        {
+          cancelToken: requestSource.token
+        }
+      );
+      // FIXME:获取任务id
+      fileId = newTaskInfo?.data?.taskRecord?.id;
+    }
+
+    // 分片上传
+    await shardUpload({
+      shardArr: checkResult?.upload || shardArr,
+      shardSize,
+      file,
+      count,
+      fileId,
+      exitPartList: checkResult?.exitPartList,
+      identifier,
+      size,
+      name
+    });
   } catch (error) {
     console.error('components-upload-uploadChange', error);
+    updateFileList({ size, name, uid, status: UPLOAD_STATUS_ERROR });
   }
 };
 
 // 上传;
-const upload = (options) => {
+const fileUpload = (options) => {
   const { file } = options || {};
   return new Promise(async (resolve, reject) => {
     try {
       const fileInfo = {
-        [props.name || 'file']: file,
-        count: 1,
-        fileName: file?.name
+        [props.name || 'file']: file
       };
-      // FIXME:调用方自己获取文件片段上传
-      if (props.isCustomUpload) {
-        shardList.value.push({ ...fileInfo });
-        resolve(true);
-      }
-      // 直接在组件中上传，非action上传
+      let percent = 0;
       const formData = getFormData({ ...fileInfo });
-      // TODO:props.request && (await props.request(formData, {...config}));
+      const result = await uploadFile(
+        formData,
+        {
+          onUploadProgress: (progressEvent) => {
+            percent = (progressEvent.loaded / progressEvent.total) | 0; //上传进度百分比
+            updateFileList({ ...options, ...result?.data, status: UPLOAD_STATUS_UPLOADING, percent });
+          }
+        },
+        {
+          cancelToken: requestSource.token
+        }
+      );
       // FIXME:上传成功修改fileList
-      updateFileList({ file });
+      updateFileList({ ...options, ...result?.data, status: UPLOAD_STATUS_SUCCESS, percent });
     } catch (error) {
       reject(error);
-      updateFileList({ file, status: 'exception' });
+      updateFileList({ ...options, status: UPLOAD_STATUS_ERROR });
+      console.error('components-upload-upload', error);
     }
   });
 };
 
 // 断点续传检查已上传完成的分片
 const checkFileUpload = async (options) => {
-  try {
-    const { shardArr } = options || {};
-    // 已经上传的
-    const uploadedInfo = (await props.checkRequest) && props.checkRequest({});
-    return _.xor(shardArr, uploadedInfo?.data);
-  } catch (error) {
-    console.error('components-upload-checkFileUpload', error);
-  }
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { shardArr = [], identifier, file } = options || {};
+      // 获取已经上传的
+      const uploadedInfo = await checkUploadTask(
+        { identifier },
+        {
+          cancelToken: requestSource.token
+        }
+      );
+      const { taskRecord, finished, fileId } = uploadedInfo?.data || {};
+      const uploadedShardNum = _.map(taskRecord?.exitPartList, 'partNumber');
+      const xor = _.xor(shardArr, uploadedShardNum); // 全部分片序号和已上传的分片做差集
+
+      // 文件已上传完成，后端直接返回成功状态和fileId
+      if (finished) {
+        updateFileList({
+          ...options,
+          ...taskRecord,
+          fileId,
+          status: UPLOAD_STATUS_SUCCESS,
+          percent: 100
+        });
+        return resolve(true);
+      }
+
+      // 有已上传的且文件没传完
+      if (uploadedShardNum?.length && !finished) {
+        // 返回已经上传、未上传的
+        resolve({ upload: xor?.length ? xor : shardArr, fileId, exitPartList: taskRecord?.exitPartList });
+      }
+
+      // 该文件没有上传过
+      resolve(null);
+    } catch (error) {
+      console.error('components-upload-checkFileUpload', error);
+      return reject(error);
+    }
+  });
 };
 
 // 分片上传
 const shardUpload = (options) => {
-  const { shardArr, shardSize, file, size, count } = options || {};
-  let number = 0;
+  const { shardArr = [], shardSize, file, count, fileId, exitPartList = [], identifier } = options || {};
+  const { size } = file || {};
+  let uploadedArr = exitPartList;
   return new Promise(async (resolve, reject) => {
     try {
-      for (let i = 0; i < shardArr.length; i++) {
-        //开始位置      每一次循环的开始位置
+      for (let i = 0; i < shardArr?.length; i++) {
+        //开始位置，每一次循环的开始位置
         const start = i * shardSize;
-        // 结束位置      取最小值    如 378，0+200取200  378,200+200取378
+        // 结束位置，取最小值
         const end = Math.min(size, start + shardSize);
 
-        //切片   slice 使用slice方法对文件进行分割
+        //切片，slice 使用slice方法对文件进行分割
         const shardFile = file?.slice(start, end);
 
         const fileInfo = {
           [props.name || 'file']: shardFile,
-          count: shardArr[i],
-          fileName: file?.name
+          fileId,
+          partNumber: shardArr[i]
         };
 
-        // FIXME:调用方自己获取文件片段上传
-        if (props.isCustomUpload) {
-          shardList.value.push({ ...fileInfo });
-          resolve(true);
-        }
-
-        // 直接在组件中上传，非action上传
         const formData = getFormData({ ...fileInfo });
-        const uploadResult = props.shardRequest && (await props.shardRequest(formData, { ...config }));
-        console.log('uploadResult', uploadResult);
+        let percent = 0;
+
+        // 上传每一个分片
+        const uploadResult = await uploadShard(
+          formData,
+          {
+            cancelToken: requestSource.token
+          },
+          {
+            onUploadProgress: (progressEvent) => {
+              const shardPercent = (progressEvent.loaded / progressEvent.total) | 0; // 分片上传进度百分比
+              percent = uploadedArr?.length / count + shardPercent; //总进度百分比
+              updateFileList({ ...options, ...result?.data, status: UPLOAD_STATUS_UPLOADING, percent });
+            }
+          }
+        );
+
         // 每一片上传成功更新进度
-        number++;
-        // updateFileList({ file, percent: number / count, status: 'active' });
-        // // TODO:最后一片上传成功，开始合并
-        // // props.mergeShardRequest && (await props.mergeShardRequest({}));
-        // // FIXME:最后一片上传成功修改fileList
-        // updateFileList({ file, status: 'success' });
+        !uploadedArr?.includes(shardArr[i]) && uploadedArr.push(shardArr[i]);
+        updateFileList({ ...options, percent, size, status: UPLOAD_STATUS_UPLOADING });
+
+        if (uploadedArr?.length === count) {
+          // 最后一片上传成功，开始合并
+          const fileInfo = await mergeShard(
+            { identifier },
+            {
+              cancelToken: requestSource.token
+            }
+          );
+          // FIXME:最后一片上传成功修改fileList
+          updateFileList({ ...options, ...fileInfo?.data, percent: 1, size, status: UPLOAD_STATUS_SUCCESS });
+        }
       }
     } catch (error) {
+      console.error('components-upload-shardUpload', error);
       reject(error);
-      updateFileList({ file, status: 'exception', percent: number / count });
+      updateFileList({ ...options, percent: uploadedArr?.length / count, size, status: UPLOAD_STATUS_ERROR });
     }
   });
 };
 
 // FormData数据
 const getFormData = (options) => {
-  const { file, count, fileName, number } = options || {};
+  const { file, fileId, partNumber } = options || {};
   const formData = new FormData();
   // FIXME:根据后端接口更新
-  formData.append(props.name || 'file', file);
-  formData.append('count', count);
-  formData.append('fileName', fileName);
-  formData.append('number', number);
+  for (let key in options) {
+    formData.append(key, options[key]);
+  }
   return formData;
 };
 
-// 上传成功更新fileList
+// 上传时更新fileList
 const updateFileList = (options) => {
-  const { file, status = 'success', percent = 100 } = options || {};
-  const index = _.findIndex(fileList.value, (item) => item?.uid === file?.uid);
-  fileList.value.splice(index, 1, {
-    percent,
-    name: file.name,
-    status
+  const { percent = 0, fileId, uid } = options || {};
+  const index = _.findIndex(fileList.value, (item) => {
+    if (!isNull(fileId)) return item?.fileId === fileId;
+    return item?.uid === uid;
+  });
+  if (index !== -1) {
+    fileList.value.splice(index, 1, {
+      ...options,
+      percent: percent * 100
+    });
+  }
+};
+
+// 删除
+const handleRemove = async (event, options) => {
+  const { fileId, uid, status } = options || {};
+  Modal.confirm({
+    title: '文件删除',
+    content: `${status === UPLOAD_STATUS_UPLOADING ? '当前文件正在上传中，是否终止并删除？' : '确认要删除吗？'}`,
+    okText: '确定',
+    okType: 'danger',
+    cancelText: '取消',
+    async onOk() {
+      try {
+        if (status === UPLOAD_STATUS_UPLOADING) {
+          requestSource.cancel('终止上传');
+        }
+
+        if (!isNull(fileId)) {
+          await fileDelete(
+            { fileId },
+            {
+              cancelToken: deleteRequestSource.token
+            }
+          );
+        }
+
+        const index = _.findIndex(fileList.value, (item) => {
+          if (!isNull(fileId)) return item?.fileId === fileId;
+          return item?.uid === uid;
+        });
+        fileList.value.splice(index, 1);
+      } catch (error) {
+        console.error('components-upload-handleRemove', error);
+      }
+    }
   });
 };
 
-// 删除图片
-const handleRemove = () => {};
+// 取消、暂停
+const handleCancelUpload = () => {
+  requestSource.cancel('终止上传');
+};
 
 // 继续上传
-const handleResume = () => {};
+const handleResume = (event, options) => {
+  const { fileId, uid, file } = options || {};
+  const index = _.findIndex(fileList.value, (item) => item?.uid === uid);
+  upload(continueUploadFile[index]);
+};
 
-defineExpose({ fileList: fileList.value, shardList: shardList.value });
+defineExpose({ fileList });
 </script>
 
 <style lang="less" scoped>
-.upload-item {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  .upload-item-content {
-    width: 100%;
+.upload-container {
+  .upload-item {
     display: flex;
     align-items: center;
-    span {
+    flex-direction: row;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 5px 0 5px 10px;
+    border: 1px dashed var(--private-border-color);
+    .upload-item-left {
       flex: 1;
+      margin-right: 20px;
+      text-align: left;
+      .file-name {
+        font-size: 14px;
+        margin-bottom: 12px;
+      }
     }
-    .action-button {
-      width: 100px;
-      display: flex;
-      align-items: center;
+    .upload-item-right {
+      width: 140px;
     }
   }
 }

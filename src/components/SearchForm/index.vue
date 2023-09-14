@@ -14,7 +14,7 @@
               {{ collapsed ? '展开' : '合并' }}
             </a-button>
             <a-button class="margin-left-12" type="primary" @click="handleSearch">搜索</a-button>
-            <a-button @click="handleReset" class="margin-left-12">重置</a-button>
+            <a-button @click="handleReset" class="margin-left-12 search-reset-btn">重置</a-button>
           </div>
         </GridItem>
       </Grid>
@@ -130,12 +130,21 @@ const handleReset = () => {
 
 <style lang="less" scoped>
 .table-search {
-  border-bottom: 1px solid var(--ant-line-color);
+  border-bottom: 1px solid var(--private-border-color);
   .operation {
     display: flex;
     align-items: center;
     justify-content: flex-end;
     margin-bottom: 18px;
+  }
+}
+</style>
+<style lang="less" scoped>
+.dark {
+  .search-reset-btn {
+    background: transparent;
+    border: 1px solid var(--private-form-border);
+    color: var(--private-primary-text-color);
   }
 }
 </style>

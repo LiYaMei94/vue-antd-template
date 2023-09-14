@@ -40,7 +40,7 @@ export const filterEnum = (callValue, enumData, fieldNames, type) => {
   if (Array.isArray(enumData)) filterData = findItemNested(enumData, callValue, value, children);
   // 判断是否输出的结果为 group 类型
   if (type == 'group') {
-    return filterData ? filterData : { [value]: callValue };
+    return filterData ? filterData : callValue;
   } else {
     return filterData ? filterData[label] : callValue;
   }
@@ -228,4 +228,48 @@ export const getTreeRootKeys = (treeData, parentKey, nodeKey, parentValue, paren
   };
   fun(parentValue);
   return parentKeys;
+};
+
+/**
+ * 文件流下载
+ * @param {*} fileStream
+ * @param {*} fileName
+ */
+export const blobDownloadFile = (fileStream, fileName, type = '') => {
+  return new Promise((resolve, reject) => {
+    try {
+      const blob = new Blob([fileStream], { type });
+      const a = document.createElement('a');
+      const URL = window.URL || window.webkitURL;
+      const href = URL.createObjectURL(blob);
+      a.href = href;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(href);
+      resolve();
+    } catch (error) {
+      console.error('utils-blobDownloadFile', error);
+      reject(error);
+    }
+  });
+};
+
+/**
+ * 文件流生成src预览
+ * @param {*} fileStream
+ * @param {*} fileName
+ */
+export const blobPreviewFile = (fileStream, type = '') => {
+  return new Promise((resolve, reject) => {
+    try {
+      const blob = new Blob([fileStream], { type });
+      const URL = window.URL || window.webkitURL;
+      const href = URL.createObjectURL(blob);
+      resolve(href);
+      URL.revokeObjectURL(href);
+    } catch (error) {
+      console.error('utils-blobPreviewFile', error);
+      reject(error);
+    }
+  });
 };

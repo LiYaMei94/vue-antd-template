@@ -52,7 +52,8 @@ import {
   Tree,
   Upload,
   UploadDragger,
-  Progress
+  Progress,
+  InputSearch
 } from 'ant-design-vue';
 
 import * as AntIcons from '@ant-design/icons-vue';
@@ -119,6 +120,7 @@ export default {
     app.component(Upload.name, Upload);
     app.component(UploadDragger.name, UploadDragger);
     app.component(Progress.name, Progress);
+    app.component(InputSearch.name, InputSearch);
 
     // 图标，使用<SyncOutlined></SyncOutlined>或者<sync-outlined></sync-outlined>
     for (const i in AntIcons) {

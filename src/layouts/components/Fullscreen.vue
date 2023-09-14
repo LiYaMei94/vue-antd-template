@@ -1,7 +1,7 @@
 <template>
   <div class="full-screen header-tool-right-icon">
     <component
-      style="font-size: 20px; color: var(--ant-body-color)"
+      style="font-size: 20px; color: var(--private-primary-text-color)"
       :is="isFullscreen ? 'FullscreenExitOutlined' : 'FullscreenOutlined'"
       @click="toggle"
     ></component>

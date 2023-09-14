@@ -1,3 +1,5 @@
+@import './reset.color.less';
+
 html,
 body,
 #app {
@@ -6,14 +8,23 @@ body,
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: var(--ant-body-bg);
-  color: var(--ant-body-color);
+  background-color: var(--private-body-bg);
+  color: var(--private-primary-text-color);
 }
 
 /* 解决 h1 标签在 webkit 内核浏览器中文字大小失效问题 */
 :-webkit-any(article, aside, nav, section) h1 {
   font-size: 2em;
 }
+
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; //作为弹性伸缩盒子模型显示。
+  -webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式--从上到下垂直排列
+  -webkit-line-clamp: 1; //显示的行
+}
+
 :root {
   .margin-left-12 {
     margin-left: 12px;
@@ -29,7 +40,6 @@ body,
   /*========================antd布局=============================*/
   .ant-layout {
     min-height: 100%;
-    background-color: var(--ant-body-bg);
   }
 
   .main {
@@ -37,15 +47,11 @@ body,
   }
 
   .ant-layout-header {
-    background-color: var(--ant-layout-header-bg);
-    border-bottom: 1px solid var(--ant-line-color);
-    color: var(--ant-body-color);
     box-sizing: border-box;
   }
 
   .ant-layout-content {
     margin: 10px 12px;
-    background-color: var(--ant-content-bg);
     min-height: 280px;
     min-width: 900px;
   }
@@ -64,17 +70,6 @@ body,
   .page-form-content {
     padding: 15px;
     box-sizing: border-box;
-  }
-
-  .ant-menu-dark .ant-menu-sub,
-  .ant-menu.ant-menu-dark,
-  .ant-menu.ant-menu-dark .ant-menu-sub {
-    background-color: var(--ant-layout-header-bg);
-  }
-
-  .ant-menu-dark,
-  .ant-menu-horizontal {
-    border-bottom: 1px solid var(--ant-line-color);
   }
 
   /*========================antd form表单&元素=============================*/
@@ -100,77 +95,39 @@ body,
   .header-tool-right-icon {
     display: flex;
     align-items: center;
-
-    .action {
-      color: var(--ant-body-color);
-    }
   }
 
-  .ant-form-item-label > label {
-    color: var(--ant-body-color);
-  }
-
-  .ant-input-affix-wrapper {
-    background-color: var(--ant-input-bg);
-    border: 1px solid var(--ant-input-border);
-  }
-
-  .ant-input-affix-wrapper-disabled {
-    background-color: #f5f5f5;
-    border-color: #d9d9d9;
-    box-shadow: none;
-    color: rgba(0, 0, 0, 0.25);
-    cursor: not-allowed;
-    opacity: 1;
-  }
-
-  .ant-input {
-    background-color: var(--ant-input-bg);
-    border: 1px solid var(--ant-input-border);
-  }
-
-  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
-    background-color: var(--ant-input-bg);
-    border: 1px solid var(--ant-input-border);
-  }
-
-  .ant-radio-wrapper {
-    color: var(--ant-body-color);
-  }
-
-  .ant-select {
-    color: var(--ant-body-color);
-  }
+  // 详情页面formdisable
   .form-all-disable {
     pointer-events: none;
 
     .ant-input {
-      background-color: #f5f5f5;
-      border-color: #d9d9d9;
+      background-color: var(--private-form-disabled-bg);
+      border-color: var(--private-form-disabled-border);
       box-shadow: none;
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--private-not-optional-text-color);
       cursor: not-allowed;
       opacity: 1;
     }
 
     .ant-select {
       .ant-select-selector {
-        background-color: #f5f5f5;
-        border-color: #d9d9d9;
+        background: var(--private-form-disabled-bg);
+        border-color: var(--private-form-disabled-border);
         box-shadow: none;
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--private-not-optional-text-color);
         cursor: not-allowed;
         opacity: 1;
       }
     }
     .ant-radio,
     .ant-radio-checked {
-      color: rgba(0, 0, 0, 0.25);
+      color: var(--private-not-optional-text-color);
       .ant-radio-inner {
-        background-color: #f5f5f5;
-        border-color: #d9d9d9;
+        background-color: var(--private-form-disabled-bg);
+        border-color: var(--private-form-disabled-border);
         box-shadow: none;
-        color: rgba(0, 0, 0, 0.25);
+        color: var(--private-not-optional-text-color);
         cursor: not-allowed;
         opacity: 1;
       }
@@ -179,7 +136,7 @@ body,
       }
     }
     .ant-checkbox-wrapper {
-      border-color: #d9d9d9;
+      border-color: var(--private-form-disabled-border);
       box-shadow: none;
       cursor: not-allowed;
       opacity: 1;
@@ -187,39 +144,34 @@ body,
         background-color: #0003;
       }
       .ant-checkbox-inner {
-        background-color: #f5f5f5;
-        border-color: #d9d9d9;
+        background-color: var(--private-form-disabled-bg);
+        border-color: var(--private-form-disabled-border);
       }
       .ant-checkbox-checked {
         .ant-checkbox-inner:after {
-          border-color: rgba(0, 0, 0, 0.25);
+          border-color: var(--private-not-optional-text-color);
         }
       }
     }
 
     .ant-tree {
-      border-color: #d9d9d9;
+      border-color: var(--private-form-disabled-border);
       box-shadow: none;
       cursor: not-allowed;
       opacity: 1;
       .ant-tree-checkbox-inner {
-        background-color: #f5f5f5;
-        border-color: #d9d9d9;
+        background-color: var(--private-form-disabled-bg);
+        border-color: var(--private-form-disabled-border);
       }
       .ant-tree-checkbox-checked {
         .ant-tree-checkbox-inner:after {
-          border-color: rgba(0, 0, 0, 0.25);
+          border-color: var(--private-not-optional-text-color);
         }
       }
     }
   }
 
   /*========================antd table=============================*/
-
-  .ant-table-cell-fix-left,
-  .ant-table-cell-fix-right {
-    background: var(--ant-table-td-bg);
-  }
 
   .table-custom-primary {
     color: var(--ant-primary-color);
@@ -228,42 +180,11 @@ body,
   .table-custom-primary-disabled {
     cursor: not-allowed;
     pointer-events: none;
-    color: var(--ant-body-color);
+    color: var(--private-primary-text-color);
   }
 
   .table-custom-danger {
     color: var(--ant-error-color);
-  }
-
-  .ant-table {
-    background: var(--ant-table-td-bg);
-    color: var(--ant-body-color);
-  }
-
-  .ant-table-tbody > tr > td {
-    border-bottom: 1px solid var(--ant-line-color);
-  }
-
-  .ant-table .ant-table-thead > tr > th {
-    background: var(--ant-table-th-bg);
-    border-bottom: 1px solid var(--ant-table-th-border-bg);
-  }
-
-  .ant-table-tbody > tr.ant-table-row:hover > td,
-  .ant-table-tbody > tr > td.ant-table-cell-row-hover {
-    background-color: var(--ant-table-row-hover);
-  }
-
-  .ant-table-thead > tr > th {
-    color: var(--ant-body-color);
-  }
-
-  .ant-empty-normal {
-    color: var(--ant-body-color);
-  }
-
-  .ant-table-tbody > tr.ant-table-placeholder:hover > td {
-    background-color: var(--ant-table-row-hover);
   }
 
   .table-pagination {
@@ -274,9 +195,6 @@ body,
     justify-content: flex-end;
   }
 
-  .ant-pagination {
-    color: var(--ant-body-color);
-  }
   /*========================antd 弹窗类=============================*/
   .ant-drawer-footer-custom {
     width: 100%;
@@ -284,37 +202,13 @@ body,
     align-items: center;
     justify-content: flex-end;
   }
-
-  .ant-drawer-content,
-  .ant-modal-content {
-    background-color: var(--ant-content-bg);
-  }
-
-  .ant-drawer-header,
-  .ant-modal-header {
-    background-color: var(--ant-content-bg);
-    color: var(--ant-body-color);
-  }
-
-  .ant-drawer-title,
-  .ant-modal-title {
-    color: var(--ant-body-color);
-  }
-
-  .ant-drawer-close,
-  .ant-modal-close {
-    color: var(--ant-body-color);
-  }
-
-  .ant-drawer-close:focus,
-  .ant-drawer-close:hover,
-  .ant-modal-close:hover {
-    color: var(--ant-body-color);
+  .ant-drawer-header-close-only {
+    padding-bottom: 16px;
   }
 
   /*========================html展示JSON=============================*/
   .tip-container {
-    border: 1px dashed var(--ant-line-color);
+    border: 1px dashed var(--private-form-disabled-border);
     min-height: 32px;
     outline: 1px solid #ccc;
     padding: 5px;

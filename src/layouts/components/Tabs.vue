@@ -139,9 +139,10 @@ const handleRemove = (event, fullPath) => {
 
 <style scoped lang="less">
 .tabs-box {
-  background-color: var(--ant-content-bg);
+  background-color: var(--private-content-bg);
   width: 100%;
   box-sizing: border-box;
+  border-left: 1px solid var(--private-border-color);
   .tabs-menu {
     width: 100%;
     .icon {
@@ -182,24 +183,6 @@ const handleRemove = (event, fullPath) => {
   .ant-tabs > .ant-tabs-nav .ant-tabs-nav-operations,
   .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-operations {
     display: none;
-  }
-  .ant-tabs-bottom > .ant-tabs-nav:before,
-  .ant-tabs-bottom > div > .ant-tabs-nav:before,
-  .ant-tabs-top > .ant-tabs-nav:before,
-  .ant-tabs-top > div > .ant-tabs-nav:before {
-    border-bottom: 0px solid #f0f0f0;
-  }
-
-  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
-  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
-    border: 1px solid #f0f0f0;
-    background-color: var(--ant-primary-color);
-    .ant-tabs-tab-remove {
-      color: #fff;
-    }
-  }
-  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #fff;
   }
   .ant-tabs-tab-remove {
     margin-left: 0;
