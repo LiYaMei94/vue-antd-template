@@ -8,8 +8,8 @@
  * @param meta ==> 路由菜单元信息
  * @param meta.icon ==> 菜单和面包屑对应的图标
  * @param meta.title ==> 路由标题 (用作 document.title || 菜单的名称)
- * @param meta.isLink ==> 是否外链，如果是，需要使用a标签跳转
- * @param meta.isFull ==> 是否全屏
+ * @param meta.isFrame ==> 是否外链，如果是，需要使用a标签跳转
+ * @param meta.pageLayout ==> 0 全屏 1非全屏
  * */
 export const routerData = [
   {
@@ -17,7 +17,8 @@ export const routerData = [
     path: '/home',
     component: () => import(/* webpackChunkName: "Home" */ '@/views/home'),
     meta: {
-      title: '首页'
+      title: '首页',
+      isFrame: '1'
     }
   },
   {
@@ -25,7 +26,9 @@ export const routerData = [
     path: '/dashboard',
     component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
     meta: {
-      title: '数据大屏'
+      title: '数据大屏',
+      isFrame: '1',
+      pageLayout: '0'
     }
   },
   {
@@ -33,7 +36,8 @@ export const routerData = [
     path: '/system',
     redirect: '/system/index',
     meta: {
-      title: '系统设置'
+      title: '系统设置',
+      isFrame: '1'
     },
     children: [
       {
@@ -43,7 +47,8 @@ export const routerData = [
         meta: {
           title: '权限管理',
           modelName: 'System',
-          parentName: 'System'
+          parentName: 'System',
+          isFrame: '1'
         }
       },
       {
@@ -53,7 +58,8 @@ export const routerData = [
         meta: {
           title: '用户管理',
           modelName: 'System',
-          parentName: 'System'
+          parentName: 'System',
+          isFrame: '1'
         }
       },
       {
@@ -63,7 +69,8 @@ export const routerData = [
         meta: {
           title: '角色管理',
           modelName: 'System',
-          parentName: 'System'
+          parentName: 'System',
+          isFrame: '1'
         }
       }
     ]

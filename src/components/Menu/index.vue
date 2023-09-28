@@ -4,7 +4,7 @@
       <template v-if="!item.children?.length">
         <a-menu-item :key="item.name" @click="routeChange($event, item)">
           <template #icon v-if="!isNull(item.meta?.icon)">
-            <MyIcon :type="item.meta?.icon" source="anticonfont"></MyIcon>
+            <IconFont :type="item.meta?.icon" source="anticonfont"></IconFont>
           </template>
           <template v-if="item.path && !isFrame(item?.meta?.isFrame)">
             <router-link :to="{ path: item.path }">{{ item.meta?.title }}</router-link>

@@ -1,6 +1,7 @@
 const { defineConfig } = require('@vue/cli-service');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path');
 
 module.exports = defineConfig({
   lintOnSave: false,
@@ -34,6 +35,36 @@ module.exports = defineConfig({
         return args;
       });
     }
+
+    // svg 使用
+    const dir = path.resolve(__dirname, 'src/assets/iconSvg');
+    config.module
+      .rule('svg-sprite')
+      .test(/\.svg$/)
+      .include.add(dir)
+      .end() // 包含 icons 目录
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({ extract: false })
+      .end()
+      .use('svgo-loader')
+      .loader('svgo-loader')
+      .options({
+        plugins: [
+          //!!!!!!!!!!!!!!!重点就是改这个位置，加个插件名字
+          {
+            name: 'removeAttrs',
+            params: {
+              // attrs: '(fill|stroke)'
+              attrs: '(fill)'
+            }
+          }
+        ]
+      })
+      // .tap((options) => ({ ...options, plugins: [{ removeAttrs: { attrs: 'fill' } }] }))
+      .end();
+    config.plugin('svg-sprite').use(require('svg-sprite-loader/plugin'), [{ plainSprite: true }]);
+    config.module.rule('svg').exclude.add(dir); // 其他 svg loader 排除 iconSvg 目录
   },
   configureWebpack: (config) => {
     // 打包体积分析
@@ -50,6 +81,9 @@ module.exports = defineConfig({
     // );
   },
   devServer: {
+    client: {
+      overlay: false // 关闭 错误 遮罩页面
+    },
     allowedHosts: 'all', // 本地内网穿透
     hot: false,
     liveReload: false,

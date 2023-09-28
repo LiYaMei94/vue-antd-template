@@ -4,7 +4,7 @@
       <a-tabs v-model:activeKey="activeKey" hide-add type="editable-card">
         <a-tab-pane v-for="item in state.global.tabsMenuList" :key="item.path">
           <template #tab>
-            <MyIcon class="icon" type="icon-dian1"></MyIcon>
+            <IconFont class="icon" type="icon-dian1"></IconFont>
             <span @click="navigatorChange($event, item.path)">
               {{ item.title }}
             </span>
@@ -33,6 +33,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import _ from 'lodash';
+import { CONST_STRING_0 } from '@/utils/const';
 
 const { state, dispatch } = useStore();
 const route = useRoute();
@@ -53,7 +54,7 @@ const props = defineProps({
 watch(
   () => route.fullPath,
   () => {
-    if (route.meta.isFull) return;
+    if (route.meta.pageLayout === CONST_STRING_0) return;
     activeKey.value = route.fullPath;
   },
   { immediate: true }

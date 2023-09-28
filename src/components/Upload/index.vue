@@ -193,7 +193,7 @@ const UploadStatus = (props) => {
   const spin = file?.status === UPLOAD_STATUS_UPLOADING;
   return (
     !isNull(item) && (
-      <a-tag color={item?.color || 'default'} icon={<MyIcon type={item?.icon} spin={spin} source='anticonfont'></MyIcon>}>
+      <a-tag color={item?.color || 'default'} icon={<IconFont type={item?.icon} spin={spin} source='anticonfont'></IconFont>}>
         {item?.label || ' '}
       </a-tag>
     )

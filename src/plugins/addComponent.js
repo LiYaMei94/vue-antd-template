@@ -60,7 +60,8 @@ import * as AntIcons from '@ant-design/icons-vue';
 
 import CustomSubMenu from '@/components/SubMenu';
 import CustomMenu from '@/components/Menu';
-import MyIcon from '@/components/Icon.vue';
+import IconFont from '@/components/Icon/IconFont.vue';
+import IconSvg from '@/components/Icon/IconSvg.vue';
 import * as ActionButtons from '@/components/ActionButtons';
 import ProTable from '@/components/ProTable';
 
@@ -130,7 +131,8 @@ export default {
     // 自定义组件
     app.component('CustomSubMenu', CustomSubMenu);
     app.component('CustomMenu', CustomMenu);
-    app.component('MyIcon', MyIcon);
+    app.component('IconFont', IconFont); // 字体图标，支持@ant-design/icons-vue和阿里巴巴矢量库
+    app.component('IconSvg', IconSvg);
     for (const i in ActionButtons) {
       app.component(ActionButtons[i].name, ActionButtons[i]);
     }

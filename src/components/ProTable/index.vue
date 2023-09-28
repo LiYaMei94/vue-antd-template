@@ -240,7 +240,12 @@ const expandIcon = (options) => {
     icon = props.expandIcon?.collapsed;
   }
   return options.record?.children?.length > 0 ? (
-    <MyIcon source='anticonfont' type={icon} onClick={(e) => options.onExpand(options.record, e)} class='custom-ant-table-row-expand-icon'></MyIcon>
+    <IconFont
+      source='anticonfont'
+      type={icon}
+      onClick={(e) => options.onExpand(options.record, e)}
+      class='custom-ant-table-row-expand-icon'
+    ></IconFont>
   ) : (
     <span class='anticon anticon-down custom-ant-table-row-expand-icon'></span>
   );

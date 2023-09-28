@@ -8,7 +8,7 @@ const QuestionTooltip = (props, context) => {
           title: () => title
         }}
       >
-        <MyIcon type='icon-question-circle'></MyIcon>
+        <IconFont type='icon-question-circle'></IconFont>
       </a-tooltip>
     </>
   );

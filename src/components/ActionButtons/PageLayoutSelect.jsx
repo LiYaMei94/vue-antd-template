@@ -14,7 +14,7 @@ const PageLayoutSelect = (props, context) => {
             }}
           >
             <div className={Style['layout-type-item-content']}>
-              <MyIcon type={item?.icon} style={item.style}></MyIcon>
+              <IconFont type={item?.icon} style={item.style}></IconFont>
               {item.value === selectID ? <div className={`${Style['select-bg']} ${!disabled ? Style['selected'] : Style['disabled']}`}></div> : null}
             </div>
             <div className={Style['layout-type-item-label']}>{item?.label}</div>
