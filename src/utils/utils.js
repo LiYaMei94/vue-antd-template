@@ -17,6 +17,10 @@ export const isObject = (value) => {
   return Object.prototype.toString.call(value) === '[object Object]';
 };
 
+export const isBoolean = (value) => {
+  return Object.prototype.toString.call(value) === '[object Boolean]';
+};
+
 export const isNull = (val) => {
   return (
     val === 'undefined' || val === undefined || val == null || val === 'null' || val.toString().trim() === '' || _.isNaN(val) || val === 'unknown'
@@ -266,7 +270,7 @@ export const blobPreviewFile = (fileStream, type = '') => {
       const URL = window.URL || window.webkitURL;
       const href = URL.createObjectURL(blob);
       resolve(href);
-      URL.revokeObjectURL(href);
+      // URL.revokeObjectURL(href);
     } catch (error) {
       console.error('utils-blobPreviewFile', error);
       reject(error);

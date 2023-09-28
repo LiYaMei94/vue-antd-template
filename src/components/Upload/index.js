@@ -1,8 +1,12 @@
 import SparkMD5 from 'spark-md5';
+import { isNull } from '@/utils/utils';
 
 // 获取文件MD5
 export const getFileMD5 = (file) => {
   return new Promise((resolve, reject) => {
+    if (isNull(file)) {
+      reject('文件不能为空');
+    }
     const spark = new SparkMD5.ArrayBuffer();
     const fileReader = new FileReader();
     fileReader.onload = (e) => {
@@ -19,6 +23,9 @@ export const getFileMD5 = (file) => {
 // 获取字符串MD5
 export const getHashMD5 = (str) => {
   return new Promise((resolve, reject) => {
+    if (isNull(str)) {
+      reject('字符串不能为空');
+    }
     const spark = new SparkMD5();
     spark.append(str);
     resolve(spark.end());
@@ -31,12 +38,11 @@ export const getDuration = (file) => {
     try {
       let url = URL.createObjectURL(file);
       console.log('file', file, url);
-      //经测试，发现audio也可获取视频的时长
       //生成一个html标签
       let audioElement = new Audio(url);
-      audioElement.addEventListener('loadeddata', () => {
+      audioElement.addEventListener('loadedmetadata', () => {
         // 得到视频或音频的时长，单位秒
-        resolve(audioElement.duration.toFixed(2));
+        resolve(audioElement.duration);
       });
     } catch (error) {
       reject(error);

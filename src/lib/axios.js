@@ -1,11 +1,9 @@
 import axios from 'axios';
-import store from '@/store';
 import db from '@/utils/db';
 import { ACCESS_TOKEN } from '@/utils/const';
 import { notification } from 'ant-design-vue'; // FIXME:提示可根据自己的需要更换
-import { isObject, isNull } from '@/utils/utils';
+import { isNull } from '@/utils/utils';
 import router from '@/router';
-import qs from 'qs';
 
 const DB = new db();
 
@@ -21,7 +19,7 @@ const instance = axios.create({
  * 异常拦截处理器
  * @param {*} error
  */
-const errorHandler = (error, Status200 = false) => {
+const errorHandler = (error) => {
   if (error) {
     let errorMap = {};
     const { status, data, code, message, msg } = error.response || error || {};
@@ -93,8 +91,7 @@ const errorHandler = (error, Status200 = false) => {
       }, 1000);
     }
   }
-  // 网络请求成功，code非200使用resolve返回
-  // return Status200 ? Promise.resolve(error) : Promise.reject(error);
+
   throw error;
 };
 
@@ -226,4 +223,20 @@ export const put = (url, data, options) => {
 export const upload = (url, data, options) => {
   return instance.post(url, data, options);
 };
+
+/**
+ *
+ * @param url download 请求
+ * @param data
+ * @param options
+ * @returns
+ */
+export const download = (url, data, options) => {
+  return instance.get(url, {
+    params: data,
+    responseType: 'blob',
+    ...options
+  });
+};
+
 export default instance;

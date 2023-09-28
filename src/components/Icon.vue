@@ -1,6 +1,6 @@
 <template>
-  <IconFont :type="type" v-if="source === 'iconfont'"></IconFont>
-  <component :is="type" v-else></component>
+  <IconFont :type="type" v-if="source === 'iconfont'" v-bind="$attrs"></IconFont>
+  <component :is="type" v-else v-bind="$attrs"></component>
 </template>
 <script setup>
 import Icon, { createFromIconfontCN } from '@ant-design/icons-vue';

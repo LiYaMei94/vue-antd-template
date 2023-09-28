@@ -25,57 +25,63 @@
       <template #itemRender="{ file, fileList }">
         <!-- 组件调用方自定义 -->
         <template v-if="!isUploadItemRender">
-          <slot name="uploadItemRender" :dataInfo="{ originNode, file, fileList }"></slot>
-        </template>
-        <!-- 组件内部自定义 -->
-        <template v-else>
-          <div class="upload-item">
-            <div class="upload-item-left">
-              <div :style="file?.status === UPLOAD_STATUS_ERROR ? 'color: error' : ''" class="text-ellipsis file-name">
-                {{ file?.name }}
-              </div>
-              <div>
-                <UploadStatus :file="file"></UploadStatus>
-                <span v-if="!isNull(file?.size)">{{ Math.ceil(file?.size / 1024) }} KB</span>
-              </div>
-              <a-progress
-                size="small"
-                :stroke-color="{
-                  from: '#108ee9',
-                  to: '#87d068'
-                }"
-                :percent="file?.percent?.toFixed(2)"
-                v-if="!isNull(file?.percent)"
-              />
-            </div>
-            <div class="upload-item-right">
-              <div class="action-button">
-                <DeleteOutlined @click="handleRemove($event, file)" style="font-size: 20px; color: var(--ant-error-color)" />
-
-                <a href="javascript:;" class="margin-left-10" @click="handleCancelUpload()" v-if="file?.status === UPLOAD_STATUS_UPLOADING">
-                  取消/终止
-                </a>
-
-                <a
-                  href="javascript:;"
-                  class="margin-left-10"
-                  @click="handleResume($event, file)"
-                  v-if="file?.status === UPLOAD_STATUS_ERROR || file?.status === UPLOAD_STATUS_STOP"
-                >
-                  继续上传
-                </a>
-              </div>
-            </div>
-          </div>
+          <slot name="uploadItemRender" :dataInfo="{ file, fileList }"></slot>
         </template>
       </template>
     </component>
+    <!-- 组件内部自定义 -->
+    <div class="custom-upload-list" v-if="isUploadItemRender">
+      <div class="upload-item" v-for="(file, index) in fileList" :key="index">
+        <div class="upload-item-left">
+          <div
+            :style="file?.status === UPLOAD_STATUS_ERROR ? 'color: var(--ant-error-color)' : 'color: var(--ant-primary-color)'"
+            class="text-ellipsis file-name"
+          >
+            {{ file?.name || file?.file?.name }}
+          </div>
+          <div>
+            <UploadStatus :file="file"></UploadStatus>
+            <span v-if="!isNull(file?.size)">{{ Math.ceil(file?.size / 1024) }} KB</span>
+            <span v-else>{{ Math.ceil(file?.file?.size / 1024) }} KB</span>
+          </div>
+          <a-progress
+            size="small"
+            :stroke-color="{
+              from: '#108ee9',
+              to: '#87d068'
+            }"
+            :percent="file?.percent"
+            v-if="!isNull(file?.percent)"
+          />
+        </div>
+        <div class="upload-item-right">
+          <div class="action-button">
+            <DeleteOutlined
+              @click="handleRemove($event, file)"
+              style="font-size: 20px; color: var(--ant-error-color)"
+              v-if="getDeleteVisible(file)"
+            />
+
+            <a href="javascript:;" class="margin-left-10" @click="handleCancelUpload()" v-if="file?.status === UPLOAD_STATUS_UPLOADING">取消上传</a>
+
+            <a
+              href="javascript:;"
+              class="margin-left-10"
+              @click="handleResume($event, file)"
+              v-if="file?.status === UPLOAD_STATUS_ERROR || file?.status === UPLOAD_STATUS_STOP"
+            >
+              继续上传
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="jsx">
 import { computed, useSlots, defineExpose, ref, onMounted, watch, onUnmounted } from 'vue';
-import { isNull, filterEnum } from '@/utils/utils';
+import { isNull, filterEnum, isBoolean } from '@/utils/utils';
 import { message, Modal } from 'ant-design-vue';
 import axios from 'axios';
 import _ from 'lodash';
@@ -116,6 +122,10 @@ const props = defineProps({
     type: Promise,
     default: null
   },
+  beforeUploadBack: {
+    type: Function,
+    default: null
+  },
   maxCount: {
     type: Number,
     default: 1
@@ -144,6 +154,10 @@ const props = defineProps({
   disabled: {
     type: Boolean, // 是否禁止点击
     default: false
+  },
+  deleteFileRequest: {
+    type: [Function, Boolean],
+    default: null
   }
 });
 
@@ -152,8 +166,8 @@ const isDragger = computed(() => props.trigger === 'dragger'); // 是否是拖�
 const isDefaultButton = !useSlots().uploadButton; // 是否自定义点击按钮
 const isUploadItemRender = !useSlots().uploadItemRender; // 是否自定义上传列表
 // 终止请求
-const requestSource = axios.CancelToken.source();
-const deleteRequestSource = axios.CancelToken.source();
+let requestSource = null;
+let deleteRequestSource = null;
 const continueUploadFile = [];
 const progressList = [];
 
@@ -168,17 +182,18 @@ watch(
 );
 
 onUnmounted(() => {
-  requestSource?.cancel('终止上传请求~');
-  deleteRequestSource?.cancel('终止删除请求~');
+  requestSource?.cancel('注意：用户已终止文件上传请求~');
+  deleteRequestSource?.cancel('注意：用户已终止文件删除请求~');
 });
 
 // 上传状态DOM
 const UploadStatus = (props) => {
   const { file } = props || {};
   const item = filterEnum(file?.status, UPLOAD_STATUS_ENUM, {}, 'group');
+  const spin = file?.status === UPLOAD_STATUS_UPLOADING;
   return (
     !isNull(item) && (
-      <a-tag color={item?.color || 'default'} icon={<MyIcon type={item?.icon} source='anticonfont'></MyIcon>}>
+      <a-tag color={item?.color || 'default'} icon={<MyIcon type={item?.icon} spin={spin} source='anticonfont'></MyIcon>}>
         {item?.label || ' '}
       </a-tag>
     )
@@ -192,6 +207,12 @@ const ClickDom = (
     点击上传
   </a-button>
 );
+
+// 是否显示删除
+const getDeleteVisible = (file) => {
+  const errorStatus = [UPLOAD_STATUS_ERROR, UPLOAD_STATUS_STOP];
+  return props.maxCount === 1 ? errorStatus?.includes(file?.status) : [...UPLOAD_STATUS_ENUM]?.includes(file?.status);
+};
 
 // 拖拽上传按钮DOM
 const DraggerDom = (
@@ -208,6 +229,8 @@ const DraggerDom = (
 
 // 上传文件之前校验文件大小、数量等操作
 const beforeFileUpload = (file, fileList) => {
+  props.beforeUploadBack && props.beforeUploadBack(file, fileList);
+
   // 组件调用方自定义beforeUpload
   if (props.beforeUpload) {
     props.beforeUpload(file, fileList);
@@ -239,14 +262,15 @@ const beforeFileUpload = (file, fileList) => {
 
 // 上传文件改变
 const uploadChange = async (file) => {
-  console.log('file-uploadChange', file);
-  upload(file.file);
   continueUploadFile.push(file.file);
+  updateFileList({ file: file.file, status: UPLOAD_STATUS_UPLOADING, percent: 0 });
+  upload(file.file);
 };
 
 // 上传
 const upload = async (file) => {
   const { size, name, uid } = file || {};
+  requestSource = axios.CancelToken.source();
   try {
     const shardSize = 1024 * props.shardSize; // 分片大小，单位字节(K)
     const count = Math.ceil(size / shardSize); // 总片数
@@ -264,24 +288,27 @@ const upload = async (file) => {
 
     // 检查已经上传的分片
     let checkResult = await checkFileUpload({ shardArr, identifier, file, size, name });
+    console.log('checkResult', checkResult);
 
-    if (checkResult) {
+    if (checkResult?.finished) {
       return;
     }
 
     let fileId = checkResult?.fileId; // 不是初次上传、但没上传完成
+    let taskId = checkResult?.taskId;
 
     // 当前文件第一次上传，初始分片任务
     if (isNull(checkResult)) {
       const duration = await getDuration(file); // 文件时长
+      console.log('duration', duration);
       const newTaskInfo = await addShardTask(
         { identifier, totalSize: size, chunkSize: shardSize, fileName: name, duration },
         {
-          cancelToken: requestSource.token
+          cancelToken: requestSource?.token
         }
       );
       // FIXME:获取任务id
-      fileId = newTaskInfo?.data?.taskRecord?.id;
+      taskId = newTaskInfo?.data?.taskRecord?.id;
     }
 
     // 分片上传
@@ -291,6 +318,7 @@ const upload = async (file) => {
       file,
       count,
       fileId,
+      taskId,
       exitPartList: checkResult?.exitPartList,
       identifier,
       size,
@@ -316,12 +344,11 @@ const fileUpload = (options) => {
         formData,
         {
           onUploadProgress: (progressEvent) => {
-            percent = (progressEvent.loaded / progressEvent.total) | 0; //上传进度百分比
-            updateFileList({ ...options, ...result?.data, status: UPLOAD_STATUS_UPLOADING, percent });
+            percent = progressEvent.loaded / progressEvent.total; //上传进度百分比
           }
         },
         {
-          cancelToken: requestSource.token
+          cancelToken: requestSource?.token
         }
       );
       // FIXME:上传成功修改fileList
@@ -343,7 +370,7 @@ const checkFileUpload = async (options) => {
       const uploadedInfo = await checkUploadTask(
         { identifier },
         {
-          cancelToken: requestSource.token
+          cancelToken: requestSource?.token
         }
       );
       const { taskRecord, finished, fileId } = uploadedInfo?.data || {};
@@ -355,21 +382,29 @@ const checkFileUpload = async (options) => {
         updateFileList({
           ...options,
           ...taskRecord,
-          fileId,
+          fileId: fileId,
           status: UPLOAD_STATUS_SUCCESS,
           percent: 100
         });
-        return resolve(true);
+        return resolve({ finished, fileId });
       }
 
       // 有已上传的且文件没传完
-      if (uploadedShardNum?.length && !finished) {
+      if (!finished && !isNull(uploadedInfo?.data)) {
         // 返回已经上传、未上传的
-        resolve({ upload: xor?.length ? xor : shardArr, fileId, exitPartList: taskRecord?.exitPartList });
+        return resolve({
+          upload: xor?.length ? xor : shardArr,
+          fileId: fileId || taskRecord?.id,
+          taskId: fileId || taskRecord?.id,
+          exitPartList: taskRecord?.exitPartList,
+          finished
+        });
       }
 
       // 该文件没有上传过
-      resolve(null);
+      if (isNull(uploadedInfo?.data)) {
+        resolve(null);
+      }
     } catch (error) {
       console.error('components-upload-checkFileUpload', error);
       return reject(error);
@@ -379,7 +414,7 @@ const checkFileUpload = async (options) => {
 
 // 分片上传
 const shardUpload = (options) => {
-  const { shardArr = [], shardSize, file, count, fileId, exitPartList = [], identifier } = options || {};
+  const { shardArr = [], shardSize, file, count, fileId, taskId, exitPartList = [], identifier } = options || {};
   const { size } = file || {};
   let uploadedArr = exitPartList;
   return new Promise(async (resolve, reject) => {
@@ -396,37 +431,28 @@ const shardUpload = (options) => {
         const fileInfo = {
           [props.name || 'file']: shardFile,
           fileId,
-          partNumber: shardArr[i]
+          partNumber: shardArr[i],
+          taskId
         };
 
         const formData = getFormData({ ...fileInfo });
         let percent = 0;
 
         // 上传每一个分片
-        const uploadResult = await uploadShard(
-          formData,
-          {
-            cancelToken: requestSource.token
-          },
-          {
-            onUploadProgress: (progressEvent) => {
-              const shardPercent = (progressEvent.loaded / progressEvent.total) | 0; // 分片上传进度百分比
-              percent = uploadedArr?.length / count + shardPercent; //总进度百分比
-              updateFileList({ ...options, ...result?.data, status: UPLOAD_STATUS_UPLOADING, percent });
-            }
-          }
-        );
+        const uploadResult = await uploadShard(formData, {
+          cancelToken: requestSource?.token
+        });
 
         // 每一片上传成功更新进度
         !uploadedArr?.includes(shardArr[i]) && uploadedArr.push(shardArr[i]);
-        updateFileList({ ...options, percent, size, status: UPLOAD_STATUS_UPLOADING });
+        updateFileList({ ...options, percent: uploadedArr?.length / count, size, status: UPLOAD_STATUS_UPLOADING });
 
         if (uploadedArr?.length === count) {
           // 最后一片上传成功，开始合并
           const fileInfo = await mergeShard(
             { identifier },
             {
-              cancelToken: requestSource.token
+              cancelToken: requestSource?.token
             }
           );
           // FIXME:最后一片上传成功修改fileList
@@ -454,22 +480,31 @@ const getFormData = (options) => {
 
 // 上传时更新fileList
 const updateFileList = (options) => {
-  const { percent = 0, fileId, uid } = options || {};
-  const index = _.findIndex(fileList.value, (item) => {
-    if (!isNull(fileId)) return item?.fileId === fileId;
-    return item?.uid === uid;
-  });
-  if (index !== -1) {
-    fileList.value.splice(index, 1, {
-      ...options,
-      percent: percent * 100
+  try {
+    console.log('updateFileList-options', options);
+    const { percent = 0, fileId, file } = options || {};
+    const { uid, size } = file || {};
+    const index = _.findIndex(fileList.value, (item) => {
+      return item?.fileId === fileId || item?.uid === uid || item?.file?.uid === uid;
     });
+
+    console.log('updateFileList-index', index);
+
+    if (index !== -1) {
+      fileList.value.splice(index, 1, {
+        ...options,
+        percent: percent?.toFixed(2) * 100
+      });
+    }
+  } catch (error) {
+    console.error('components-upload-updateFileList', error);
   }
 };
 
 // 删除
 const handleRemove = async (event, options) => {
   const { fileId, uid, status } = options || {};
+  deleteRequestSource = axios.CancelToken.source();
   Modal.confirm({
     title: '文件删除',
     content: `${status === UPLOAD_STATUS_UPLOADING ? '当前文件正在上传中，是否终止并删除？' : '确认要删除吗？'}`,
@@ -479,16 +514,12 @@ const handleRemove = async (event, options) => {
     async onOk() {
       try {
         if (status === UPLOAD_STATUS_UPLOADING) {
-          requestSource.cancel('终止上传');
+          requestSource?.cancel('注意：用户已终止文件上传请求~');
         }
 
         if (!isNull(fileId)) {
-          await fileDelete(
-            { fileId },
-            {
-              cancelToken: deleteRequestSource.token
-            }
-          );
+          const deleteAPI = props?.deleteFileRequest || fileDelete;
+          await deleteAPI({ fileId });
         }
 
         const index = _.findIndex(fileList.value, (item) => {
@@ -505,13 +536,17 @@ const handleRemove = async (event, options) => {
 
 // 取消、暂停
 const handleCancelUpload = () => {
-  requestSource.cancel('终止上传');
+  requestSource?.cancel('注意：用户已终止文件上传请求~');
 };
 
 // 继续上传
 const handleResume = (event, options) => {
   const { fileId, uid, file } = options || {};
   const index = _.findIndex(fileList.value, (item) => item?.uid === uid);
+  if (index === -1) {
+    message.error('找不到文件~');
+    return;
+  }
   upload(continueUploadFile[index]);
 };
 
@@ -520,25 +555,30 @@ defineExpose({ fileList });
 
 <style lang="less" scoped>
 .upload-container {
-  .upload-item {
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    padding: 5px 0 5px 10px;
-    border: 1px dashed var(--private-border-color);
-    .upload-item-left {
-      flex: 1;
-      margin-right: 20px;
-      text-align: left;
-      .file-name {
-        font-size: 14px;
-        margin-bottom: 12px;
-      }
+  .custom-upload-list {
+    .upload-item:nth-of-type(1) {
+      margin-top: 10px;
     }
-    .upload-item-right {
-      width: 140px;
+    .upload-item {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 5px 0 5px 10px;
+      border: 1px dashed var(--private-border-color);
+      .upload-item-left {
+        flex: 1;
+        margin-right: 20px;
+        text-align: left;
+        .file-name {
+          font-size: 14px;
+          margin-bottom: 12px;
+        }
+      }
+      .upload-item-right {
+        width: 140px;
+      }
     }
   }
 }
