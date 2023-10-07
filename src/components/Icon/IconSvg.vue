@@ -1,5 +1,5 @@
 <template>
-  <svg :fill="fillColor" :stroke="strokeColor">
+  <svg v-bind="$attrs">
     <use :xlink:href="'#' + name" v-bind="$attrs"></use>
   </svg>
 </template>
@@ -10,14 +10,6 @@ const importAll = (requireContext) => requireContext.keys().forEach(requireConte
 
 const props = defineProps({
   name: {
-    type: String,
-    default: null
-  },
-  fillColor: {
-    type: String,
-    default: null
-  },
-  strokeColor: {
     type: String,
     default: null
   }

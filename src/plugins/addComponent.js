@@ -60,8 +60,8 @@ import * as AntIcons from '@ant-design/icons-vue';
 
 import CustomSubMenu from '@/components/SubMenu';
 import CustomMenu from '@/components/Menu';
-import IconFont from '@/components/Icon/IconFont.vue';
-import IconSvg from '@/components/Icon/IconSvg.vue';
+import IconFont from '@/components/Icon/IconFont';
+import IconSvg from '@/components/Icon/IconSvg';
 import * as ActionButtons from '@/components/ActionButtons';
 import ProTable from '@/components/ProTable';
 

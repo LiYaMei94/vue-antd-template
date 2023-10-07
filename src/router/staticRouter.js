@@ -4,13 +4,14 @@ import { routerData } from './dynamicRouter';
 
 const isPermission = process.env.VUE_APP_route_permission === 'true';
 const defaultPermission = !isPermission ? routerData : [];
+
 export const staticRoutes = [
   {
     component: BasicLayout,
     name: 'BasicLayout',
     path: '/',
-    redirect: '/home',
-    children: [...defaultPermission]
+    redirect: '/project',
+    children: []
   },
   {
     path: '/user',
@@ -21,7 +22,7 @@ export const staticRoutes = [
       {
         path: '/user/login',
         name: 'UserLogin',
-        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login.vue')
+        component: () => import(/* webpackChunkName: "user" */ '@/views/user/Login')
       }
     ],
     meta: {
@@ -37,7 +38,7 @@ export const errorRouter = [
   {
     path: '/403',
     name: '403',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403.vue'),
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
     meta: {
       title: '403页面'
     }
@@ -45,7 +46,7 @@ export const errorRouter = [
   {
     path: '/404',
     name: '404',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404.vue'),
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
     meta: {
       title: '404页面'
     }
@@ -53,13 +54,13 @@ export const errorRouter = [
   {
     path: '/500',
     name: '500',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500.vue'),
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
     meta: {
       title: '500页面'
     }
   },
   {
     path: '/:pathMatch(.*)*',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404.vue')
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
   }
 ];

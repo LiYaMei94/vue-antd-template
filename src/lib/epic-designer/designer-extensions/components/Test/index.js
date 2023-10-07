@@ -1,5 +1,5 @@
 export default {
-  component: async () => await import('./index.vue'),
+  component: async () => await import('./index'),
   defaultSchema: {
     label: '请假单',
     type: 'test',

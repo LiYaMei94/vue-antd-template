@@ -23,9 +23,9 @@
 </template>
 <script setup>
 import { computed, ref, watch } from 'vue';
-import SearchFormItem from './components/SearchFormItem.vue';
-import Grid from '@/components/Grid/index.vue';
-import GridItem from '@/components/Grid/GridItem.vue';
+import SearchFormItem from './components/SearchFormItem';
+import Grid from '@/components/Grid/index';
+import GridItem from '@/components/Grid/GridItem';
 
 // 默认值
 const props = defineProps({

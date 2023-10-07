@@ -1,5 +1,5 @@
 <template>
-  <div class="tabs-box" :style="{ padding: state.global.tabsMenuList?.length > 0 ? '4px 10px' : 0 }">
+  <div class="tabs-box" :style="{ padding: state.global.tabsMenuList?.length ? '4px 10px' : 0 }">
     <div class="tabs-menu">
       <a-tabs v-model:activeKey="activeKey" hide-add type="editable-card">
         <a-tab-pane v-for="item in state.global.tabsMenuList" :key="item.path">

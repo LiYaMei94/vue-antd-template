@@ -19,6 +19,10 @@
         <CustomSubMenu :mode="mode" :key="item.name" :menuInfo="item" :routeChange="routeChange" />
       </template>
     </template>
+    <template #overflowedIndicator>
+      更多
+      <DownOutlined />
+    </template>
   </a-menu>
 </template>
 <script setup>
@@ -56,6 +60,10 @@ const props = defineProps({
       triggerSubMenuAction: 'click',
       inlineCollapsed: false
     }
+  },
+  maxLength: {
+    type: Number,
+    default: 6
   }
 });
 const openKeys = ref([]);
@@ -83,14 +91,16 @@ watch(
   () => currentRoute,
   (val) => {
     const modelName = unref(val).meta?.modelName;
+    const topName = unref(val).meta?.topName;
     const name = unref(val)?.name;
     const parentName = unref(val).meta?.parentName;
 
     dispatch('setMenuModel', modelName);
+    dispatch('setMenuTopModel', topName);
 
     // 顶部菜单
     if (isTopMenu.value) {
-      selectedKeys.value = modelName ? [modelName] : [name];
+      selectedKeys.value = modelName ? [topName] : [name];
     }
 
     // 侧边栏
@@ -111,7 +121,8 @@ const onOpenChange = (keys) => {
 
 const routeChange = (event, to) => {
   if (isTopMenu.value) {
-    dispatch('setMenuModel', to?.name);
+    dispatch('setMenuModel', to?.meta?.modelName);
+    dispatch('setMenuTopModel', to?.name);
   }
 
   if (state.global?.showTabs && !isTopMenu.value) {

@@ -2,8 +2,8 @@
   <div>首页</div>
   <Upload v-bind="{ multiple: true }"></Upload>
   <div style="background-color: red">
-    <IconSvg name="mode-home-icon" fillColor="#287DFA"></IconSvg>
-    <IconSvg name="message-icon"></IconSvg>
+    <IconSvg name="mode-home-icon" fill="#287DFA"></IconSvg>
+    <IconSvg name="message-icon" class="message-icon"></IconSvg>
 
     <IconSvg name="model-1" fill="red"></IconSvg>
     <IconSvg name="model-2" fill="red"></IconSvg>

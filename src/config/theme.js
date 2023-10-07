@@ -50,7 +50,7 @@ export const THEME_COLOR = {
     '--private-second-text-color': '#455873', // 二级
     '--private-first-text-color': '#0F294D', // 一级
     '--private-placeholder-text-color': '#CED2D9', // placeholder
-    '--private-primary-text-color': 'rgba(0,0,0,.85)', // 默认字体颜色
+    '--private-primary-text-color': 'rgba(15, 41, 77, 1)', // 默认字体颜色
 
     /**=========================背景色========================== **/
     '--private-content-bg': '#FFFFFF', // 内容背景
@@ -69,9 +69,10 @@ export const THEME_COLOR = {
     '--private-form-border': '#d9d9d9',
     '--private-form-icon': 'rgba(0,0,0,.25)',
     '--private-show-count-suffix-text-color': 'rgba(0, 0, 0, 0.45)',
-    '--private-form-dropdown-hover-bg': '#f5f5f5'
+    '--private-form-dropdown-hover-bg': '#f5f5f5',
 
     /**=========================hover========================== **/
+    '--private-primary-color-hover': 'rgba(0, 83, 247, 0.8)'
   },
   [DARK_THEME]: {
     /**=========================字体颜色========================== **/
@@ -101,8 +102,9 @@ export const THEME_COLOR = {
     '--private-form-border': 'rgb(69, 72, 71)',
     '--private-form-icon': 'rgba(229, 224, 216, 0.25)',
     '--private-show-count-suffix-text-color': 'rgba(0, 0, 0, 0.45)',
-    '--private-form-dropdown-hover-bg': 'transparent'
+    '--private-form-dropdown-hover-bg': 'transparent',
 
     /**=========================hover========================== **/
+    '--private-primary-color-hover': 'rgba(0, 83, 247, 0.8)'
   }
 };

@@ -19,7 +19,7 @@ export const usePermission = (options) => {
 
   // 重新分配角色刷新;
   const refresh = async () => {
-    isPermission ? await getRouteData() : await setDefaultMenu();
+    await getRouteData();
     await getUserData();
   };
 
@@ -28,27 +28,26 @@ export const usePermission = (options) => {
    */
   const getRouteData = async () => {
     try {
-      const routeInfo = (await getRoutesInfo())?.data;
-      let newRouteInfo = routeInfo; // 所有路由数据
-      // FIXME:删除业务平台和管理平台这级的菜单
-      // const deleteIndex = _.findIndex(routeInfo, (item) => item?.menuType === MENU_TYPE_R);
-      // if (!isNull(deleteIndex)) {
-      //   _.forEach(routeInfo, (item) => {
-      //     newRouteInfo = item.children?.length ? newRouteInfo.concat(item.children) : newRouteInfo;
-      //   });
-      // }
+      let routeInfo = isPermission ? (await getRoutesInfo())?.data : routerData; // 所有路由数据
+
       // 路由
-      const routes = filterRouter(newRouteInfo);
+      const routes = filterRouter(_.cloneDeep(routeInfo));
+      // 模块
+      const modeMenuData = filterModeMenu(_.cloneDeep(routeInfo));
       // 顶部导航
-      const topMenuData = filterTopMenu(_.cloneDeep(newRouteInfo));
+      const topMenuData = filterTopMenu(_.cloneDeep(routes));
       // 侧边栏
-      const sideMenuData = filterSideMenu(_.cloneDeep(newRouteInfo));
-      // console.log('topMenuData', topMenuData);
-      // console.log('sideMenuData', sideMenuData);
+      const sideMenuData = filterSideMenu(_.cloneDeep(routes));
+
       // 设置路由
       addRoute(treeToArr(routes));
+      // 设置模块
+      const topKeys = Object.keys(topMenuData) || [];
+      const sideKeys = Object.keys(sideMenuData) || [];
+      dispatch('setMenuModel', topKeys[0]);
+      dispatch('setMenuTopModel', sideKeys[0]);
       // 设置菜单
-      dispatch('setMenuData', { side: sideMenuData, top: topMenuData || [] });
+      dispatch('setMenuData', { side: sideMenuData, top: topMenuData || [], module: modeMenuData || [] });
     } catch (error) {
       console.error('hooks-usePermission-getRouteData', error);
     }
@@ -62,10 +61,10 @@ export const usePermission = (options) => {
   const filterRouter = (asyncRouterMap) => {
     try {
       return asyncRouterMap.map((route) => {
-        if (route?.children?.length > 0) {
+        if (route?.children?.length) {
           // 设置redirect地址
           route.redirect = setRedirect(route);
-          route.children = filterChildren(route.children, route.name, route.name);
+          route.children = filterChildren(route.children, route.name, null, route.name);
         }
         return route;
       });
@@ -81,7 +80,7 @@ export const usePermission = (options) => {
    * @param {*} parentName
    * @returns
    */
-  const filterChildren = (children, modelName, parentName) => {
+  const filterChildren = (children, modelName, topName, parentName) => {
     try {
       return children.map((child) => {
         child = {
@@ -90,11 +89,12 @@ export const usePermission = (options) => {
           meta: {
             ...child.meta,
             modelName,
-            parentName
+            parentName,
+            topName
           }
         };
-        if (child?.children?.length > 0) {
-          child.children = filterChildren(child?.children, modelName, child.name);
+        if (child?.children?.length) {
+          child.children = filterChildren(child?.children, modelName, child.meta.topName || child.name, child.name);
         }
         return child;
       });
@@ -136,7 +136,7 @@ export const usePermission = (options) => {
           router.component = () => import(`@/views/${newRouter.component}.vue`);
         }
         if (!isNull(router?.path)) {
-          if (router?.meta?.pageLayout !== CONST_STRING_1) {
+          if (!isNull(router?.meta?.pageLayout) && router?.meta?.pageLayout !== CONST_STRING_1) {
             route.addRoute({ ...router });
           } else {
             route.addRoute('BasicLayout', { ...router });
@@ -156,12 +156,14 @@ export const usePermission = (options) => {
    */
   const filterTopMenu = (asyncRouterMap) => {
     try {
-      return asyncRouterMap.filter((route) => {
-        if (route?.children?.length > 0) {
-          delete route['children'];
+      const menuMap = {};
+      asyncRouterMap.map((route) => {
+        const model = _.cloneDeep(route);
+        if (model.name) {
+          menuMap[model.name] = filterSideChildren(model.children, true);
         }
-        return [];
       });
+      return menuMap;
     } catch (error) {
       console.error('hooks-usePermission-filterTopMenu', error);
     }
@@ -176,9 +178,13 @@ export const usePermission = (options) => {
     try {
       const menuMap = {};
       asyncRouterMap.map((route) => {
-        const model = _.cloneDeep(route);
-        if (model.name) {
-          menuMap[model.name] = filterSideChildren(model.children);
+        if (route?.children?.length) {
+          _.map(route?.children, (item) => {
+            const model = _.cloneDeep(item);
+            if (model.name) {
+              menuMap[model.name] = filterSideChildren(model.children);
+            }
+          });
         }
       });
       return menuMap;
@@ -187,13 +193,41 @@ export const usePermission = (options) => {
     }
   };
 
-  const filterSideChildren = (childrenMap = []) => {
+  /**
+   * 模块
+   * @param {*} asyncRouterMap
+   * @returns
+   */
+  const filterModeMenu = (asyncRouterMap) => {
+    try {
+      return asyncRouterMap.filter((route) => {
+        if (route?.children?.length) {
+          delete route['children'];
+        }
+        return [];
+      });
+    } catch (error) {
+      console.error('hooks-usePermission-filterModeMenu', error);
+    }
+  };
+
+  /**
+   *
+   * @param {*} childrenMap
+   * @param {*} deleteChild
+   * @returns
+   */
+  const filterSideChildren = (childrenMap = [], deleteChild = false) => {
     try {
       return childrenMap.filter((el) => {
         if (el?.hidden) {
           return false;
         }
-        if (el?.children?.length > 0) {
+        if (el?.children?.length) {
+          if (deleteChild) {
+            delete el.children;
+            return true;
+          }
           el.children = filterSideChildren(el.children);
         }
         return true;
@@ -214,19 +248,10 @@ export const usePermission = (options) => {
     } catch (error) {}
   };
 
-  // 不校验路由权限，使用本地的路由即可
-  const setDefaultMenu = () => {
-    const topMenuData = filterTopMenu(_.cloneDeep(routerData));
-    const sideMenuData = filterSideMenu(_.cloneDeep(routerData));
-    // 设置菜单
-    dispatch('setMenuData', { side: sideMenuData, top: topMenuData || [] });
-  };
-
   return {
     ...toRefs(state),
     refresh,
     getRouteData,
-    getUserData,
-    setDefaultMenu
+    getUserData
   };
 };

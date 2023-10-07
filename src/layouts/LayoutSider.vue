@@ -28,7 +28,7 @@ const props = defineProps({
 
 const collapsed = ref(false);
 const menuData = computed(() => {
-  return state?.user?.menuData?.side[state?.global?.menuModel] || [];
+  return state?.user?.menuData?.side[state?.global?.menuTopModel] || [];
 });
 </script>
 

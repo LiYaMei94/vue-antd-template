@@ -14,7 +14,7 @@ export const someHidden = {
       const { value } = binding;
       const permissionButton = state?.state?.user?.buttonList || [];
       const newValue = Array.isArray(value) ? value : !isNull(value) ? [value] : [];
-      if (newValue.length > 0) {
+      if (newValue.length) {
         const somePermission = permissionButton.some((role) => {
           return newValue.includes(role);
         });
@@ -41,7 +41,7 @@ export const everyHidden = {
       const { state } = useStore();
       const permissionButton = state?.state?.user?.buttonList || [];
       const newValue = Array.isArray(value) ? value : !isNull(value) ? [value] : [];
-      if (newValue.length > 0) {
+      if (newValue.length) {
         const somePermission = permissionButton.every((role) => {
           return newValue.includes(role);
         });
@@ -66,7 +66,7 @@ export const someDisabled = {
       const { value } = binding;
       const permissionButton = state?.state?.user?.buttonList || [];
       const newValue = Array.isArray(value) ? value : !isNull(value) ? [value] : [];
-      if (newValue.length > 0) {
+      if (newValue.length) {
         const somePermission = permissionButton.some((role) => {
           return newValue.includes(role);
         });
@@ -91,7 +91,7 @@ export const everyDisabled = {
       const { value } = binding;
       const permissionButton = state?.state?.user?.buttonList || [];
       const newValue = Array.isArray(value) ? value : !isNull(value) ? [value] : [];
-      if (newValue.length > 0) {
+      if (newValue.length) {
         const somePermission = permissionButton.every((role) => {
           return newValue.includes(role);
         });

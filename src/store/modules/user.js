@@ -6,7 +6,7 @@ export default {
     buttonList: DB.getSession('buttonList') || DB.getLocal('buttonList') || [],
     menuData: null,
     menuDataLoaded: false,
-    userInfo: DB.getSession('userInfo') || DB.getLocal('userInfo') || {}
+    userInfo: DB.getSession('userInfo') || DB.getLocal('userInfo') || { userName: 'userName', nickName: 'nickName' }
   }),
   actions: {
     setMenuData({ commit }, val) {

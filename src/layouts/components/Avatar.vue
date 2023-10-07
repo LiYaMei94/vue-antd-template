@@ -2,24 +2,33 @@
   <a-dropdown :trigger="['click']">
     <div class="user-container">
       <div class="user-avatar">
-        <a-avatar :size="40" style="background-color: var(--ant-primary-color)">
+        <a-avatar :size="32" style="background-color: var(--ant-primary-color)">
           <template #icon>
             <UserOutlined />
           </template>
         </a-avatar>
       </div>
-      <div class="user-info">
-        <div>{{ state?.user?.userInfo?.userName }}</div>
-        <div>{{ state?.user?.userInfo?.nickName }}</div>
-      </div>
     </div>
     <template #overlay>
-      <a-menu>
-        <!-- <a-menu-item key="0">
-          <a href="javaScript:;" @click="changePassword">修改密码</a>
-        </a-menu-item>
-        <a-menu-divider /> -->
-        <a-menu-item key="2">
+      <a-menu mode="vertical" v-model:selectedKeys="selectedKeys">
+        <div class="user-info">
+          <div>{{ state?.user?.userInfo?.userName }}</div>
+          <div>{{ state?.user?.userInfo?.nickName }}</div>
+        </div>
+        <a-menu-divider />
+        <a-sub-menu key="sub1" title="切换主题">
+          <template #icon>
+            <IconSvg name="theme-switch" class="theme-switch-icon"></IconSvg>
+          </template>
+          <a-menu-item key="light" class="avatar-menu-item">
+            <a href="javaScript:;" @click="changeTheme($event, 'light')">白月光</a>
+          </a-menu-item>
+          <a-menu-item key="dark" class="avatar-menu-item">
+            <a href="javaScript:;" @click="changeTheme($event, 'dark')">曜石黑</a>
+          </a-menu-item>
+        </a-sub-menu>
+        <a-menu-item key="2" class="avatar-menu-item">
+          <template #icon><IconSvg name="logout" class="logout-icon"></IconSvg></template>
           <a href="javaScript:;" @click="handleLogout">退出登录</a>
         </a-menu-item>
       </a-menu>
@@ -27,16 +36,29 @@
   </a-dropdown>
 </template>
 <script setup>
+import { ref } from 'vue';
 import db from '@/utils/db';
 import { ACCESS_TOKEN } from '@/utils/const';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { logout } from '@/api/user';
+import { useTheme } from '@/hooks/useTheme';
 
-const { state } = useStore();
+const { changePrimaryColor, setThemeColor, theme } = useTheme();
+const { dispatch, state } = useStore();
 const router = useRouter();
 const DB = new db();
+const selectedKeys = ref([state?.global?.theme]);
+
 const changePassword = () => {};
+
+// 切换主题
+const changeTheme = (event, key) => {
+  setThemeColor(key);
+  selectedKeys.value = [key];
+};
+
+// 退出登录
 const handleLogout = async () => {
   try {
     await logout();
@@ -54,13 +76,36 @@ const handleLogout = async () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  .user-info {
-    margin-left: 10px;
-    div {
-      height: 18px;
-      line-height: 18px;
-      font-size: 13px;
-    }
+}
+</style>
+<style lang="less">
+.user-info {
+  padding: 5px 12px;
+  div:nth-of-type(1) {
+    color: var(--private-first-text-color);
+    font-size: 14px;
+    font-weight: 500;
   }
+  div:nth-of-type(2) {
+    color: var(--private-second-text-color);
+    font-size: 14px;
+    font-weight: 400;
+  }
+}
+.ant-dropdown-menu-submenu-title {
+  display: flex;
+}
+
+.theme-switch-icon,
+.logout-icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+.theme-switch-icon {
+  fill: var(--private-content-bg);
+}
+.logout-icon {
+  fill: var(--private-second-text-color);
 }
 </style>

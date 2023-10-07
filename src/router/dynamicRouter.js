@@ -12,66 +12,165 @@
  * @param meta.pageLayout ==> 0 全屏 1非全屏
  * */
 export const routerData = [
+  // {
+  //   name: 'Home',
+  //   path: '/home',
+  //   component: () => import(/* webpackChunkName: "Home" */ '@/views/home'),
+  //   meta: {
+  //     title: '首页',
+  //     isFrame: '1'
+  //   }
+  // },
+  // {
+  //   name: 'Dashboard',
+  //   path: '/dashboard',
+  //   component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
+  //   meta: {
+  //     title: '数据大屏',
+  //     isFrame: '1',
+  //     pageLayout: '0'
+  //   }
+  // },
   {
-    name: 'Home',
-    path: '/home',
-    component: () => import(/* webpackChunkName: "Home" */ '@/views/home'),
+    name: 'Project',
+    path: '/project',
+    redirect: '/project/dept',
     meta: {
-      title: '首页',
-      isFrame: '1'
-    }
-  },
-  {
-    name: 'Dashboard',
-    path: '/dashboard',
-    component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
-    meta: {
-      title: '数据大屏',
+      title: '项目管理',
       isFrame: '1',
-      pageLayout: '0'
-    }
-  },
-  {
-    name: 'System',
-    path: '/system',
-    redirect: '/system/index',
-    meta: {
-      title: '系统设置',
-      isFrame: '1'
+      icon: 'model-1',
+      pageLayout: '1'
     },
     children: [
       {
-        name: 'SystemIndex',
-        path: '/system/index',
-        component: () => import(/* webpackChunkName: "SystemIndex" */ '@/views/system'),
+        name: 'ProjectDept',
+        path: '/project/dept',
+        redirect: '/project/dept/manage',
+        meta: {
+          title: '项目部',
+          isFrame: '1',
+          pageLayout: '1'
+        },
+        children: [
+          {
+            name: 'ProjectDeptManage',
+            path: '/project/dept/manage',
+            redirect: '/project/dept/manage/subcontractor',
+            meta: {
+              title: '项目部管理',
+              isFrame: '1',
+              pageLayout: '1'
+            },
+            children: [
+              {
+                name: 'ProjectDeptManageSubcontractor',
+                path: '/project/dept/manage/subcontractor',
+                component: () => import(/* webpackChunkName: "ProjectDeptSubcontractor" */ '@/views/project/dept/subcontractor/list'),
+                meta: {
+                  title: '分包商',
+                  isFrame: '1',
+                  pageLayout: '1'
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        name: 'ProjectAuth',
+        path: '/project/auth',
+        redirect: '/project/auth/user',
         meta: {
           title: '权限管理',
-          modelName: 'System',
-          parentName: 'System',
-          isFrame: '1'
-        }
+          isFrame: '1',
+          pageLayout: '1'
+        },
+        children: [
+          {
+            name: 'ProjectAuthUser',
+            path: '/project/auth/user',
+            component: () => import(/* webpackChunkName: "ProjectAuthUser" */ '@/views/project/auth/role/list'),
+            meta: {
+              title: '账号管理',
+              isFrame: '1',
+              pageLayout: '1'
+            }
+          },
+          {
+            name: 'ProjectAuthRole',
+            path: '/project/auth/role',
+            component: () => import(/* webpackChunkName: "ProjectAuthRole" */ '@/views/project/auth/role/list'),
+            meta: {
+              title: '角色管理',
+              isFrame: '1',
+              pageLayout: '1'
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'Basic',
+    path: '/basic',
+    meta: {
+      title: '基础配置管理',
+      isFrame: '1',
+      icon: 'model-2',
+      pageLayout: '1'
+    },
+    children: [
+      {
+        name: 'BasicSystem',
+        path: '/basic/system',
+        meta: {
+          title: '系统设置',
+          isFrame: '1',
+          pageLayout: '1'
+        },
+        children: [
+          {
+            name: 'BasicSystemStation',
+            path: '/basic/system/station',
+            component: () => import(/* webpackChunkName: "BasicSystemStation" */ '@/views/system/user'),
+            meta: {
+              title: '岗位管理',
+              isFrame: '1',
+              pageLayout: '1'
+            }
+          }
+        ]
       },
       {
-        name: 'SystemUser',
-        path: '/system/user',
-        component: () => import(/* webpackChunkName: "SystemUser" */ '@/views/system/user.vue'),
+        name: 'BasicAuth',
+        path: '/basic/auth',
         meta: {
-          title: '用户管理',
-          modelName: 'System',
-          parentName: 'System',
-          isFrame: '1'
-        }
-      },
-      {
-        name: 'SystemRole',
-        path: '/system/role',
-        component: () => import(/* webpackChunkName: "SystemRole" */ '@/views/system/role.vue'),
-        meta: {
-          title: '角色管理',
-          modelName: 'System',
-          parentName: 'System',
-          isFrame: '1'
-        }
+          title: '权限管理',
+          isFrame: '1',
+          pageLayout: '1'
+        },
+        children: [
+          {
+            name: 'BasicAuthRole',
+            path: '/basic/auth/role',
+            component: () => import(/* webpackChunkName: "BasicAuthRole" */ '@/views/system/role'),
+            meta: {
+              title: '角色管理',
+              isFrame: '1',
+              pageLayout: '1'
+            }
+          },
+          {
+            name: 'BasicAuthAccount ',
+            path: '/basic/auth/account ',
+            component: () => import(/* webpackChunkName: "BasicAuthAccount" */ '@/views/system/role'),
+            meta: {
+              title: '账号管理',
+              isFrame: '1',
+              pageLayout: '1'
+            }
+          }
+        ]
       }
     ]
   }

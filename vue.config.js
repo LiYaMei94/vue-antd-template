@@ -49,9 +49,9 @@ module.exports = defineConfig({
       .end()
       .use('svgo-loader')
       .loader('svgo-loader')
-      .options({
+      .tap((options) => ({
+        ...options,
         plugins: [
-          //!!!!!!!!!!!!!!!重点就是改这个位置，加个插件名字
           {
             name: 'removeAttrs',
             params: {
@@ -60,8 +60,7 @@ module.exports = defineConfig({
             }
           }
         ]
-      })
-      // .tap((options) => ({ ...options, plugins: [{ removeAttrs: { attrs: 'fill' } }] }))
+      }))
       .end();
     config.plugin('svg-sprite').use(require('svg-sprite-loader/plugin'), [{ plainSprite: true }]);
     config.module.rule('svg').exclude.add(dir); // 其他 svg loader 排除 iconSvg 目录

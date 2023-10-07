@@ -14,6 +14,7 @@ export default {
     showTabs: true,
     // 当前模块
     menuModel: DB.getLocal('menuModel') || '',
+    menuTopModel: DB.getLocal('menuTopModel') || '',
     tabsMenuList: DB.getSession('tabsMenuList') || []
   }),
   getters: {},
@@ -32,6 +33,9 @@ export default {
     },
     setMenuModel({ commit }, val) {
       commit('setMenuModel', val);
+    },
+    setMenuTopModel({ commit }, val) {
+      commit('setMenuTopModel', val);
     },
     setShowTabs({ commit }, val) {
       commit('setShowTabs', val);
@@ -57,6 +61,10 @@ export default {
     setMenuModel(state, val) {
       DB.setLocal('menuModel', val);
       state.menuModel = val;
+    },
+    setMenuTopModel(state, val) {
+      DB.setLocal('menuTopModel', val);
+      state.menuTopModel = val;
     },
     setShowTabs(state, val) {
       state.setShowTabs = val;

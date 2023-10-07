@@ -1,5 +1,5 @@
-import BasicLayout from './BasicLayout.vue';
-import UserLayout from './UserLayout.vue';
-import UpperMiddleLayout from './UpperMiddleLayout.vue';
+import BasicLayout from './BasicLayout';
+import UserLayout from './UserLayout';
+import UpperMiddleLayout from './UpperMiddleLayout';
 
 export { BasicLayout, UserLayout, UpperMiddleLayout };

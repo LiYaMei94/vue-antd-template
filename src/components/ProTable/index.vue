@@ -239,7 +239,7 @@ const expandIcon = (options) => {
   if (!options.expanded) {
     icon = props.expandIcon?.collapsed;
   }
-  return options.record?.children?.length > 0 ? (
+  return options.record?.children?.length ? (
     <IconFont
       source='anticonfont'
       type={icon}
