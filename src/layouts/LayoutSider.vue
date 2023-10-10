@@ -1,7 +1,7 @@
 <template>
   <a-layout-sider v-model:collapsed="collapsed" :theme="theme" collapsible>
     <template #trigger>
-      <component :is="collapsed ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined'"></component>
+      <div class="ant-layout-sider-trigger-icon"><component :is="collapsed ? 'MenuUnfoldOutlined' : 'MenuFoldOutlined'"></component></div>
     </template>
     <CustomMenu :theme="theme" mode="inline" :menuList="menuData" type="side-menu"></CustomMenu>
   </a-layout-sider>
@@ -31,5 +31,3 @@ const menuData = computed(() => {
   return state?.user?.menuData?.side[state?.global?.menuTopModel] || [];
 });
 </script>
-
-<style lang="less" scope></style>

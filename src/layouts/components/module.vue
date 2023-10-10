@@ -1,7 +1,7 @@
 <template>
-  <div class="module-modal" :style="{ height: visible ? 'calc(100% - 80px)' : '0' }">
+  <div class="module-modal" :style="{ height: visible ? 'calc(100% - 80px)' : '0' }" v-if="visible">
     <div class="module-modal-content">
-      <div class="module-content" :style="{ height: visible ? '232px' : '0' }" v-if="visible">
+      <div class="module-content">
         <div class="module-item" v-for="item in moduleData" :key="item?.name" @click="handleClick($event, item)">
           <div class="left"><IconSvg :name="item?.meta?.icon" class="module-icon"></IconSvg></div>
           <div class="right">
@@ -37,6 +37,7 @@ const moduleData = computed(() => {
 
 const handleClick = (event, route) => {
   dispatch('setMenuModel', route?.name);
+  dispatch('setMenuTopModel', null);
   push({ name: route?.name });
   props.close && props.close();
 };
@@ -44,10 +45,11 @@ const handleClick = (event, route) => {
 <style lang="less" scoped>
 .module-modal {
   position: absolute;
-  top: 64px;
+  top: 65px;
   right: 0;
   z-index: 666;
   width: 100%;
+  transition: all 0.3;
   .module-modal-content {
     width: 100%;
     height: 100%;
@@ -60,7 +62,6 @@ const handleClick = (event, route) => {
       display: grid;
       grid-template-columns: repeat(3, 1fr); //分成三栏，每栏均等分
       grid-gap: 40px 10px; //行间距 列间距
-      height: 232px;
       position: absolute;
       top: 0;
       z-index: 555;
@@ -77,11 +78,11 @@ const handleClick = (event, route) => {
           align-items: center;
           justify-content: center;
           margin-right: 16px;
-          background-color: var(--ant-primary-color);
+          background-color: var(--private-primary-color);
           .module-icon {
             width: 32px;
             height: 32px;
-            fill: var(--private-primary-color-hover);
+            fill: var(--private-primary-color);
           }
         }
         .right {
@@ -99,10 +100,10 @@ const handleClick = (event, route) => {
       }
       .module-item:hover {
         div:nth-of-type(1) {
-          color: var(--private-primary-color-hover) !important;
+          color: var(--private-primary-color) !important;
         }
         div:nth-of-type(2) {
-          color: var(--private-primary-color-hover) !important;
+          color: var(--private-primary-color) !important;
         }
       }
     }
@@ -111,8 +112,19 @@ const handleClick = (event, route) => {
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.25);
+      background-color: var(--private-mask-bg);
     }
+  }
+}
+</style>
+<style lang="less">
+#model-6 {
+  fill: var(--private-primary-color);
+  path:nth-of-type(3) {
+    fill: white;
+  }
+  path:nth-of-type(4) {
+    fill: white;
   }
 }
 </style>

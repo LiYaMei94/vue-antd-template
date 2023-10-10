@@ -293,7 +293,7 @@ defineExpose({ getTableData, updateRowData, tableData: tableData.value });
   .pro-table-right-tool-btn {
     background: transparent;
     border: 1px solid var(--private-form-border);
-    color: var(--private-primary-text-color);
+    color: var(--private-first-text-color);
   }
   .pro-table-right-tool-btn:focus,
   .pro-table-right-tool-btn:hover {

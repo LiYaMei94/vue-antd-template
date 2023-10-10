@@ -22,7 +22,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "core-js": "^3.8.3",
     "dayjs": "^1.11.8",
-    "epic-designer": "^0.8.7",
+    "element-plus": "^2.3.14",
     "js-base64": "^3.7.5",
     "lodash": "^4.17.21",
     "qs": "^6.11.2",
@@ -46,6 +46,8 @@
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8",
     "svg-sprite-loader": "^6.0.11",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-vue-components": "^0.25.2",
     "webpack-bundle-analyzer": "^4.9.0"
   },
   "eslintConfig": {

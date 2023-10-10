@@ -120,6 +120,6 @@ defineExpose({ dataSource: newDataSource });
   padding: 15px;
   box-sizing: border-box;
   text-align: center;
-  border: 1px solid var(--private-border-color);
+  border: 1px solid var(--private-line-color-2);
 }
 </style>

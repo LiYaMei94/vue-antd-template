@@ -10,7 +10,6 @@ export const staticRoutes = [
     component: BasicLayout,
     name: 'BasicLayout',
     path: '/',
-    redirect: '/project',
     children: []
   },
   {

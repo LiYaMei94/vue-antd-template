@@ -21,7 +21,7 @@ export const useTheme = () => {
     });
 
     // 其他主题颜色变化
-    // document.documentElement.style.setProperty('--ant-primary-color', val);
+    // document.documentElement.style.setProperty('--private-primary-color', val);
     dispatch('setGlobalPrimary', val);
   };
 

@@ -5,13 +5,11 @@
         name="mode-home-icon"
         class="mode-home-icon"
         @click.self="handleOpenModule"
-        :fill="visible ? 'var(--private-primary-color-hover)' : ''"
+        :fill="visible ? 'var(--private-primary-color)' : ''"
       ></IconSvg>
     </div>
-    <div class="logo">
-      <img src="~@/assets/images/logo.png" />
-      <span>EPCM工程管理平台</span>
-    </div>
+    <img class="logo" src="~@/assets/images/logo.png" />
+    <div class="system-title">EPCM工程管理平台</div>
     <div class="header-menu">
       <slot name="headerMenu"></slot>
     </div>
@@ -23,7 +21,7 @@
         <Theme></Theme>
         <Fullscreen></Fullscreen>
         <div class="header-tool-right-icon">
-          <SyncOutlined style="font-size: 20px; color: var(--private-primary-text-color)" @click="handleRefresh" />
+          <SyncOutlined style="font-size: 20px; color: var(--private-first-text-color)" @click="handleRefresh" />
         </div>
       </a-space> -->
     </div>
@@ -76,12 +74,13 @@ const close = () => {
       width: 32px;
       height: 32px;
       cursor: pointer;
+      fill: var(--private-first-text-color);
     }
     .mode-home-icon:hover {
-      fill: var(--ant-primary-color);
+      fill: var(--private-primary-color);
     }
     .mode-home-icon:active {
-      fill: var(--ant-primary-color);
+      fill: var(--private-primary-color);
     }
   }
   .logo {
@@ -89,13 +88,15 @@ const close = () => {
     display: flex;
     align-items: center;
     margin: 0 16px;
+    width: 27px;
+    height: auto;
+  }
+  .system-title {
     font-size: 20px;
     font-weight: 500;
-    img {
-      margin-right: 10px;
-      width: 27.36px;
-      height: auto;
-    }
+    min-width: 179px;
+    width: auto;
+    margin-right: 20px;
   }
   .header-menu {
     flex: 1;

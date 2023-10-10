@@ -19,7 +19,7 @@ import { ACCESS_TOKEN } from '@/utils/const';
 const DB = new db();
 
 const { dispatch, state } = useStore();
-const { getUserData } = usePermission();
+const { getUserData, getRouteData } = usePermission();
 // 设置日期组件语言
 dayjs.locale('en');
 
@@ -34,6 +34,7 @@ onMounted(async () => {
   // if (!isNull(token)) {
   //   await getUserData();
   // }
+  // await getRouteData();
 });
 </script>
 <style></style>

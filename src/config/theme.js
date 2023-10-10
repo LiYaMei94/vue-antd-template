@@ -1,5 +1,5 @@
 // 默认主题颜色
-export const DEFAULT_PRIMARY_COLOR = '#287DFA';
+export const DEFAULT_PRIMARY_COLOR = 'rgba(0, 83, 247, 1)';
 
 // 浅色主题
 export const LIGHT_THEME = 'light';
@@ -33,11 +33,11 @@ export const MAIN_THEME_MAP = {
   [DARK_THEME]: {
     theme: DARK_THEME,
     antd: {
-      primaryColor: 'rgb(24, 144, 255)',
-      errorColor: '#F37668',
-      successColor: '#84CA7B',
-      warningColor: '#FFB866',
-      infoColor: 'rgb(24, 144, 255)'
+      primaryColor: '0A99FF',
+      errorColor: '#D33939',
+      successColor: '#3FA14A',
+      warningColor: '#DF6802',
+      infoColor: '0A99FF'
     }
   }
 };
@@ -45,66 +45,106 @@ export const MAIN_THEME_MAP = {
 // 主题模式自定义颜色
 export const THEME_COLOR = {
   [LIGHT_THEME]: {
+    /**=========================主色========================== **/
+    '--private-primary-color': 'rgba(0, 83, 247, 1)',
+    '--private-primary-color-1': 'rgba(0, 83, 247, 0.1)',
+    '--private-primary-color-2': 'rgba(0, 83, 247, 0.2)',
+    '--private-primary-color-3': 'rgba(0, 83, 247, 0.3)',
+    '--private-primary-color-5': 'rgba(0, 83, 247, 0.5)',
+    '--private-primary-color-6': 'rgba(0, 83, 247, 0.6)',
+    '--private-primary-color-8': 'rgba(0, 83, 247, 0.8)',
+    /**=========================辅助色========================== **/
+    '--private-success-color': 'rgba(79, 180, 67, 1)',
+    '--private-success-color-1': 'rgba(79, 180, 67, 0.1)',
+    '--private-success-color-3': 'rgba(79, 180, 67, 0.3)',
+
+    '--private-error-color': 'rgba(238, 59, 40, 1)',
+    '--private-error-color-1': 'rgba(238, 59, 40, 0.1)',
+    '--private-error-color-3': 'rgba(238, 59, 40, 0.3)',
+
+    '--private-warning-color': 'rgba(255, 149, 0, 1)',
+    '--private-warning-color-1': 'rgba(255, 149, 0, 0.1)',
+    '--private-warning-color-3': 'rgba(255, 149, 0, 0.3)',
     /**=========================字体颜色========================== **/
     '--private-third-text-color': '#8592A6', // 三级
     '--private-second-text-color': '#455873', // 二级
     '--private-first-text-color': '#0F294D', // 一级
     '--private-placeholder-text-color': '#CED2D9', // placeholder
-    '--private-primary-text-color': 'rgba(15, 41, 77, 1)', // 默认字体颜色
+    '--private-not-optional-text-color': '#ACB4BF', // 不可点击、不可选择
 
     /**=========================背景色========================== **/
     '--private-content-bg': '#FFFFFF', // 内容背景
-    '--private-body-bg': '#F5F7FA', // body背景
-    '--private-table-header-bg': '#fafafa', // table header
+    '--private-bg-1': '#F4F5F8',
+    '--private-bg-2': '#F0F2F5',
+    '--private-tip-bg': '#FFF7EB',
+    '--private-table-header-bg': '#F5F7FA', // table header bg
+    '--private-table-bg': '#F5F7FA', // table bg
+    '--private-header-shadow': 'rgba(15, 41, 77, 0.15)', // header shadow
+    '--private-mask-bg': 'rgba(0, 0, 0, 0.25)', // 遮罩层
 
     /**=========================线、边框========================== **/
-    '--private-line-color': '#E1E5EB',
-    '--private-border-color': '#E1E5EB',
-    '--private-table-border-color': '#f0f0f0',
+    '--private-line-color-1': '#DADFE6',
+    '--private-line-color-2': '#E1E5EB',
+    '--private-table-border-color': '#F0F2F5', // table边框
 
-    /**=========================form 禁止点击 相关颜色========================== **/
+    /**=========================form 相关颜色========================== **/
     '--private-form-disabled-bg': '#f5f5f5',
     '--private-form-disabled-border': '#d9d9d9',
-    '--private-not-optional-text-color': '#ACB4BF', // 不可点击、不可选择
     '--private-form-border': '#d9d9d9',
     '--private-form-icon': 'rgba(0,0,0,.25)',
     '--private-show-count-suffix-text-color': 'rgba(0, 0, 0, 0.45)',
-    '--private-form-dropdown-hover-bg': '#f5f5f5',
-
-    /**=========================hover========================== **/
-    '--private-primary-color-hover': 'rgba(0, 83, 247, 0.8)'
+    '--private-form-dropdown-hover-bg': '#f5f5f5'
   },
   [DARK_THEME]: {
+    /**=========================主色========================== **/
+    '--private-primary-color': 'rgba(0, 83, 247, 1)',
+    '--private-primary-color-1': 'rgba(0, 83, 247, 0.1)',
+    '--private-primary-color-2': 'rgba(0, 83, 247, 0.2)',
+    '--private-primary-color-3': 'rgba(0, 83, 247, 0.3)',
+    '--private-primary-color-5': 'rgba(0, 83, 247, 0.5)',
+    '--private-primary-color-6': 'rgba(0, 83, 247, 0.6)',
+    '--private-primary-color-8': 'rgba(0, 83, 247, 0.8)',
+    /**=========================辅助色========================== **/
+    '--private-success-color': 'rgba(63, 161, 74, 1)',
+    '--private-success-color-1': 'rgba(63, 161, 74, 0.1)',
+    '--private-success-color-3': 'rgba(63, 161, 74, 0.3)',
+
+    '--private-error-color': 'rgba(211, 57, 57, 1)',
+    '--private-error-color-1': 'rgba(211, 57, 57, 0.1)',
+    '--private-error-color-3': 'rgba(211, 57, 57, 0.3)',
+
+    '--private-warning-color': 'rgba(223, 104, 2, 1)',
+    '--private-warning-color-1': 'rgba(223, 104, 2, 0.1)',
+    '--private-warning-color-3': 'rgba(223, 104, 2, 0.3)',
     /**=========================字体颜色========================== **/
     '--private-third-text-color': '#99A6BA', // 三级
     '--private-second-text-color': '#B8C4D4', // 二级
     '--private-first-text-color': '#FFFFFF', // 一级
     '--private-placeholder-text-color': '#5C697C', // placeholder
-    '--private-primary-text-color': 'hsla(0,0%,100%,.65)', // 默认字体颜色
-    '--darkreader-text--ant-primary-color': '#409fe7',
+    '--private-not-optional-text-color': '#5C697C', // 不可点击、不可选择
 
     /**=========================背景色========================== **/
-    '--private-content-bg': 'rgb(36, 37, 37)', // 内容背景
-    '--private-body-bg': 'rgb(42, 44, 44)', // body背景
-    '--private-dark-active-bg': '#113545', // FIXME: 侧边菜单active的背景色
-    '--private-table-header-bg': 'rgb(39, 40, 39)', // table header
+    '--private-content-bg': '#1C242E', // 内容背景
+    '--private-bg-1': '#0D131A',
+    '--private-bg-2': '#1C242E',
+    '--private-tip-bg': '#50473B',
+    '--private-table-header-bg': '#1C242E', // table header bg
+    '--private-table-bg': '#1C242E', // table bg
+    '--private-header-shadow': 'rgba(15, 41, 77, 0.15)', // header shadow
+    '--private-mask-bg': 'rgba(0, 0, 0, 0.25)', // 遮罩层
 
     /**=========================线、边框========================== **/
-    '--private-line-color': '#0D131A',
-    '--private-border-color': '#0D131A',
-    '--private-table-border-color': 'rgba(143, 132, 117, 0.06)',
+    '--private-line-color-1': '#6C7C95',
+    '--private-line-color-2': '#39404C',
+    '--private-table-border-color': '#1C242E', // table边框
 
-    /**=========================form 禁止点击 相关颜色========================== **/
+    /**=========================form 相关颜色========================== **/
     '--private-form-disabled-bg': 'rgb(42, 44, 44)',
     '--private-form-disabled-border': 'rgb(69, 72, 71)',
-    '--private-not-optional-text-color': '#8D9095',
     '--private-not-optional-text-bg': '',
     '--private-form-border': 'rgb(69, 72, 71)',
     '--private-form-icon': 'rgba(229, 224, 216, 0.25)',
     '--private-show-count-suffix-text-color': 'rgba(0, 0, 0, 0.45)',
-    '--private-form-dropdown-hover-bg': 'transparent',
-
-    /**=========================hover========================== **/
-    '--private-primary-color-hover': 'rgba(0, 83, 247, 0.8)'
+    '--private-form-dropdown-hover-bg': 'transparent'
   }
 };

@@ -94,21 +94,20 @@ watch(
     const topName = unref(val).meta?.topName;
     const name = unref(val)?.name;
     const parentName = unref(val).meta?.parentName;
-
-    dispatch('setMenuModel', modelName);
-    dispatch('setMenuTopModel', topName);
+    !isNull(modelName) && dispatch('setMenuModel', modelName);
+    !isNull(topName) && dispatch('setMenuTopModel', topName);
 
     // 顶部菜单
     if (isTopMenu.value) {
-      selectedKeys.value = modelName ? [topName] : [name];
+      selectedKeys.value = !isNull(topName) ? [topName] : [name];
     }
 
     // 侧边栏
     if (!isTopMenu.value) {
-      let keys = parentName ? [parentName] : [];
+      let keys = !isNull(parentName) ? [parentName] : [];
       keys = getOpenKeys(parentName, keys);
 
-      selectedKeys.value = name ? [name] : [];
+      selectedKeys.value = !isNull(name) ? [name] : [];
       openKeys.value = keys;
     }
   },
@@ -121,8 +120,8 @@ const onOpenChange = (keys) => {
 
 const routeChange = (event, to) => {
   if (isTopMenu.value) {
-    dispatch('setMenuModel', to?.meta?.modelName);
-    dispatch('setMenuTopModel', to?.name);
+    !isNull(to?.meta?.modelName) && dispatch('setMenuModel', to?.meta?.modelName);
+    !isNull(to?.name) && dispatch('setMenuTopModel', to?.name);
   }
 
   if (state.global?.showTabs && !isTopMenu.value) {

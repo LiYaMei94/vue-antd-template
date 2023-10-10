@@ -34,7 +34,7 @@
       <div class="upload-item" v-for="(file, index) in fileList" :key="index">
         <div class="upload-item-left">
           <div
-            :style="file?.status === UPLOAD_STATUS_ERROR ? 'color: var(--ant-error-color)' : 'color: var(--ant-primary-color)'"
+            :style="file?.status === UPLOAD_STATUS_ERROR ? 'color: var(--ant-error-color)' : 'color: var(--private-primary-color)'"
             class="text-ellipsis file-name"
           >
             {{ file?.name || file?.file?.name }}
@@ -566,7 +566,7 @@ defineExpose({ fileList });
       border-radius: 10px;
       margin-bottom: 10px;
       padding: 5px 0 5px 10px;
-      border: 1px dashed var(--private-border-color);
+      border: 1px dashed var(--private-line-color-2);
       .upload-item-left {
         flex: 1;
         margin-right: 20px;

@@ -8,7 +8,7 @@
         </div>
       </template>
     </LayoutHeader>
-    <a-layout>
+    <a-layout style="margin-top: 64px">
       <LayoutSider v-model:theme="state.global.theme" v-if="sideMenuData?.length"></LayoutSider>
       <div class="main">
         <PageTabs v-if="state.global.showTabs && sideMenuData.length"></PageTabs>
@@ -38,7 +38,7 @@ const sideMenuData = computed(() => {
   width: 300px;
 }
 .header-menu-right {
-  flex: 1;
+  width: calc(100% - 300px - 84px);
   text-align: right;
   .ant-menu-horizontal {
     justify-content: flex-end;

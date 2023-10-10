@@ -3,6 +3,10 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 
+const AutoImport = require('unplugin-auto-import/webpack');
+const Components = require('unplugin-vue-components/webpack');
+const { ElementPlusResolver } = require('unplugin-vue-components/resolvers');
+
 module.exports = defineConfig({
   lintOnSave: false,
   transpileDependencies: true,
@@ -78,6 +82,16 @@ module.exports = defineConfig({
     //     ]
     //   })
     // );
+    config.plugins.push(
+      AutoImport({
+        resolvers: [ElementPlusResolver()]
+      })
+    );
+    config.plugins.push(
+      Components({
+        resolvers: [ElementPlusResolver()]
+      })
+    );
   },
   devServer: {
     client: {

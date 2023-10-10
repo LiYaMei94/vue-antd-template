@@ -31,7 +31,7 @@ const handleClick = () => {
     width: 16px;
     height: 16px;
     border-radius: 10px;
-    background-color: var(--ant-error-color);
+    background-color: var(--private-error-color);
     text-align: center;
     line-height: 16px;
     top: -4px;

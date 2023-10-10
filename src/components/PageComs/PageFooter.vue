@@ -11,7 +11,7 @@
   box-sizing: border-box;
   align-items: center;
   justify-content: space-between;
-  border-top: 1px solid var(--private-border-color);
+  border-top: 1px solid var(--private-line-color-2);
   pointer-events: all !important;
   position: fixed;
   bottom: 0;

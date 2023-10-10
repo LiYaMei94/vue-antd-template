@@ -13,15 +13,6 @@
  * */
 export const routerData = [
   // {
-  //   name: 'Home',
-  //   path: '/home',
-  //   component: () => import(/* webpackChunkName: "Home" */ '@/views/home'),
-  //   meta: {
-  //     title: '首页',
-  //     isFrame: '1'
-  //   }
-  // },
-  // {
   //   name: 'Dashboard',
   //   path: '/dashboard',
   //   component: () => import(/* webpackChunkName: "Dashboard" */ '@/views/dashboard'),
@@ -32,76 +23,76 @@ export const routerData = [
   //   }
   // },
   {
-    name: 'Project',
-    path: '/project',
-    redirect: '/project/dept',
+    name: 'Dashboard',
+    path: '/dashboard',
     meta: {
-      title: '项目管理',
+      title: '监管驾驶舱',
+      subtitle: '全项目远程可视化监管大屏局监管',
       isFrame: '1',
       icon: 'model-1',
+      pageLayout: '1'
+    }
+  },
+  {
+    name: 'Business',
+    path: '/business',
+    meta: {
+      title: '企业管理',
+      subtitle: '账号管理等基础配置',
+      isFrame: '1',
+      icon: 'model-2',
+      pageLayout: '1'
+    }
+  },
+  {
+    name: 'Construction',
+    path: '/construction',
+    meta: {
+      title: '项目施工管理',
+      subtitle: '经验案例、人力物资、常用模板',
+      isFrame: '1',
+      icon: 'model-6',
+      pageLayout: '1'
+    },
+    children: []
+  },
+  {
+    name: 'Supervise',
+    path: '/supervise',
+    meta: {
+      title: '项目监管',
+      subtitle: 'EPC工程关联方信息管理',
+      isFrame: '1',
+      icon: 'model-3',
+      pageLayout: '1'
+    }
+  },
+  {
+    name: 'Library',
+    path: '/library',
+    meta: {
+      title: '资源库管理',
+      subtitle: '公司层面对项目的统一监管',
+      isFrame: '1',
+      icon: 'model-4',
       pageLayout: '1'
     },
     children: [
       {
-        name: 'ProjectDept',
-        path: '/project/dept',
-        redirect: '/project/dept/manage',
+        name: 'LibraryProcedure',
+        path: '/library/procedure',
         meta: {
-          title: '项目部',
+          title: '手续管理',
           isFrame: '1',
           pageLayout: '1'
         },
         children: [
           {
-            name: 'ProjectDeptManage',
-            path: '/project/dept/manage',
-            redirect: '/project/dept/manage/subcontractor',
+            name: 'LibraryProcedureTemplate',
+            path: '/library/procedure/template',
+            component: () => import(/* webpackChunkName: "BasicSystemStation" */ '@/views/library/procedure/template/list'),
             meta: {
-              title: '项目部管理',
-              isFrame: '1',
-              pageLayout: '1'
-            },
-            children: [
-              {
-                name: 'ProjectDeptManageSubcontractor',
-                path: '/project/dept/manage/subcontractor',
-                component: () => import(/* webpackChunkName: "ProjectDeptSubcontractor" */ '@/views/project/dept/subcontractor/list'),
-                meta: {
-                  title: '分包商',
-                  isFrame: '1',
-                  pageLayout: '1'
-                }
-              }
-            ]
-          }
-        ]
-      },
-      {
-        name: 'ProjectAuth',
-        path: '/project/auth',
-        redirect: '/project/auth/user',
-        meta: {
-          title: '权限管理',
-          isFrame: '1',
-          pageLayout: '1'
-        },
-        children: [
-          {
-            name: 'ProjectAuthUser',
-            path: '/project/auth/user',
-            component: () => import(/* webpackChunkName: "ProjectAuthUser" */ '@/views/project/auth/role/list'),
-            meta: {
-              title: '账号管理',
-              isFrame: '1',
-              pageLayout: '1'
-            }
-          },
-          {
-            name: 'ProjectAuthRole',
-            path: '/project/auth/role',
-            component: () => import(/* webpackChunkName: "ProjectAuthRole" */ '@/views/project/auth/role/list'),
-            meta: {
-              title: '角色管理',
+              title: '手续标准库',
               isFrame: '1',
               pageLayout: '1'
             }
@@ -115,8 +106,9 @@ export const routerData = [
     path: '/basic',
     meta: {
       title: '基础配置管理',
+      subtitle: '支持光伏工程业务现场管理',
       isFrame: '1',
-      icon: 'model-2',
+      icon: 'model-5',
       pageLayout: '1'
     },
     children: [
@@ -132,7 +124,7 @@ export const routerData = [
           {
             name: 'BasicSystemStation',
             path: '/basic/system/station',
-            component: () => import(/* webpackChunkName: "BasicSystemStation" */ '@/views/system/user'),
+            component: () => import(/* webpackChunkName: "BasicSystemStation" */ '@/views/basic/system/user'),
             meta: {
               title: '岗位管理',
               isFrame: '1',
@@ -153,7 +145,7 @@ export const routerData = [
           {
             name: 'BasicAuthRole',
             path: '/basic/auth/role',
-            component: () => import(/* webpackChunkName: "BasicAuthRole" */ '@/views/system/role'),
+            component: () => import(/* webpackChunkName: "BasicAuthRole" */ '@/views/basic/system/role'),
             meta: {
               title: '角色管理',
               isFrame: '1',
@@ -161,9 +153,9 @@ export const routerData = [
             }
           },
           {
-            name: 'BasicAuthAccount ',
-            path: '/basic/auth/account ',
-            component: () => import(/* webpackChunkName: "BasicAuthAccount" */ '@/views/system/role'),
+            name: 'BasicAuthAccount',
+            path: '/basic/auth/account',
+            component: () => import(/* webpackChunkName: "BasicAuthAccount" */ '@/views/basic/system/role'),
             meta: {
               title: '账号管理',
               isFrame: '1',

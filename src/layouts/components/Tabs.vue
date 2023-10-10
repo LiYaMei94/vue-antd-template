@@ -1,25 +1,24 @@
 <template>
-  <div class="tabs-box" :style="{ padding: state.global.tabsMenuList?.length ? '4px 10px' : 0 }">
+  <div class="tabs-box" :style="{ padding: state.global.tabsMenuList?.length ? '16px 20px' : '16px 20px 0' }">
     <div class="tabs-menu">
       <a-tabs v-model:activeKey="activeKey" hide-add type="editable-card">
         <a-tab-pane v-for="item in state.global.tabsMenuList" :key="item.path">
           <template #tab>
-            <IconFont class="icon" type="icon-dian1"></IconFont>
             <span @click="navigatorChange($event, item.path)">
               {{ item.title }}
             </span>
           </template>
           <template #closeIcon>
-            <CloseOutlined @click="handleRemove($event, item.path)"></CloseOutlined>
+            <IconSvg name="tab-cancel" class="tab-cancel" @click="handleRemove($event, item.path)"></IconSvg>
           </template>
         </a-tab-pane>
         <template #leftExtra>
-          <div class="extra-icon-wrap" @click="scrollPrev">
+          <div class="extra-icon-wrap" @click="scrollPrev" :style="{ width: showExtra ? '25px' : '0' }">
             <LeftOutlined v-if="showExtra">左边</LeftOutlined>
           </div>
         </template>
         <template #rightExtra>
-          <div class="extra-icon-wrap" @click="scrollNext">
+          <div class="extra-icon-wrap" @click="scrollNext" :style="{ width: showExtra ? '25px' : '0' }">
             <RightOutlined v-if="showExtra"></RightOutlined>
           </div>
         </template>
@@ -140,58 +139,16 @@ const handleRemove = (event, fullPath) => {
 
 <style scoped lang="less">
 .tabs-box {
-  background-color: var(--private-content-bg);
   width: 100%;
   box-sizing: border-box;
-  border-left: 1px solid var(--private-border-color);
   .tabs-menu {
     width: 100%;
-    .icon {
-      font-size: 16px;
-      display: none;
-      margin-right: 5px;
-      margin-top: 2px;
-    }
-    .ant-tabs-tab-active {
-      .icon {
-        display: inline-block;
-      }
-    }
   }
   .extra-icon-wrap {
-    width: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-  }
-}
-</style>
-<style lang="less">
-.tabs-box {
-  .tabs-menu .ant-tabs-top .ant-tabs-nav {
-    margin: 0;
-  }
-  .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab,
-  .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab {
-    padding: 5px 10px;
-  }
-  .ant-tabs-tab .anticon.anticon-close {
-    margin: 0;
-    margin-left: 10px;
-    font-size: 12px;
-  }
-  .ant-tabs > .ant-tabs-nav .ant-tabs-nav-operations,
-  .ant-tabs > div > .ant-tabs-nav .ant-tabs-nav-operations {
-    display: none;
-  }
-  .ant-tabs-tab-remove {
-    margin-left: 0;
-    padding-left: 0;
-  }
-  .ant-tabs-tab-btn {
-    display: flex;
-    align-items: center;
   }
 }
 </style>

@@ -16,7 +16,7 @@ const props = defineProps({
 .card-header-title {
   margin-bottom: 10px;
   .title {
-    color: var(--ant-primary-color);
+    color: var(--private-primary-color);
     position: relative;
     padding-left: 14px;
     box-sizing: border-box;
@@ -29,7 +29,7 @@ const props = defineProps({
     content: '';
     width: 4px;
     height: 18px;
-    background-color: var(--ant-primary-color);
+    background-color: var(--private-primary-color);
   }
 }
 </style>

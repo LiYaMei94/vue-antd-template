@@ -2,7 +2,7 @@
   <div class="theme-modal">
     <a-dropdown :trigger="['click']">
       <div class="header-tool-right-icon">
-        <IconFont type="icon-zhuti" style="font-size: 20px; color: var(--private-primary-text-color)"></IconFont>
+        <IconFont type="icon-zhuti" style="font-size: 20px; color: var(--private-first-text-color)"></IconFont>
       </div>
       <template #overlay>
         <a-menu @click="changeTheme" v-model:selectedKeys="selectedKeys">

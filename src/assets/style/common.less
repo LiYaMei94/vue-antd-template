@@ -1,4 +1,4 @@
-@import './reset.color.less';
+@import './ant.reset.less';
 @import 'epic.designer.reset.less';
 
 html,
@@ -9,8 +9,8 @@ body,
   height: 100%;
   padding: 0;
   margin: 0;
-  background-color: var(--private-body-bg);
-  color: var(--private-primary-text-color);
+  background-color: var(--private-bg-1);
+  color: var(--private-first-text-color);
 }
 
 /* 解决 h1 标签在 webkit 内核浏览器中文字大小失效问题 */
@@ -18,15 +18,14 @@ body,
   font-size: 2em;
 }
 
-.text-ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box; //作为弹性伸缩盒子模型显示。
-  -webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式--从上到下垂直排列
-  -webkit-line-clamp: 1; //显示的行
-}
-
 :root {
+  .text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box; //作为弹性伸缩盒子模型显示。
+    -webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式--从上到下垂直排列
+    -webkit-line-clamp: 1; //显示的行
+  }
   .margin-r-28 {
     margin-right: 28px;
   }
@@ -42,30 +41,8 @@ body,
     height: 39px;
   }
   /*========================antd布局=============================*/
-  .ant-layout {
-    min-height: 100%;
-  }
-
   .main {
     flex: 1;
-  }
-
-  .ant-layout-header {
-    box-sizing: border-box;
-    padding: 0 24px;
-  }
-
-  .ant-layout-content {
-    margin: 10px 12px;
-    min-height: 280px;
-    min-width: 900px;
-  }
-
-  .ant-layout-sider-trigger {
-    text-align: right;
-    padding-right: 16px;
-    box-sizing: border-box;
-    font-size: 20px;
   }
 
   .list-table-content {
@@ -77,7 +54,7 @@ body,
     box-sizing: border-box;
   }
 
-  /*========================antd form表单&元素=============================*/
+  /*========================form表单&元素=============================*/
   /*自定义 校验规则展示小红点*/
   .nesting-form-item .ant-form-item-label:before {
     display: inline-block;
@@ -89,103 +66,21 @@ body,
     content: '*';
   }
 
-  .ant-input-number {
-    width: 100%;
-  }
-
-  .ant-picker {
-    width: 100%;
-  }
-
   .header-tool-right-icon {
     display: flex;
     align-items: center;
   }
 
-  // 详情页面formdisable
-  .form-all-disable {
-    pointer-events: none;
-
-    .ant-input {
-      background-color: var(--private-form-disabled-bg);
-      border-color: var(--private-form-disabled-border);
-      box-shadow: none;
-      color: var(--private-not-optional-text-color);
-      cursor: not-allowed;
-      opacity: 1;
-    }
-
-    .ant-select {
-      .ant-select-selector {
-        background: var(--private-form-disabled-bg);
-        border-color: var(--private-form-disabled-border);
-        box-shadow: none;
-        color: var(--private-not-optional-text-color);
-        cursor: not-allowed;
-        opacity: 1;
-      }
-    }
-    .ant-radio,
-    .ant-radio-checked {
-      color: var(--private-not-optional-text-color);
-      .ant-radio-inner {
-        background-color: var(--private-form-disabled-bg);
-        border-color: var(--private-form-disabled-border);
-        box-shadow: none;
-        color: var(--private-not-optional-text-color);
-        cursor: not-allowed;
-        opacity: 1;
-      }
-      .ant-radio-inner:after {
-        background-color: #0003;
-      }
-    }
-    .ant-checkbox-wrapper {
-      border-color: var(--private-form-disabled-border);
-      box-shadow: none;
-      cursor: not-allowed;
-      opacity: 1;
-      .ant-checkbox {
-        background-color: #0003;
-      }
-      .ant-checkbox-inner {
-        background-color: var(--private-form-disabled-bg);
-        border-color: var(--private-form-disabled-border);
-      }
-      .ant-checkbox-checked {
-        .ant-checkbox-inner:after {
-          border-color: var(--private-not-optional-text-color);
-        }
-      }
-    }
-
-    .ant-tree {
-      border-color: var(--private-form-disabled-border);
-      box-shadow: none;
-      cursor: not-allowed;
-      opacity: 1;
-      .ant-tree-checkbox-inner {
-        background-color: var(--private-form-disabled-bg);
-        border-color: var(--private-form-disabled-border);
-      }
-      .ant-tree-checkbox-checked {
-        .ant-tree-checkbox-inner:after {
-          border-color: var(--private-not-optional-text-color);
-        }
-      }
-    }
-  }
-
-  /*========================antd table=============================*/
+  /*======================== table=============================*/
 
   .table-custom-primary {
-    color: var(--ant-primary-color);
+    color: var(--private-primary-color);
   }
 
   .table-custom-primary-disabled {
     cursor: not-allowed;
     pointer-events: none;
-    color: var(--private-primary-text-color);
+    color: var(--private-first-text-color);
   }
 
   .table-custom-danger {
@@ -198,17 +93,6 @@ body,
     display: flex;
     align-items: center;
     justify-content: flex-end;
-  }
-
-  /*========================antd 弹窗类=============================*/
-  .ant-drawer-footer-custom {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-  .ant-drawer-header-close-only {
-    padding-bottom: 16px;
   }
 
   /*========================html展示JSON=============================*/

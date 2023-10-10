@@ -1,10 +1,10 @@
 <template>
-  <a-dropdown :trigger="['click']">
+  <a-dropdown :trigger="['click']" :overlayClassName="'avatar-dropdown'">
     <div class="user-container">
       <div class="user-avatar">
-        <a-avatar :size="32" style="background-color: var(--ant-primary-color)">
+        <a-avatar :size="32" style="background-color: var(--private-primary-color)">
           <template #icon>
-            <UserOutlined />
+            <IconSvg name="user-profile" class="user-profile" fill="#fff"></IconSvg>
           </template>
         </a-avatar>
       </div>
@@ -76,9 +76,10 @@ const handleLogout = async () => {
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  .ant-avatar {
+    position: relative;
+  }
 }
-</style>
-<style lang="less">
 .user-info {
   padding: 5px 12px;
   div:nth-of-type(1) {
@@ -92,8 +93,24 @@ const handleLogout = async () => {
     font-weight: 400;
   }
 }
+</style>
+<style lang="less">
+.avatar-dropdown {
+  top: 65px !important;
+}
 .ant-dropdown-menu-submenu-title {
   display: flex;
+  align-items: center;
+}
+
+.user-profile {
+  width: 16px;
+  height: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -10px;
 }
 
 .theme-switch-icon,
@@ -102,8 +119,11 @@ const handleLogout = async () => {
   height: 18px;
   margin-right: 8px;
 }
-.theme-switch-icon {
+#theme-switch {
   fill: var(--private-content-bg);
+  path {
+    stroke: var(--private-second-text-color);
+  }
 }
 .logout-icon {
   fill: var(--private-second-text-color);

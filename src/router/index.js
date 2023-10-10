@@ -37,9 +37,14 @@ router.beforeEach(async (to, from, next) => {
         await getRouteData();
         return next({ ...to, replace: true });
       } else {
-        return next({
-          path: '/user/login'
-        });
+        if (!isNull(token)) {
+          await getRouteData();
+          return next({ ...to, replace: true });
+        } else {
+          return next({
+            path: '/user/login'
+          });
+        }
       }
     }
 

@@ -130,7 +130,7 @@ const handleReset = () => {
 
 <style lang="less" scoped>
 .table-search {
-  border-bottom: 1px solid var(--private-border-color);
+  border-bottom: 1px solid var(--private-line-color-2);
   .operation {
     display: flex;
     align-items: center;
@@ -144,7 +144,7 @@ const handleReset = () => {
   .search-reset-btn {
     background: transparent;
     border: 1px solid var(--private-form-border);
-    color: var(--private-primary-text-color);
+    color: var(--private-first-text-color);
   }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div style="border: 1px solid var(--private-border-color)">
-    <Toolbar style="border-bottom: 1px solid var(--private-border-color)" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
+  <div style="border: 1px solid var(--private-line-color-2)">
+    <Toolbar style="border-bottom: 1px solid var(--private-line-color-2)" :editor="editorRef" :defaultConfig="toolbarConfig" :mode="mode" />
     <Editor
       style="height: 500px; overflow-y: hidden"
       v-model="valueHtml"

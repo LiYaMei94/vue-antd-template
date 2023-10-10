@@ -41,11 +41,12 @@ export const usePermission = (options) => {
 
       // 设置路由
       addRoute(treeToArr(routes));
-      // 设置模块
-      const topKeys = Object.keys(topMenuData) || [];
-      const sideKeys = Object.keys(sideMenuData) || [];
-      dispatch('setMenuModel', topKeys[0]);
-      dispatch('setMenuTopModel', sideKeys[0]);
+      // TODO:设置模块
+      // const topKeys = Object.keys(topMenuData) || [];
+      // const sideKeys = !isNull(topKeys[0]) ? Object.keys(sideMenuData[topKeys[0]]) : [];
+      // dispatch('setMenuModel', topKeys[0]);
+      // dispatch('setMenuTopModel', sideKeys[0]);
+      // console.log('===', { side: sideMenuData, top: topMenuData || [], module: modeMenuData || [] });
       // 设置菜单
       dispatch('setMenuData', { side: sideMenuData, top: topMenuData || [], module: modeMenuData || [] });
     } catch (error) {
