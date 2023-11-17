@@ -1,0 +1,327 @@
+@import './element.reset.less';
+@import './ant.reset.less';
+
+html,
+body,
+#app {
+  width: 100%;
+  min-width: 1280px;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  background-color: var(--private-bg-1);
+  color: var(--private-first-text-color);
+}
+
+/* 解决 h1 标签在 webkit 内核浏览器中文字大小失效问题 */
+:-webkit-any(article, aside, nav, section) h1 {
+  font-size: 2em;
+}
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box; //作为弹性伸缩盒子模型显示。
+  -webkit-box-orient: vertical; //设置伸缩盒子的子元素排列方式--从上到下垂直排列
+  -webkit-line-clamp: 1; //显示的行
+  word-break: break-all; //纯英文、数字、中文
+  white-space: pre-line; //合并空白符序列，但是保留换行符
+}
+.margin-left-16 {
+  margin-left: 16px;
+}
+.margin-r-28 {
+  margin-right: 28px;
+}
+.margin-left-12 {
+  margin-left: 12px;
+}
+
+.margin-left-10 {
+  margin-left: 10px;
+}
+
+.button-39 {
+  height: 39px;
+}
+/*========================antd布局=============================*/
+.main {
+  width: 100%;
+}
+
+.list-table-content {
+  padding: @contentPadding @contentPadding 0 @contentPadding;
+  box-sizing: border-box;
+  flex: 1;
+  .table-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--private-first-text-color);
+  }
+}
+.page-form-content {
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/*========================form表单&元素=============================*/
+/*自定义 校验规则展示小红点*/
+.nesting-form-item .ant-form-item-label:before {
+  display: inline-block;
+  margin-right: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: '*';
+}
+
+.header-tool-right-icon {
+  display: flex;
+  align-items: center;
+}
+
+/*======================== table=============================*/
+
+.table-custom-primary {
+  color: var(--private-primary-color);
+}
+
+.table-custom-primary-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  color: var(--private-first-text-color);
+}
+
+.table-custom-danger {
+  color: var(--ant-error-color);
+}
+
+/*.table-pagination {
+  width: 100%;
+  background-color: var(--private-content-bg);
+  padding: @contentPadding;
+  box-sizing: border-box;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}*/
+
+/*========================html展示JSON=============================*/
+.tip-container {
+  border: 1px dashed var(--private-form-disabled-border);
+  min-height: 32px;
+  outline: 1px solid #ccc;
+  padding: 5px;
+  margin: 5px;
+
+  .string {
+    color: green;
+  }
+
+  .number {
+    color: darkorange;
+  }
+
+  .boolean {
+    color: blue;
+  }
+
+  .null {
+    color: magenta;
+  }
+
+  .key {
+    color: red;
+  }
+}
+
+.list-card-header {
+  display: flex;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+/*========================动画=============================*/
+.fadeIn {
+  -webkit-animation: fadeInDown 0.3s;
+  animation: fadeInDown 0.3s;
+}
+@keyframes fadeInDown {
+  0% {
+    -webkit-transform: translate3d(0, -2%, 0);
+    -webkit-transform: translate3d(0, -2%, 0);
+    transform: translate3d(0, -2%, 0);
+    transform: translate3d(0, -2%, 0);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: none;
+    transform: none;
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fadeInDown {
+  0% {
+    -webkit-transform: translate3d(0, -2%, 0);
+    opacity: 0;
+  }
+  100% {
+    -webkit-transform: none;
+    opacity: 1;
+  }
+}
+/*树列表*/
+
+.custom-tree-container {
+  .title-wrap {
+    display: flex;
+    align-items: center;
+    height: 38px;
+    span {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .action-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      a {
+        display: inline-block;
+        width: 35px;
+        text-align: right;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--ant-primary-color);
+      }
+    }
+  }
+}
+/*树编辑*/
+.tree-edit-container {
+  .a-button {
+    display: flex;
+    align-items: center;
+    color: var(--private-first-text-color);
+    margin-left: 8px;
+    cursor: pointer;
+    .tree-action-icon {
+      width: 16px;
+      height: 16px;
+      fill: var(--private-second-text-color);
+    }
+  }
+
+  .a-button:focus,
+  .a-button:hover {
+    .tree-action-icon {
+      fill: var(--ant-primary-color) !important;
+    }
+  }
+  .input-status-error.ant-input-focused,
+  .input-status-error.ant-input:focus {
+    box-shadow: 0 0 0 2px rgba(255, 38, 5, 0.06);
+  }
+  .input-status-error,
+  .input-status-error.ant-input-focused,
+  .input-status-error.ant-input:focus {
+    border: 1px solid var(--private-error-color);
+  }
+  .anticon.anticon-search {
+    color: var(--private-not-optional-text-color);
+  }
+  .ant-input-affix-wrapper:not(.tree-edit-input) {
+    background-color: var(--private-bg-2);
+  }
+  .ant-input-affix-wrapper:not(.tree-edit-input) > input.ant-input {
+    background-color: var(--private-bg-2) !important;
+  }
+
+  .content {
+    .editable-cell-input-wrapper {
+      display: flex;
+      align-items: center;
+      .editable-cell-icon-check {
+        margin-left: 8px;
+      }
+      .ant-btn .ant-btn-link:not(.ant-btn-dangerous) {
+        .editable-cell-icon-check {
+          color: var(--ant-primary-color);
+        }
+      }
+    }
+
+    .ant-tree .ant-tree-node-content-wrapper {
+      flex: 1;
+    }
+    .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
+      background-color: var(--private-primary-color-1);
+      color: var(--ant-primary-color);
+    }
+    .ant-tree .ant-tree-node-content-wrapper:hover {
+      background-color: var(--private-primary-color-1);
+      color: var(--ant-primary-color);
+    }
+    .ant-tree .ant-tree-treenode {
+      width: 100%;
+    }
+    .ant-tree-node-content-wrapper.ant-tree-node-content-wrapper-open.ant-tree-node-selected {
+      background-color: var(--private-primary-color-1);
+      color: var(--ant-primary-color);
+    }
+    .tree-content {
+      display: flex;
+      align-items: center;
+      height: 32px;
+      width: 100%;
+      .tree-content-action {
+        width: 100px;
+        display: none;
+        .tree-content-action-wrap {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          .a-button .tree-action-icon,
+          .ant-btn .tree-action-icon {
+            height: 24px;
+          }
+
+          .action-button-col .ellipsis-icon {
+            fill: var(--private-first-text-color);
+          }
+        }
+      }
+      .tree-title {
+        flex: 1;
+      }
+      .edit-tree-title {
+        width: calc(100% - 100px);
+        span {
+          width: 100%;
+        }
+      }
+    }
+    .tree-content:hover .tree-content-action {
+      display: inline;
+    }
+  }
+}
+
+::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 4px; //width对于横向滚动条来说没有用，但是对于纵向就有用了
+  height: 8px; // height对于纵向滚动条来说没有用，但是对于横向就有用了
+}
+::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  box-shadow: inset 0 0 5px rgba(97, 184, 179, 0.1);
+  background: var(--private-webkit-scrollbar-thumb-bg);
+}
+::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  box-shadow: inset 0 0 5px rgba(87, 175, 187, 0.1);
+  border-radius: 10px;
+  background: #ededed;
+}

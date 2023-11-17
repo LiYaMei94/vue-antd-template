@@ -1,0 +1,56 @@
+import { createRouter, createWebHashHistory } from 'vue-router';
+import _ from 'lodash';
+import { staticRoutes, errorRouter } from './staticRouter';
+import { usePermission } from '@/hooks/usePermission';
+import { useStore } from 'vuex';
+import DB from '@/utils/db';
+import { isNull } from '@/utils/utils';
+import { ACCESS_TOKEN } from '@/utils/const';
+
+const isPermission = process.env?.VUE_APP_route_permission === 'true';
+const router = createRouter({
+  history: createWebHashHistory(),
+  strict: false,
+  routes: [...staticRoutes, ...errorRouter]
+});
+
+// FIXME:白名单
+const routerWhiteNameList = ['UserLogin', 'UserEditPassword', '404', '403', '500'];
+
+// 路由拦截
+router.beforeEach(async (to, from, next) => {
+  try {
+    const { getRouteData } = usePermission();
+    const token = DB.getLocal(ACCESS_TOKEN);
+    const { state, dispatch } = useStore();
+    // FIXME:1.动态设置标题，根据各平台自行配置
+    const title = 'EPCM工程管理平台';
+    document.title = to.meta.title ? `${to.meta.title} - ${title}` : title;
+
+    // 2.判断访问页面是否在路由白名单地址(静态路由)中，如果存在直接放行
+    if (routerWhiteNameList.includes(to.name)) return next();
+
+    // 3.如果没有侧边菜单数据就重新请求，并生成路由
+    if (!state?.user?.menuDataLoaded) {
+      if (!isPermission) {
+        await getRouteData();
+        return next({ ...to, replace: true });
+      } else {
+        if (!isNull(token)) {
+          await getRouteData();
+          return next({ ...to, replace: true });
+        } else {
+          dispatch('clearMenuInfo');
+          return next({
+            path: '/user/login'
+          });
+        }
+      }
+    }
+
+    return next();
+  } catch (error) {
+    console.error('router.beforeEach', error);
+  }
+});
+export default router;

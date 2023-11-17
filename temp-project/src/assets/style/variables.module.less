@@ -1,0 +1,20 @@
+// 公共变量
+@siderWidth: 200px; // 侧边栏展开宽度
+@siderCollapsedWidth: 48px; // 侧边栏收起宽度
+@contentMarginLeft: 20px;
+@contentMarginRight: 20px;
+@contentPadding: unit(@contentPaddingNumber, px);
+@contentPaddingNumber: 16;
+@headerHeight: unit(@headerHeightNumber, px);
+@headerHeightNumber: 64;
+
+:export {
+  siderWidth: @siderWidth;
+  siderCollapsedWidth: @siderCollapsedWidth;
+  contentMarginLeft: @contentMarginLeft;
+  contentMarginRight: @contentMarginRight;
+  contentPadding: @contentPadding;
+  contentPaddingNumber: @contentPaddingNumber;
+  headerHeight: @headerHeight;
+  headerHeightNumber: @headerHeightNumber;
+}
